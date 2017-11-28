@@ -1,0 +1,69 @@
+#all-of-us-helper-header {
+  height: 5rem;
+  @include breakpoint(large) {
+    padding-top: .5rem;
+  }
+
+  position: fixed;
+  background-color: $white;
+  top: 0;
+  width: 100%;
+  overflow: hidden;
+  z-index: 3;
+
+  #offCanvasRight {
+    z-index: 20;
+  }
+  .all-of-us-helper-branding {
+    @include grid-column($columns: 8);
+    @include show-for(large);
+
+    .all-of-us-helper-logo-large {
+      height: 4rem;
+    }
+  }
+
+  .all-of-us-helper-logo-small {
+    height: 3.5rem;
+  }
+
+  .all-of-us-helper-main-navigation {
+    @include grid-column-offset(7);
+    @include grid-column($columns: 9);
+    @include show-for(large);
+
+    a {
+      color: $all-of-us-dark-gray !important;
+    }
+  }
+
+  .menu-icon::after {
+    background: black;
+    box-shadow: 0 7px 0 black, 0 14px 0 black;
+  }
+}
+
+#all-of-us-helper-content-header {
+  height: 5rem;
+  padding-top: .5rem;
+  position: fixed;
+  top: 5rem;
+  width: 100%;
+  overflow: hidden;
+  background-color: $all-of-us-blue;
+  z-index: 2;
+
+  h1 {
+    color: $all-of-us-dark-purple;
+  }
+}
+
+#all-of-us-helper-content {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 1rem;
+  top: 10rem;
+  z-index: 1;
+  width: 100%;
+}

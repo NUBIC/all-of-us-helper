@@ -1,0 +1,25 @@
+#all-of-us-helper-header
+  .off-canvas-wrapper
+    .title-bar{"data-hide-for" => "large", "data-responsive-toggle" => "widemenu"}
+      = link_to image_tag('allofus-logo@2x.png', alt: 'all of us helper', class: 'all-of-us-helper-logo-small'), root_url
+      .title-bar-right
+        %button.menu-icon{"data-open" => "offCanvasRight", :type => "button"}
+    #offCanvasRight.off-canvas.position-right{"data-off-canvas" => ""}
+      %button.close-button{"aria-label" => "Close menu", "data-close" => "", :type => "button"}
+        %span{"aria-hidden" => "true"} ×
+      %ul.vertical.menu
+        = render 'shared/navigation_links'
+    .off-canvas-content{"data-off-canvas-content" => ""}
+      .flash.small-centered{ 'data-closable' => true }
+        - flash.each do |name, msg|
+          - if msg.is_a?(String)
+            = content_tag :div, class: "callout small #{name}" do
+              %button.close-button{"aria-label" => "dismiss alert", "data-close" => "", :type => "button"}
+                %span{"aria-hidden" => "true"} ×
+              = msg
+  #widemenu
+    .row.expanded
+      .all-of-us-helper-branding
+        = link_to image_tag('allofus-logo@2x.png', alt: 'all of us helper', class: 'all-of-us-helper-logo-large'), root_url
+      .all-of-us-helper-main-navigation
+        = render 'shared/navigation'
