@@ -1,0 +1,44 @@
+- content_for(:title) do
+  Home
+- content_for(:all_of_us_helper_header) do
+  = render 'layouts/all_of_us_helper_header'
+- content_for(:all_of_us_helper_content_header) do
+  #all-of-us-helper-content-header
+    .row
+      .all-of-us-helper-welcome
+        %h1
+          Profile
+- content_for(:all_of_us_helper_content) do
+  #all-of-us-helper-content
+    .row
+      #user.columns.large-24
+        = render 'shared/flash'
+        .user
+          .row
+            .username
+              %div{class: 'small-10 large-4 columns' }
+                %label
+                  Username
+              %div{class: 'small-14 large-20 columns' }
+                = @user.username
+          .row
+            .first_name
+              %div{class: 'small-10 large-4 columns' }
+                %label
+                  First Name
+              %div{class: 'small-14 large-20 columns' }
+                = @user.first_name
+          .row
+            .last_name
+              %div{class: 'small-10 large-4 columns' }
+                %label
+                  Last Name
+              %div{class: 'small-14 large-20 columns' }
+                = @user.last_name
+          .row
+            .email
+              %div{class: 'small-10 large-4 columns' }
+                %label
+                  Email
+              %div{class: 'small-14 large-20 columns' }
+                = @user.email

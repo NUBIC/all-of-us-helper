@@ -1,3 +1,17 @@
+#flash {
+  .callout {
+    padding: .75rem .75rem;
+  }
+
+  .notice {
+    background-color: $success-color;
+  }
+
+  .alsert {
+    background-color: $alert-color;
+  }
+
+}
 #all-of-us-helper-header {
   height: 5rem;
   @include breakpoint(large) {
