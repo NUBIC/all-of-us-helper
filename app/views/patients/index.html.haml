@@ -1,0 +1,47 @@
+- content_for(:title) do
+  Patients
+- content_for(:all_of_us_helper_header) do
+  = render 'layouts/all_of_us_helper_header'
+- content_for(:all_of_us_helper_content_header) do
+  #all-of-us-helper-content-header
+    #patients-header
+      = form_tag patients_url, method: 'get', id: 'search_patients_form' do
+        %h1{ class: 'large-4 columns' }
+          Patients
+        .search_box{ class: 'large-offset-10 large-6 columns' }
+          %label{for: 'search' }
+            Search
+          = text_field_tag :search, (params[:search].nil? ? '' : params[:search]), type: 'search'
+        .search_buttons{ class: 'large-4 columns' }
+          %button{ type: 'submit', id: 'search_patients_button', class: 'tiny button' }
+            Search
+          = link_to 'Clear', patients_url()
+
+- content_for(:all_of_us_helper_content) do
+  #all-of-us-helper-content
+    #patients
+      #patients-list
+        = will_paginate @patients, renderer: FoundationPagination::Rails
+        %table.hack_stack.hover
+          %thead
+            %tr
+              %th.record_id
+                = sortable 'record_id'
+              %th.last_name
+                = sortable 'last_name'
+              %th.first_name
+                = sortable 'first_name'
+              %th.email
+                = sortable 'email'
+          %tbody
+            - @patients.each do |patient|
+              = content_tag_for(:tr, patient) do
+                %td.record_id
+                  = patient.record_id
+                %td.last_name
+                  = patient.last_name
+                %td.first_name
+                  = patient.first_name
+                %td.email
+                  = patient.email
+        = will_paginate @patients, renderer: FoundationPagination::Rails

@@ -7,11 +7,12 @@
     background-color: $success-color;
   }
 
-  .alsert {
+  .alert {
     background-color: $alert-color;
   }
 
 }
+
 #all-of-us-helper-header {
   height: 5rem;
   @include breakpoint(large) {
@@ -29,7 +30,7 @@
     z-index: 20;
   }
   .all-of-us-helper-branding {
-    @include grid-column($columns: 8);
+    @include grid-column($columns: 6);
     @include show-for(large);
 
     .all-of-us-helper-logo-large {
@@ -42,9 +43,29 @@
   }
 
   .all-of-us-helper-main-navigation {
-    @include grid-column-offset(7);
-    @include grid-column($columns: 9);
+    @include grid-column-offset(2);
+    @include grid-column($columns: 14);
     @include show-for(large);
+
+    .home {
+      @include grid-column($columns: 6);
+      text-align: center;
+    }
+
+    .patients {
+      @include grid-column($columns: 6);
+      text-align: center;
+    }
+
+    .login {
+      @include grid-column($columns: 6);
+       text-align: center;
+    }
+
+    .logout {
+      @include grid-column($columns: 6);
+      text-align: center;
+    }
 
     a {
       color: $all-of-us-dark-gray !important;
@@ -58,26 +79,43 @@
 }
 
 #all-of-us-helper-content-header {
-  height: 5rem;
-  padding-top: .5rem;
-  position: fixed;
-  top: 5rem;
-  width: 100%;
-  overflow: hidden;
-  background-color: $all-of-us-blue;
-  z-index: 2;
-
+  @include breakpoint(large) {
+    height: 5rem;
+    padding-top: .5rem;
+    position: fixed;
+    top: 5rem;
+    width: 100%;
+    overflow: hidden;
+    background-color: $all-of-us-blue;
+    z-index: 2;
+  }
   h1 {
     color: $all-of-us-dark-purple;
+  }
+  @include breakpoint(small) {
+    position: relative;
+    top: 5rem;
   }
 }
 
 #all-of-us-helper-content {
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 1rem;
-  top: 10rem;
-  z-index: 1;
-  width: 100%;
+  @include breakpoint(large) {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 1rem;
+    top: 10rem;
+    z-index: 1;
+    width: 100%;
+  }
+
+  @include breakpoint(small) {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 1rem;
+    top: 5rem;
+    z-index: 1;
+    width: 100%;
+  }
 }

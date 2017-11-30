@@ -1,11 +1,12 @@
 %li.home.menu-text{ class: active?('is-active', controller: '/home', action: 'index') }
   = link_to 'Home', root_url, class: 'align-center'
+%li.patients.menu-text{ class: active?('active', controller: '/patients', action: 'index') }
+  = link_to 'Patients', patients_url
 - if user_signed_in?
+  %li.log_out.menu-text
+    = link_to "Log out", destroy_user_session_path, method: :delete
   %li.profile.menu-text{ class: active?('active', controller: '/users', action: 'show', id: current_user.id) }
     = link_to "Profile (#{current_user.username})", user_url(current_user)
 - else
   %li.login.menu-text{ class: active?('active', controller: 'devise/sessions', action: 'new') }
     = link_to 'Login', new_user_session_url
-%li.log_out.menu-text
-  - if user_signed_in?
-    = link_to "Log out", destroy_user_session_path, method: :delete
