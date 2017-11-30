@@ -5,9 +5,22 @@
      $columns: 24
     );
 
+    @include breakpoint(large) {
+      h1 {
+        @include grid-column($columns: 4);
+      }
+
+      .search_box {
+        @include grid-column($columns: 6);
+        @include grid-column-offset(10);
+      }
+      .search_buttons{
+        @include grid-column($columns: 4);
+      }
+    };
+
     .search_buttons{
       margin-top: 1.5rem;
-
       #search_patients_button {
         margin-top: .50rem;
       }
