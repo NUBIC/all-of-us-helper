@@ -1,6 +1,6 @@
-#patients-header {
+#invitation-codes-header {
   @include grid-row();
-  #search-patients-form {
+  #search-invitation-codes_form {
     @include grid-column($columns: 24);
 
     @include breakpoint(large) {
@@ -8,7 +8,7 @@
         @include grid-column($columns: 4);
       }
 
-      .search-box {
+      .searc-box {
         @include grid-column($columns: 6);
         @include grid-column-offset(10);
       }
@@ -19,16 +19,16 @@
 
     .search-buttons{
       margin-top: 1.5rem;
-      #search-patients-button {
+      #search-invitation-codes-button {
         margin-top: .50rem;
       }
     }
   }
 }
 
-#patients {
+#invitation-codes {
   @include grid-row();
-  #patients-list {
+  #invitation-codes-list {
 		@include grid-column($columns: 24);
 
     th .current {
@@ -51,10 +51,10 @@
   }
 }
 
-#patient-show {
+#invitation-code-show {
   @include grid-column-row();
 
-  .record_id, .first_name, .last_name, .email, .actions {
+  .code, .actions {
    margin-bottom: 1rem;
   }
 }

@@ -13,4 +13,11 @@ namespace :setup do
     Patient.where(record_id: '10', first_name: 'The', last_name: 'Hemulen', email: 'the.hemulen@moomin.com').first_or_create
     Patient.where(record_id: '11', first_name: 'Toffle', last_name: 'Moomin', email: 'toffle.moomin@moomin.com').first_or_create
   end
+
+  desc 'Load dummy invitation codes'
+  task(load_dummy_invitation_codes: :environment) do  |t, args|
+    (1...20)  .to_a.each do |invitation_code|
+      InvitationCode.where(code: invitation_code.to_s).first_or_create
+    end
+  end
 end

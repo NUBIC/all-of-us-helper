@@ -1,0 +1,39 @@
+- content_for(:title) do
+  Invitation Codes
+- content_for(:all_of_us_helper_header) do
+  = render 'layouts/all_of_us_helper_header'
+- content_for(:all_of_us_helper_content_header) do
+  #all-of-us-helper-content-header
+    #invitation-codes-header
+      = form_tag invitation_codes_url, method: 'get', id: 'search-invitation-codes-form' do
+        %h1
+          Invitation Codes
+        .search-box
+          %label{for: 'search' }
+            Search
+          = text_field_tag :search, (params[:search].nil? ? '' : params[:search]), type: 'search'
+        .search-buttons
+          %button{ type: 'submit', id: 'search-invitation-codes-button', class: 'tiny button' }
+            Search
+          = link_to 'Clear', invitation_codes_url()
+
+- content_for(:all_of_us_helper_content) do
+  #all-of-us-helper-content
+    #invitation-codes
+      = render 'shared/flash'
+      #invitation-codes-list
+        = will_paginate @invitation_codes, renderer: FoundationPagination::Rails
+        %table.hack_stack.hover
+          %thead
+            %tr
+              %th.code
+                = sortable 'code'
+              %th.show-invitation-code-link
+          %tbody
+            - @invitation_codes.each do |invitation_code|
+              = content_tag_for(:tr, invitation_code) do
+                %td.code
+                  = invitation_code.code
+                %td.show-invitation-code-link
+                  = link_to "Show", invitation_code_url(invitation_code), class: 'show-invitation-code-link'
+        = will_paginate @patients, renderer: FoundationPagination::Rails

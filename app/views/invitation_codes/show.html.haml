@@ -1,31 +1,23 @@
 - content_for(:title) do
-  = "Patient: #{@patient.full_name}"
+  = "Invitation Code"
 - content_for(:all_of_us_helper_header) do
   = render 'layouts/all_of_us_helper_header'
 - content_for(:all_of_us_helper_content_header) do
   #all-of-us-helper-content-header
-    #patient-header
+    #invitation-code-header
       %h1
-        Patient
+        Invitation Code
 - content_for(:all_of_us_helper_content) do
   #all-of-us-helper-content
-    #patient-show
-      .record_id
+    #invitation-code-show
+      .code
         %strong
-          Record:
-        = @patient.record_id
-      .first_name
+          Code:
+        = @invitation_code.code
+      .assignment_status
         %strong
-          First Name:
-        = @patient.first_name
-      .last_name
-        %strong
-          Last Name:
-        = @patient.last_name
-      .email
-        %strong
-          Email:
-        = @patient.email
+          Assignment Status:
+        = @invitation_code.assignment_status
       .actions
         %hr
         = link_to 'Patients', patients_url(), { class: 'patients-link' }
