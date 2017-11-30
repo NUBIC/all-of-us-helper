@@ -5,9 +5,10 @@
       .title-bar-right
         %button.menu-icon{"data-open" => "offCanvasRight", :type => "button"}
     #offCanvasRight.off-canvas.position-right{"data-off-canvas" => ""}
-      %button.close-button{"aria-label" => "Close menu", "data-close" => "", :type => "button"}
-        %span{"aria-hidden" => "true"} ×
       %ul.vertical.menu
+        %li
+          %button.close-button{"aria-label" => "Close menu", "data-close" => "", :type => "button"}
+            %span{"aria-hidden" => "true"} ×
         = render 'shared/navigation_links'
     .off-canvas-content{"data-off-canvas-content" => ""}
   #widemenu

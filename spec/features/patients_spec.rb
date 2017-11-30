@@ -95,6 +95,15 @@ RSpec.feature 'Patients', type: :feature do
     match_patient_row(@patient_1, 0)
     not_match_patient(@patient_2)
   end
+
+  scenario "Visiting a patient's show page", js: true, focus: false do
+    visit patient_path(@patient_1)
+    sleep(1)
+    expect(page).to have_css('#patient-show .record_id', text: @patient_1.record_id)
+    expect(page).to have_css('#patient-show .first_name', text: @patient_1.first_name)
+    expect(page).to have_css('#patient-show .last_name', text: @patient_1.last_name)
+    expect(page).to have_css('#patient-show .email', text: @patient_1.email)
+  end
 end
 
 def match_patient_row(patient, index)

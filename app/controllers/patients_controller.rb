@@ -13,7 +13,7 @@ class PatientsController < ApplicationController
   end
 
   def show
-    # authorize @repository
+    # authorize @patient
   end
 
   private
@@ -22,7 +22,7 @@ class PatientsController < ApplicationController
     end
 
     def load_patient
-      @repository = Repository.find(params[:id])
+      @patient = Patient.find(params[:id])
     end
 
     def sort_column

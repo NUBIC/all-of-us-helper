@@ -1,9 +1,7 @@
 #patients-header {
   @include grid-row();
   #search_patients_form {
-    @include grid-column(
-     $columns: 24
-    );
+    @include grid-column($columns: 24);
 
     @include breakpoint(large) {
       h1 {
@@ -31,9 +29,7 @@
 #patients {
   @include grid-row();
   #patients-list {
-		@include grid-column(
-		  $columns: 24
-		);
+		@include grid-column($columns: 24);
 
     th .current {
       padding-right: 2em;
@@ -50,13 +46,19 @@
     }
 
     table {
-      @include grid-column(
-       $columns: 24
-      );
+      @include grid-column($columns: 24);
     }
     .building-thumbnail {
       background-size: 300px 300px;
       background-repeat: no-repeat;
     }
+  }
+}
+
+#patient-show {
+  @include grid-column-row();
+
+  .record_id, .first_name, .last_name, .email, .actions {
+   margin-bottom: 1rem;
   }
 }

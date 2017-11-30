@@ -34,6 +34,7 @@
                 = sortable 'first_name'
               %th.email
                 = sortable 'email'
+              %th.show_patient_link
           %tbody
             - @patients.each do |patient|
               = content_tag_for(:tr, patient) do
@@ -45,4 +46,6 @@
                   = patient.first_name
                 %td.email
                   = patient.email
+                %td.show_patient_link
+                  = link_to "Show", patient_url(patient), class: 'show_patient_link'
         = will_paginate @patients, renderer: FoundationPagination::Rails

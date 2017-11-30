@@ -1,0 +1,31 @@
+- content_for(:title) do
+  = "Patient: #{@patient.full_name}"
+- content_for(:all_of_us_helper_header) do
+  = render 'layouts/all_of_us_helper_header'
+- content_for(:all_of_us_helper_content_header) do
+  #all-of-us-helper-content-header
+    #patient-header
+      %h1
+        Patient
+- content_for(:all_of_us_helper_content) do
+  #all-of-us-helper-content
+    #patient-show
+      .record_id
+        %strong
+          Record:
+        = @patient.record_id
+      .first_name
+        %strong
+          First Name:
+        = @patient.first_name
+      .last_name
+        %strong
+          Last Name:
+        = @patient.last_name
+      .email
+        %strong
+          Email:
+        = @patient.email
+      .actions
+        %hr
+        = link_to 'Patients', patients_url(), { class: 'patients_link' }

@@ -54,4 +54,8 @@ RSpec.describe Patient, type: :model do
     expect(Patient.search_across_fields(nil, { sort_column: 'email', sort_direction: 'asc' })).to eq([@patient_1, @patient_2])
     expect(Patient.search_across_fields(nil, { sort_column: 'email', sort_direction: 'desc' })).to eq([@patient_2, @patient_1])
   end
+
+  it "can present a patients's full name", focus: false do
+    expect(@patient_1.full_name).to eq('Little My')
+  end
 end
