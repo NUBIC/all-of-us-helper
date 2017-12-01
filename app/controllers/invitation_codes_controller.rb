@@ -6,10 +6,11 @@ class InvitationCodesController < ApplicationController
   def index
     # authorize InvitationCode
     params[:page]||= 1
+    params[:assignment_status]||= InvitationCode::ASSIGNMENT_STATUS_UNASSIGNED
     options = {}
     options[:sort_column] = sort_column
     options[:sort_direction] = sort_direction
-    @invitation_codes = InvitationCode.search_across_fields(params[:search], options).paginate(per_page: 10, page: params[:page])
+    @invitation_codes = InvitationCode.search_across_fields(params[:search], options).by_assignment_status(params[:assignment_status]).paginate(per_page: 10, page: params[:page])
   end
 
   def show
@@ -26,7 +27,7 @@ class InvitationCodesController < ApplicationController
     end
 
     def sort_column
-      ['code'].include?(params[:sort]) ? params[:sort] : 'code'
+      ['code', 'assignment_status'].include?(params[:sort]) ? params[:sort] : 'code'
     end
 
     def sort_direction

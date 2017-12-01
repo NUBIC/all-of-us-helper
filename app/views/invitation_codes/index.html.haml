@@ -8,6 +8,10 @@
       = form_tag invitation_codes_url, method: 'get', id: 'search-invitation-codes-form' do
         %h1
           Invitation Codes
+        .assignment_status
+          %label{for: 'assignment_status' }
+            Assignment Status
+          = select_tag :assignment_status, options_for_select(InvitationCode::ASSIGNMENT_STATUSES.map { |assignment_status| [assignment_status, assignment_status] }, (params[:assignment_status].blank? ? '' : params[:assignment_status])), { include_blank: 'all', class: 'status'}
         .search-box
           %label{for: 'search' }
             Search
@@ -28,12 +32,16 @@
             %tr
               %th.code
                 = sortable 'code'
+              %th.assignment_status
+                = sortable 'assignment_status'
               %th.show-invitation-code-link
           %tbody
             - @invitation_codes.each do |invitation_code|
               = content_tag_for(:tr, invitation_code) do
                 %td.code
                   = invitation_code.code
+                %td.assignment_status
+                  = invitation_code.assignment_status
                 %td.show-invitation-code-link
                   = link_to "Show", invitation_code_url(invitation_code), class: 'show-invitation-code-link'
         = will_paginate @patients, renderer: FoundationPagination::Rails

@@ -1,17 +1,21 @@
 #invitation-codes-header {
   @include grid-row();
-  #search-invitation-codes_form {
+  #search-invitation-codes-form {
     @include grid-column($columns: 24);
 
     @include breakpoint(large) {
       h1 {
-        @include grid-column($columns: 4);
+        @include grid-column($columns: 8);
       }
 
-      .searc-box {
+      .assignment_status {
         @include grid-column($columns: 6);
-        @include grid-column-offset(10);
       }
+
+      .search-box {
+        @include grid-column($columns: 6);
+      }
+
       .search-buttons{
         @include grid-column($columns: 4);
       }
@@ -49,6 +53,11 @@
       @include grid-column($columns: 24);
     }
   }
+}
+
+
+#invitation-code-header {
+  @include grid-column-row();
 }
 
 #invitation-code-show {

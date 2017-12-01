@@ -1,7 +1,7 @@
 class InvitationCode < ApplicationRecord
-  ASSIGNMENT_STATUS_UNIASSIGNED = 'unassigned'
-  ASSIGNMENT_STATUS_ASSIGNED = 'assigned'
-  ASSIGNMENT_STATUSES = [ASSIGNMENT_STATUS_ASSIGNED, ASSIGNMENT_STATUS_ASSIGNED]
+  ASSIGNMENT_STATUS_UNASSIGNED = 'Unassigned'
+  ASSIGNMENT_STATUS_ASSIGNED = 'Assigned'
+  ASSIGNMENT_STATUSES = [ASSIGNMENT_STATUS_UNASSIGNED, ASSIGNMENT_STATUS_ASSIGNED]
 
   after_initialize :set_defaults
 
@@ -30,7 +30,7 @@ class InvitationCode < ApplicationRecord
   private
     def set_defaults
       if self.new_record? && self.assignment_status.blank?
-        self.assignment_status = ASSIGNMENT_STATUS_UNIASSIGNED
+        self.assignment_status = ASSIGNMENT_STATUS_UNASSIGNED
       end
     end
 end
