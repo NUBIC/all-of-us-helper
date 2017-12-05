@@ -1,0 +1,9 @@
+.invitation_code_id
+  .field_label
+    %label{ for: 'invitation_code_id' }
+      Invitation Code:
+      %span{ class: 'required' }
+  .field
+    = f.select :invitation_code_id, options_for_select(@invitation_codes), { include_blank: 'Select an Invitation Code' }, id: 'invitation_code_id'
+    - if validation_errors?(invitation_code_assignment, :invitation_code_id)
+      %p.error= format_validation_errors(invitation_code_assignment, :invitation_code_id)

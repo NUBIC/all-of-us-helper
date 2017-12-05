@@ -2,9 +2,13 @@ require 'rails_helper'
 require 'active_support'
 
 RSpec.describe Patient, type: :model do
+  it { should have_many :invitation_code_assignments }
+
   before(:each) do
     @patient_1 = FactoryGirl.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
     @patient_2 = FactoryGirl.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
+    @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')
+    @invitation_code_2 = FactoryGirl.create(:invitation_code, code: '2B')
   end
 
   it 'can search across fields (by first_name)', focus: false do
@@ -57,5 +61,11 @@ RSpec.describe Patient, type: :model do
 
   it "can present a patients's full name", focus: false do
     expect(@patient_1.full_name).to eq('Little My')
+  end
+
+  it 'can emit its active invitation code', focus: false do
+    invitation_code_assignment_1 = InvitationCodeAssignment.create(invitation_code: @invitation_code_1, patient: @patient_1)
+    invitation_code_assignment_2 = InvitationCodeAssignment.create(invitation_code: @invitation_code_2, patient: @patient_1)
+    expect(@patient_1.invitation_code).to eq(@invitation_code_2.code)
   end
 end

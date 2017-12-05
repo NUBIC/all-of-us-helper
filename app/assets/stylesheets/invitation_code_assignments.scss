@@ -1,0 +1,12 @@
+#invitation_code_assignment {
+  @include grid-column-row();
+
+  @include breakpoint(large) {
+    .field_label {
+      @include grid-column($columns: 4);
+    }
+    .field {
+      @include grid-column($columns: 20);
+    }
+  }
+}

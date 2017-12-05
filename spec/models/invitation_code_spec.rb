@@ -2,6 +2,8 @@ require 'rails_helper'
 require 'active_support'
 
 RSpec.describe InvitationCode, type: :model do
+  it { should have_one :invitation_code_assignment }
+
   before(:each) do
     @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')
     @invitation_code_2 = FactoryGirl.create(:invitation_code, code: '2B')
@@ -24,7 +26,7 @@ RSpec.describe InvitationCode, type: :model do
     expect(InvitationCode.new.assignment_status).to eq(InvitationCode::ASSIGNMENT_STATUS_UNASSIGNED)
   end
 
-  it "leaves assignment status intact for a new record that provides a assignment status", focus: false do
+  it "leaves assignment status intact for a new record that provides an assignment status", focus: false do
     expect(InvitationCode.new(assignment_status: InvitationCode::ASSIGNMENT_STATUS_ASSIGNED).assignment_status).to eq(InvitationCode::ASSIGNMENT_STATUS_ASSIGNED)
   end
 

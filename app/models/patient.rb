@@ -1,4 +1,6 @@
 class Patient < ApplicationRecord
+  has_many :invitation_code_assignments
+
   scope :search_across_fields, ->(search_token, options={}) do
     if search_token
       search_token.downcase!
@@ -13,6 +15,12 @@ class Patient < ApplicationRecord
     p = p.nil? ? order(sort) : p.order(sort)
 
     p
+  end
+
+  def invitation_code
+     if invitation_code_assignments.is_active.any?
+       invitation_code_assignments.is_active.first.invitation_code.code
+     end
   end
 
   def full_name

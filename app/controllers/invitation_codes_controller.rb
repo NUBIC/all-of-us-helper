@@ -18,7 +18,7 @@ class InvitationCodesController < ApplicationController
   end
 
   private
-    def patient_params
+    def invitation_code_params
       params.require(:invitation_code).permit(:code)
     end
 

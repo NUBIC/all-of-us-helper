@@ -3,6 +3,8 @@ RSpec.feature 'Patients', type: :feature do
   before(:each) do
     @patient_1 = FactoryGirl.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
     @patient_2 = FactoryGirl.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
+    @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')
+    @invitation_code_2 = FactoryGirl.create(:invitation_code, code: '2B')
     @harold_user = FactoryGirl.create(:user, username: 'hbaines')
     login_as(@harold_user, scope: :user)
     visit root_path
@@ -103,6 +105,29 @@ RSpec.feature 'Patients', type: :feature do
     expect(page).to have_css('#patient-show .first_name', text: @patient_1.first_name)
     expect(page).to have_css('#patient-show .last_name', text: @patient_1.last_name)
     expect(page).to have_css('#patient-show .email', text: @patient_1.email)
+  end
+
+  scenario "Assigning a patient an invitation code", js: true, focus: false do
+    click_link('Patients')
+    sleep(1)
+    all("#patient_#{@patient_1.id} a.new-invitation-code-assignment-link", text: 'Assign Code')[0].click
+    select(@invitation_code_1.code, from: 'Invitation Code:')
+    click_button('Save')
+    sleep(1)
+    expect(all("#patient_#{@patient_1.id} .invitation_code")[0]).to have_content(@invitation_code_1.code)
+  end
+
+  scenario "Assigning a patient an invitation code with validation", js: true, focus: false do
+    click_link('Patients')
+    sleep(1)
+    all("#patient_#{@patient_1.id} a.new-invitation-code-assignment-link", text: 'Assign Code')[0].click
+    click_button('Save')
+    sleep(1)
+
+    expect(page).to have_css('.invitation_code_id .field_with_errors')
+    within(".invitation_code_id .error") do
+      expect(page).to have_content("can't be blank")
+    end
   end
 end
 

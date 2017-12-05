@@ -1,0 +1,25 @@
+- content_for(:title) do
+  = "New Invitation Code Assignment for Patient: #{@patient.full_name}"
+- content_for(:all_of_us_helper_header) do
+  = render 'layouts/all_of_us_helper_header'
+- content_for(:all_of_us_helper_content_header) do
+  #all-of-us-helper-content-header
+    #new-invitation-code-assignment-header
+      %h1
+        = "Invitation Code Assignment: #{@patient.full_name}"
+- content_for(:all_of_us_helper_content) do
+  #all-of-us-helper-content
+    #invitation_code_assignment
+      = form_with(model: [@patient, @invitation_code_assignment], local: true, id: 'invitation-code-assignment-form') do |f|
+        = render 'invitation_code_assignment', patient: @patient, invitation_code_assignment: @invitation_code_assignment,  f: f
+        .navigation{class: 'small-offset-12 small-12 large-offset-20 large-4 columns' }
+          %p.help-text
+            %span{ class: 'required' }
+            Indicates required field
+          = f.submit 'Save', class: 'button'
+          = link_to 'Cancel', patients_url(@patient), class: 'cancel-link button warning'
+      .actions
+        %hr
+        = link_to 'Patients', patients_url(), { class: 'patients-link' }
+        |
+        = link_to 'Invitation Codes', invitation_codes_url(), { class: 'invitation-codes-link' }

@@ -1,4 +1,6 @@
 class InvitationCode < ApplicationRecord
+  has_one :invitation_code_assignment
+
   ASSIGNMENT_STATUS_UNASSIGNED = 'Unassigned'
   ASSIGNMENT_STATUS_ASSIGNED = 'Assigned'
   ASSIGNMENT_STATUSES = [ASSIGNMENT_STATUS_UNASSIGNED, ASSIGNMENT_STATUS_ASSIGNED]

@@ -1,3 +1,7 @@
+.required:after {
+  content:" *";
+}
+
 #flash {
   .callout {
     padding: .75rem .75rem;
@@ -12,6 +16,12 @@
   }
 
 }
+
+.field_with_errors input, .field_with_errors select {
+  border-color: red;
+  border-style: solid;
+}
+
 
 #all-of-us-helper-header {
   height: 5rem;
