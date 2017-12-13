@@ -1,3 +1,6 @@
+#new-invitation-code-assignment-header {
+  @include grid-column-row();
+}
 #invitation_code_assignment {
   @include grid-column-row();
 

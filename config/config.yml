@@ -1,0 +1,39 @@
+---
+application: all-of-us-helper
+repository: https://github.com/NUBIC/all-of-us-helper.git
+deployer: all-of-us-helper-deployer
+development:
+  server_name: 0.0.0.0:3000
+test:
+  server_name: 0.0.0.0:3000
+staging:
+  app_host: vtfsmnubicapps01.fsm.northwestern.edu
+  server_name: all-of-us-helper-staging.cancer.northwestern.edu
+  server_alias: all-of-us-helper-staging.cancer.northwestern.edu
+  cert_file: /etc/pki/tls/certs/all-of-us-helper-staging_cancer_northwestern_edu_cert.cer
+  chain_file: /etc/pki/tls/certs/all-of-us-helper-staging_cancer_northwestern_edu_interm.cer
+  key_file: /etc/pki/tls/private/all-of-us-helper-staging_cancer_northwestern_edu.key
+production:
+  app_host: vfsmnubicapps01.fsm.northwestern.edu
+  server_name: all-of-us-helper.cancer.northwestern.edu
+  server_alias: all-of-us-helper.cancer.northwestern.edu
+  cert_file: /etc/pki/tls/certs/all-of-us-helper_cancer_northwestern_edu_cert.cer
+  chain_file: /etc/pki/tls/certs/all-of-us-helper_cancer_northwestern_edu_interm.cer
+  key_file: /etc/pki/tls/private/all-of-us-helper_cancer_northwestern_edu.key
+support:
+  recepients:
+    - all-of-us-helper@northwestern.edu
+  sender_address: all-of-us-helper@northwestern.edu
+redcap:
+  development:
+    host_url: https://redcap.nubic.northwestern.edu/redcap/api/
+    verify_ssl: false
+  test:
+    host_url: http://redcap.nubic.northwestern.edu/redcap/api/
+    verify_ssl: false
+  staging:
+    host_url: https://redcap.nubic.northwestern.edu/redcap/api/
+  production:
+    host_url: https://redcap.nubic.northwestern.edu/redcap/api/
+  dev:
+    host_url: https://redcap.nubic.northwestern.edu/redcap/api/

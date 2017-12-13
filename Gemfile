@@ -39,6 +39,7 @@ gem 'foundation-rails', '6.4.1.2'
 gem 'haml'
 gem 'jquery-rails'
 gem 'record_tag_helper'
+gem 'rest-client'
 # gem 'webpacker'
 gem 'will_paginate'
 gem 'will_paginate-foundation'
@@ -73,4 +74,5 @@ group :test do
   gem 'selenium-webdriver'
   gem 'factory_girl_rails'
   gem 'shoulda'
+  gem 'webmock'
 end

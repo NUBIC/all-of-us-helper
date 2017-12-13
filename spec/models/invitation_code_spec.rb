@@ -39,4 +39,19 @@ RSpec.describe InvitationCode, type: :model do
     expect(InvitationCode.by_assignment_status(InvitationCode::ASSIGNMENT_STATUS_UNASSIGNED)).to match_array([@invitation_code_1])
     expect(InvitationCode.by_assignment_status(InvitationCode::ASSIGNMENT_STATUS_ASSIGNED)).to match_array([@invitation_code_2])
   end
+
+  it 'can get an unassigned invitation code', focus: false do
+    @invitation_code_3 = FactoryGirl.create(:invitation_code, code: '3C', assignment_status: InvitationCode::ASSIGNMENT_STATUS_ASSIGNED)
+    invitation_code = InvitationCode.get_unassigned_invitation_code
+    expect([@invitation_code_1, @invitation_code_2]).to include(invitation_code)
+  end
+
+  it 'returns nil if no unassigned invitation code are available', focus: false do
+    [@invitation_code_1, @invitation_code_2].each do |invitation_code|
+      invitation_code.assignment_status = InvitationCode::ASSIGNMENT_STATUS_ASSIGNED
+      invitation_code.save!
+    end
+    invitation_code = InvitationCode.get_unassigned_invitation_code
+    expect(invitation_code).to be_nil
+  end
 end

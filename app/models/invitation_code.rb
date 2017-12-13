@@ -29,6 +29,16 @@ class InvitationCode < ApplicationRecord
     end
   end
 
+  def self.get_unassigned_invitation_code
+    invitation_code = nil
+    unassigned_invitation_codes = InvitationCode.by_assignment_status(InvitationCode::ASSIGNMENT_STATUS_UNASSIGNED)
+
+    if unassigned_invitation_codes.any?
+      invitation_code = unassigned_invitation_codes[Random.rand(0..(unassigned_invitation_codes.size-1))]
+    end
+    invitation_code
+  end
+
   private
     def set_defaults
       if self.new_record? && self.assignment_status.blank?
