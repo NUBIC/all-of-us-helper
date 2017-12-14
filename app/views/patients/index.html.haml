@@ -36,7 +36,6 @@
               %th.invitation_code
                 Invitation Code
               %th.show-patient-link
-              %th.new-invitation-code-assignment-link
           %tbody
             - @patients.each do |patient|
               = content_tag_for(:tr, patient) do
@@ -52,6 +51,4 @@
                   = patient.invitation_code
                 %td.show_patient_link
                   = link_to "Show", patient_url(patient), class: 'show-patient-link'
-                %td.new-invitation-code-assignment-link
-                  = link_to "Assign Code", new_patient_invitation_code_assignment_url(patient), class: 'new-invitation-code-assignment-link'
         = will_paginate @patients, renderer: FoundationPagination::Rails

@@ -107,28 +107,47 @@ RSpec.feature 'Patients', type: :feature do
     expect(page).to have_css('#patient-show .first_name', text: @patient_1.first_name)
     expect(page).to have_css('#patient-show .last_name', text: @patient_1.last_name)
     expect(page).to have_css('#patient-show .email', text: @patient_1.email)
+    expect(page).to have_css('#patient-show .invitation_code', text: nil)
   end
 
-  scenario "Assigning a patient an invitation code", js: true, focus: false do
-    click_link('Patients')
+  scenario "Visiting a patient's show page and assigning an invitation code", js: true, focus: false do
+    visit patient_path(@patient_1)
     sleep(1)
-    all("#patient_#{@patient_1.id} a.new-invitation-code-assignment-link", text: 'Assign Code')[0].click
-    select(@invitation_code_1.code, from: 'Invitation Code:')
-    click_button('Save')
-    sleep(1)
-    expect(all("#patient_#{@patient_1.id} .invitation_code")[0]).to have_content(@invitation_code_1.code)
-  end
+    expect(page).to have_css('#patient-show .record_id', text: @patient_1.record_id)
+    expect(page).to have_css('#patient-show .first_name', text: @patient_1.first_name)
+    expect(page).to have_css('#patient-show .last_name', text: @patient_1.last_name)
+    expect(page).to have_css('#patient-show .email', text: @patient_1.email)
+    expect(@patient_1.invitation_code).to be_nil
+    expect(page).to have_css('#patient-show .invitation_code', text: nil)
+    @patient_1.invitation_code_assignments.is_inactive.order('created_at DESC').each do |invitation_code_assignment|
+      expect(find("#invitation_code_assignment_#{invitation_code_assignment.id} .date")).to have_content(invitation_code_assignment.created_at.to_s(:date_time12))
+      expect(find("#invitation_code_assignment_#{invitation_code_assignment.id} .code")).to have_content(invitation_code_assignment.invitation_code.code)
+    end
 
-  scenario "Assigning a patient an invitation code with validation", js: true, focus: false do
-    click_link('Patients')
-    sleep(1)
-    all("#patient_#{@patient_1.id} a.new-invitation-code-assignment-link", text: 'Assign Code')[0].click
-    click_button('Save')
+    allow_any_instance_of(RedcapApi).to receive(:assign_invitation_code).and_return({ resposne: { "count"=> 1}, error: nil })
+    accept_confirm do
+      click_button('Assign New Invitation Code')
+    end
     sleep(1)
 
-    expect(page).to have_css('.invitation_code_id .field_with_errors')
-    within(".invitation_code_id .error") do
-      expect(page).to have_content("can't be blank")
+    expect(page).to have_css('#patient-show .record_id', text: @patient_1.record_id)
+    expect(page).to have_css('#patient-show .first_name', text: @patient_1.first_name)
+    expect(page).to have_css('#patient-show .last_name', text: @patient_1.last_name)
+    expect(page).to have_css('#patient-show .email', text: @patient_1.email)
+    expect(@patient_1.invitation_code).to_not be_nil
+    expect(page).to have_css('#patient-show .invitation_code', text: @patient_1.invitation_code)
+    @patient_1.invitation_code_assignments.is_inactive.order('created_at DESC').each do |invitation_code_assignment|
+      expect(find("#invitation_code_assignment_#{invitation_code_assignment.id} .date")).to have_content(invitation_code_assignment.created_at.to_s(:date_time12))
+      expect(find("#invitation_code_assignment_#{invitation_code_assignment.id} .code")).to have_content(invitation_code_assignment.invitation_code.code)
+    end
+
+    accept_confirm do
+      click_button('Assign New Invitation Code')
+    end
+    sleep(1)
+    @patient_1.invitation_code_assignments.is_inactive.order('created_at DESC').each do |invitation_code_assignment|
+      expect(find("#invitation_code_assignment_#{invitation_code_assignment.id} .date")).to have_content(invitation_code_assignment.created_at.to_s(:date_time12))
+      expect(find("#invitation_code_assignment_#{invitation_code_assignment.id} .code")).to have_content(invitation_code_assignment.invitation_code.code)
     end
   end
 

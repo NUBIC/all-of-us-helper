@@ -95,6 +95,7 @@ class RedcapApi
         )
         response = JSON.parse(response) if parse_response
       rescue Exception => e
+        error = e
         Rails.logger.info(e.class)
         Rails.logger.info(e.message)
         Rails.logger.info(e.backtrace.join("\n"))

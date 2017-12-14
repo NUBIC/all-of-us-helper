@@ -116,17 +116,4 @@ RSpec.describe Patient, type: :model do
     expect(@patient_1.invitation_code_assignments).to_not be_empty
     expect([@invitation_code_2]).to include(@patient_1.invitation_code_assignments.first.invitation_code)
   end
-
-  it 'adds an error to the patient of the API call to REDCap fails', focus: false do
-    FactoryGirl.create(:api_token, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP, token: 'foo')
-    api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
-    redcap_api = RedcapApi.new(api_token.token)
-    response = { response: nil, error: 'bad joo joo' }
-    allow(redcap_api).to receive(:assign_invitation_code).and_return(response)
-
-    expect(@patient_1.invitation_code_assignments).to be_empty
-    @patient_1.assign_invitation_code(redcap_api, @invitation_code_2)
-    expect(@patient_1.invitation_code_assignments).to be_empty
-    expect(@patient_1.errors.full_messages).to match_array([Patient::ERROR_MESSAGE_FAILED_TO_ASSIGN_INVITATION_CODE])
-  end
 end

@@ -58,7 +58,10 @@
 #patient-show {
   @include grid-column-row();
 
-  .record_id, .first_name, .last_name, .email, .actions {
+  .record_id, .first_name, .last_name, .email, .invitation_code, .actions {
    margin-bottom: 1rem;
+  }
+  #invitation-code-assignment-form {
+    display: inline;
   }
 }

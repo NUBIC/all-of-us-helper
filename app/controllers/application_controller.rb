@@ -19,6 +19,11 @@ class ApplicationController < ActionController::Base
     stored_location_for(resource) || root_path
   end
 
+  def initalize_redcap_api
+    api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
+    redcap_api = RedcapApi.new(api_token.token)
+  end
+
   protected
     def configure_permitted_parameters
       devise_parameter_sanitizer.permit(:sign_in) do |user_params|

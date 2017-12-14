@@ -37,8 +37,7 @@ END_OF_STRING
     redcap_api = RedcapApi.new(@api_token.token)
 
     WebMock.stub_request(:post, Rails.configuration.custom.app_config['redcap']['test']['host_url']).
-           with(body: {"content"=>"record", "fields"=>["email", "first_name", "last_name", "record_id"], "filterLogic"=>"([invitationcode]=\"\") AND ([code_assignment_complete]=\"0\")", "format"=>"json", "forms"=>["code_assignment"], "returnFormat"=>"json", "token"=> @api_token.token, "type"=>"flat"},
-            headers: {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip, deflate', 'Content-Length'=>'285', 'Content-Type'=>'application/x-www-form-urlencoded', 'Host'=>'redcap.nubic.northwestern.edu', 'User-Agent'=>'rest-client/2.0.0 (darwin15.6.0 x86_64) ruby/2.3.1p112'}).
+           with(body: {"content"=>"record", "fields"=>["email", "first_name", "last_name", "record_id"], "filterLogic"=>"([invitationcode]=\"\") AND ([code_assignment_complete]=\"0\")", "format"=>"json", "forms"=>["code_assignment"], "returnFormat"=>"json", "token"=> @api_token.token, "type"=>"flat"}).
        to_return(status: 200, body: @pending_invitation_code_assignments, headers: {})
 
 
@@ -49,8 +48,7 @@ END_OF_STRING
   it 'returns a patient', focus: false do
     redcap_api = RedcapApi.new(@api_token.token)
     WebMock.stub_request(:post, Rails.configuration.custom.app_config['redcap']['test']['host_url']).
-      with(body: {"content"=>"record", "format"=>"json", "forms"=>["how_to_join"], "records"=>["#{@record_id}"], "returnFormat"=>"json", "token"=>@api_token.token, "type"=>"flat"},
-           headers: {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip, deflate', 'Content-Length'=>'106', 'Content-Type'=>'application/x-www-form-urlencoded', 'Host'=>'redcap.nubic.northwestern.edu', 'User-Agent'=>'rest-client/2.0.0 (darwin15.6.0 x86_64) ruby/2.3.1p112'}).
+      with(body: {"content"=>"record", "format"=>"json", "forms"=>["how_to_join"], "records"=>["#{@record_id}"], "returnFormat"=>"json", "token"=>@api_token.token, "type"=>"flat"}).
       to_return(status: 200, body: @patient, headers: {})
 
     patient = JSON.parse(@patient)
@@ -61,8 +59,7 @@ END_OF_STRING
   it 'raises an error if it returns duplicate patients', focus: false do
     redcap_api = RedcapApi.new(@api_token.token)
     WebMock.stub_request(:post, Rails.configuration.custom.app_config['redcap']['test']['host_url']).
-      with(body: {"content"=>"record", "format"=>"json", "forms"=>["how_to_join"], "records"=>["#{@record_id}"], "returnFormat"=>"json", "token"=>@api_token.token, "type"=>"flat"},
-           headers: {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip, deflate', 'Content-Length'=>'106', 'Content-Type'=>'application/x-www-form-urlencoded', 'Host'=>'redcap.nubic.northwestern.edu', 'User-Agent'=>'rest-client/2.0.0 (darwin15.6.0 x86_64) ruby/2.3.1p112'}).
+      with(body: {"content"=>"record", "format"=>"json", "forms"=>["how_to_join"], "records"=>["#{@record_id}"], "returnFormat"=>"json", "token"=>@api_token.token, "type"=>"flat"}).
       to_return(status: 200, body: @duplicate_patients, headers: {})
 
     patient = JSON.parse(@duplicate_patients)
@@ -74,8 +71,7 @@ END_OF_STRING
     redcap_api = RedcapApi.new(@api_token.token)
 
     WebMock.stub_request(:post, Rails.configuration.custom.app_config['redcap']['test']['host_url']).
-      with(body: {"content"=>"record", "data"=>"record_id,invitationcode,code_assignment_complete\n\"#{@record_id}\",\"#{@invitation_code_1.code}\",\"2\"", "format"=>"csv", "overwriteBehavior"=>"overwrite", "returnContent"=>"count", "returnFormat"=>"json", "token"=>"foo", "type"=>"flat"},
-           headers: {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip, deflate', 'Content-Length'=>'201', 'Content-Type'=>'application/x-www-form-urlencoded', 'Host'=>'redcap.nubic.northwestern.edu', 'User-Agent'=>'rest-client/2.0.0 (darwin15.6.0 x86_64) ruby/2.3.1p112'}).
+      with(body: {"content"=>"record", "data"=>"record_id,invitationcode,code_assignment_complete\n\"#{@record_id}\",\"#{@invitation_code_1.code}\",\"2\"", "format"=>"csv", "overwriteBehavior"=>"overwrite", "returnContent"=>"count", "returnFormat"=>"json", "token"=>"foo", "type"=>"flat"}).
       to_return(status: 200, body: @assign_invitation_code_response, headers: {})
 
     assign_invitation_code_response = JSON.parse(@assign_invitation_code_response)

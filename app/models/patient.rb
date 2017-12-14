@@ -41,6 +41,7 @@ class Patient < ApplicationRecord
   end
 
   def assign_invitation_code(redcap_api, invitation_code=nil)
+    invitation_code_assignment = nil
     if invitation_code.blank?
       invitation_code = InvitationCode.get_unassigned_invitation_code
     end
@@ -49,14 +50,15 @@ class Patient < ApplicationRecord
       Patient.transaction do
         redcap_patient_invitation_code = redcap_api.assign_invitation_code(record_id, invitation_code.code)
         raise "Error assigning invitation code #{invitation_code.code} to record_id #{record_id}." if redcap_patient_invitation_code[:error].present?
-        invitation_code_assignments.build(invitation_code: invitation_code)
+        invitation_code_assignment = invitation_code_assignments.build(invitation_code: invitation_code)
         save!
       end
     rescue Exception => e
+      invitation_code_assignment = nil
       Rails.logger.info(e.class)
       Rails.logger.info(e.message)
       Rails.logger.info(e.backtrace.join("\n"))
-      self.errors.add(:base, Patient::ERROR_MESSAGE_FAILED_TO_ASSIGN_INVITATION_CODE)
     end
+    invitation_code_assignment
   end
 end

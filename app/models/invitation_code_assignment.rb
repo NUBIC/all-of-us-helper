@@ -11,6 +11,10 @@ class InvitationCodeAssignment < ApplicationRecord
     where(active: true)
   end
 
+  scope :is_inactive, -> do
+    where(active: false)
+  end
+
   private
     def set_defaults
       if self.new_record? && self.active.nil?

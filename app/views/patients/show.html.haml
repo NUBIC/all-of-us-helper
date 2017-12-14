@@ -10,9 +10,10 @@
 - content_for(:all_of_us_helper_content) do
   #all-of-us-helper-content
     #patient-show
+      = render 'shared/flash'
       .record_id
         %strong
-          Record:
+          REDCap Record ID:
         = @patient.record_id
       .first_name
         %strong
@@ -26,8 +27,38 @@
         %strong
           Email:
         = @patient.email
+      .invitation_code
+        %strong
+          Current Invitation Code:
+        = @patient.invitation_code
+      .historical_invitation_codes
+        %hr
+        %strong
+          Historical Invitation Codes
+        - if @patient.invitation_code_assignments.is_inactive.any?
+          %table.hack_stack.hover
+            %thead
+              %tr
+                %th.date
+                  Date
+                %th.code
+                  Invitation Code
+            %tbody
+              - @patient.invitation_code_assignments.is_inactive.order('created_at DESC').each do |invitation_code_assignment|
+                = content_tag_for(:tr, invitation_code_assignment) do
+                  %td.date
+                    = invitation_code_assignment.created_at.to_s(:date_time12)
+                  %td.code
+                    = invitation_code_assignment.invitation_code.code
+        - else
+          %br
+          %em
+            None
       .actions
         %hr
+        = form_with(model: [@patient, @invitation_code_assignment], local: true, id: 'invitation-code-assignment-form') do |f|
+          = f.submit 'Assign New Invitation Code', class: 'button', data: { confirm: 'Are you sure you want to assign a new invitation code?' }
+        |
         = link_to 'Patients', patients_url(), { class: 'patients-link' }
         |
         = link_to 'Invitation Codes', invitation_codes_url(), { class: 'invitation-codes-link' }

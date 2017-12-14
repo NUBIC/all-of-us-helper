@@ -14,12 +14,11 @@ class PatientsController < ApplicationController
   end
 
   def show
+    @invitation_code_assignment = @patient.invitation_code_assignments.build
   end
 
   def record_id
-    api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
-    redcap_api = RedcapApi.new(api_token.token)
-
+    redcap_api = initalize_redcap_api
     @patient = Patient.where(record_id: params[:record_id]).first
     if @patient.blank?
       redcap_patient_response = redcap_api.patient(params[:record_id])

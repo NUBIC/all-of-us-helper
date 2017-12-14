@@ -29,7 +29,7 @@ redcap:
     host_url: https://redcap.nubic.northwestern.edu/redcap/api/
     verify_ssl: false
   test:
-    host_url: http://redcap.nubic.northwestern.edu/redcap/api/
+    host_url: http://redcap.local/redcap/api/
     verify_ssl: false
   staging:
     host_url: https://redcap.nubic.northwestern.edu/redcap/api/
