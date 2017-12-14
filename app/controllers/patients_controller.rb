@@ -1,10 +1,11 @@
+require 'redcap_api'
 class PatientsController < ApplicationController
+  PATIENT_CONTROLLER_SHOW_REDCAP_ERROR = 'Failed to communicate with REDCap.'
   before_action :authenticate_user!
   before_action :load_patient, only: [:show]
   helper_method :sort_column, :sort_direction
 
   def index
-    # authorize Patient
     params[:page]||= 1
     options = {}
     options[:sort_column] = sort_column
@@ -13,7 +14,24 @@ class PatientsController < ApplicationController
   end
 
   def show
-    # authorize @patient
+  end
+
+  def record_id
+    api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
+    redcap_api = RedcapApi.new(api_token.token)
+
+    @patient = Patient.where(record_id: params[:record_id]).first
+    if @patient.blank?
+      redcap_patient_response = redcap_api.patient(params[:record_id])
+      if redcap_patient_response[:error].present?
+        flash[:alert] = PATIENT_CONTROLLER_SHOW_REDCAP_ERROR
+        redirect_to root_url and return
+      end
+
+      @patient = Patient.create_or_update!(redcap_patient_response[:response].slice('record_id', 'first_name', 'last_name', 'email'))
+    end
+
+    redirect_to patient_url(@patient)
   end
 
   private

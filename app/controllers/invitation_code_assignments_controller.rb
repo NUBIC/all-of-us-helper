@@ -8,7 +8,6 @@ class InvitationCodeAssignmentsController < ApplicationController
   end
 
   def create
-    # authorize Repository
     @invitation_code_assignment = @patient.invitation_code_assignments.new(invitation_code_assignment_params)
 
     if @invitation_code_assignment.save
