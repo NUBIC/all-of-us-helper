@@ -80,6 +80,10 @@
     a {
       color: $all-of-us-dark-gray !important;
     }
+
+    li.active a {
+      color: white !important;
+    }
   }
 
   .menu-icon::after {
