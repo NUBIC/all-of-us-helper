@@ -41,6 +41,7 @@ gem 'jquery-rails'
 gem 'record_tag_helper'
 gem 'rest-client'
 # gem 'webpacker'
+gem 'whenever', :require => false
 gem 'will_paginate'
 gem 'will_paginate-foundation'
 
