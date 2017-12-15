@@ -1,0 +1,22 @@
+- content_for(:title) do
+  Settings
+- content_for(:all_of_us_helper_header) do
+  = render 'layouts/all_of_us_helper_header'
+- content_for(:all_of_us_helper_content_header) do
+  #all-of-us-helper-content-header
+    #setting-header
+      %h1
+        Settings
+- content_for(:all_of_us_helper_content) do
+  #all-of-us-helper-content
+    #setting
+      = render 'shared/flash'
+      = form_with(model: @setting, local: true, id: 'settting-form') do |f|
+        = render 'setting', setting: @settigng,  f: f
+        .navigation{class: 'small-offset-12 small-12 large-offset-20 large-4 columns' }
+          = f.submit 'Save', class: 'button'
+      .actions
+        %hr
+        = link_to 'Patients', patients_url(), { class: 'patients-link' }
+        |
+        = link_to 'Invitation Codes', invitation_codes_url(), { class: 'invitation-codes-link' }

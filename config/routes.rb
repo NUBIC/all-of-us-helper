@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   end
 
   resources :users, only: :show
+  resources :settings, only: [:edit, :update]
 
   root 'home#index'
 end

@@ -4,11 +4,13 @@
   = link_to 'Patients', patients_url
 %li.invitation_codes.menu-text{ class: active?('active', controller: '/invitation_codes', action: 'index') }
   = link_to 'Invitation Codes', invitation_codes_url
+%li.settings.menu-text{ class: active?('active', controller: '/settings', action: 'edit', id: Setting.first ) }
+  = link_to 'Settings', edit_setting_url(Setting.first)
 - if user_signed_in?
   %li.log_out.menu-text
     = link_to "Log out", destroy_user_session_path, method: :delete
   %li.profile.menu-text{ class: active?('active', controller: '/users', action: 'show', id: current_user.id) }
-    = link_to "Profile (#{current_user.username})", user_url(current_user)
+    = link_to "Profile", user_url(current_user)
 - else
   %li.login.menu-text{ class: active?('active', controller: 'devise/sessions', action: 'new') }
     = link_to 'Login', new_user_session_url

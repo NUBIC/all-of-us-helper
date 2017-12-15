@@ -20,4 +20,11 @@ namespace :setup do
       InvitationCode.where(code: invitation_code.to_s).first_or_create
     end
   end
+
+  desc "Load settings"
+  task(settings: :environment) do  |t, args|
+    if Setting.count == 0
+      Setting.create!(auto_assign_invitation_codes: true)
+    end
+  end
 end

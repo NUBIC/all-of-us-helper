@@ -1,0 +1,16 @@
+#setting-header {
+  @include grid-column-row();
+}
+
+#setting {
+  @include grid-column-row();
+
+  @include breakpoint(large) {
+    .field_label {
+      @include grid-column($columns: 4);
+    }
+    .field {
+      @include grid-column($columns: 20);
+    }
+  }
+}

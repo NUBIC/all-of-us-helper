@@ -1,6 +1,7 @@
 require 'rails_helper'
 RSpec.feature 'Patients', type: :feature do
   before(:each) do
+    Setting.create!(auto_assign_invitation_codes: true)
     @patient_1 = FactoryGirl.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
     @patient_2 = FactoryGirl.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
     @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')

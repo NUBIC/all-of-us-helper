@@ -53,27 +53,41 @@
   };
 
   .all-of-us-helper-main-navigation {
-    @include grid-column-offset(2);
-    @include grid-column($columns: 14);
+    @include grid-column($columns: 18);
     @include show-for(large);
 
     .home {
-      @include grid-column($columns: 6);
+      @include grid-column($columns: 4);
       text-align: center;
     }
 
     .patients {
-      @include grid-column($columns: 6);
+      @include grid-column($columns: 4);
       text-align: center;
     }
 
+    .settings {
+      @include grid-column($columns: 4);
+      text-align: center;
+    }
+
+    .invitation-codes {
+      @include grid-column($columns: 4);
+       text-align: center;
+    }
+
     .login {
-      @include grid-column($columns: 6);
+      @include grid-column($columns: 4);
        text-align: center;
     }
 
     .logout {
-      @include grid-column($columns: 6);
+      @include grid-column($columns: 4);
+      text-align: center;
+    }
+
+    .profile {
+      @include grid-column($columns: 4);
       text-align: center;
     }
 

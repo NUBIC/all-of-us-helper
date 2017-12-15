@@ -1,6 +1,7 @@
 require 'rails_helper'
 RSpec.feature 'Invitation Codes', type: :feature do
   before(:each) do
+    Setting.create!(auto_assign_invitation_codes: true)
     @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')
     @invitation_code_2 = FactoryGirl.create(:invitation_code, code: '2B')
     @harold_user = FactoryGirl.create(:user, username: 'hbaines')

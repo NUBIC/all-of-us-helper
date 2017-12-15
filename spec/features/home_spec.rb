@@ -1,6 +1,7 @@
 require 'rails_helper'
 RSpec.feature 'Home', type: :feature do
   before(:each) do
+    Setting.create!(auto_assign_invitation_codes: true)
     visit root_path
     sleep(1)
   end

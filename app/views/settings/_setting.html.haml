@@ -1,0 +1,8 @@
+.auto_assign_invitation_codes
+  .field_label
+    %label{ for: 'setting_auto_assign_invitation_codes' }
+      Auto-assign Invitation Codes?
+  .field
+    = f.check_box :auto_assign_invitation_codes, id: 'setting_auto_assign_invitation_codes'
+    %span{ class: 'help-text' }
+      (Checking this field enables the process to auto-assign Patients in REDCap an invitation code)
