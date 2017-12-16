@@ -1,5 +1,8 @@
 class ApplicationController < ActionController::Base
+  UNAUTHORIZED_MESSAGE = "You are not authorized to perform this action."
   protect_from_forgery with: :exception
+  include Pundit
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   rescue_from DeviseLdapAuthenticatable::LdapException do |exception|
     render :text => exception, :status => 500
@@ -33,5 +36,15 @@ class ApplicationController < ActionController::Base
       devise_parameter_sanitizer.permit(:account_update) do |user_params|
         user_params.permit(:last_name, :first_name)
       end
+    end
+
+  private
+    def after_sign_out_path_for(resource_or_scope)
+      root_path
+    end
+
+    def user_not_authorized
+      flash[:alert] = UNAUTHORIZED_MESSAGE
+      redirect_to(request.referrer || root_path)
     end
 end

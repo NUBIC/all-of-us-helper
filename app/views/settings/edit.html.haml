@@ -4,15 +4,15 @@
   = render 'layouts/all_of_us_helper_header'
 - content_for(:all_of_us_helper_content_header) do
   #all-of-us-helper-content-header
-    #setting-header
+    #settings-header
       %h1
         Settings
 - content_for(:all_of_us_helper_content) do
   #all-of-us-helper-content
-    #setting
+    #settings
       = render 'shared/flash'
-      = form_with(model: @setting, local: true, id: 'settting-form') do |f|
-        = render 'setting', setting: @settigng,  f: f
+      = form_with(model: @settings, url: settings_url, local: true, id: 'settting-form') do |f|
+        = render 'settings',  f: f
         .navigation{class: 'small-offset-12 small-12 large-offset-20 large-4 columns' }
           = f.submit 'Save', class: 'button'
       .actions

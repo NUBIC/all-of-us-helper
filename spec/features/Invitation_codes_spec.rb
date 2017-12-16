@@ -5,6 +5,9 @@ RSpec.feature 'Invitation Codes', type: :feature do
     @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')
     @invitation_code_2 = FactoryGirl.create(:invitation_code, code: '2B')
     @harold_user = FactoryGirl.create(:user, username: 'hbaines')
+    Role.setup
+    @harold_user.roles << Role.where(name: Role::ROLE_ALL_OF_US_HELPER_USER).first
+    @harold_user.save!
     login_as(@harold_user, scope: :user)
     visit root_path
   end

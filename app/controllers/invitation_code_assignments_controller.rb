@@ -3,6 +3,7 @@ class InvitationCodeAssignmentsController < ApplicationController
   before_action :load_patient, only: [:create]
 
   def create
+    authorize InvitationCodeAssignment
     redcap_api = initalize_redcap_api
     if @patient.assign_invitation_code(redcap_api)
       flash[:success] = 'You have successfully assigned an invitation code.'

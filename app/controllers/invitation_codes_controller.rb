@@ -4,6 +4,7 @@ class InvitationCodesController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   def index
+    authorize InvitationCode
     params[:page]||= 1
     params[:assignment_status]||= InvitationCode::ASSIGNMENT_STATUS_UNASSIGNED
     options = {}
@@ -13,6 +14,7 @@ class InvitationCodesController < ApplicationController
   end
 
   def show
+    authorize @invitation_code
   end
 
   private

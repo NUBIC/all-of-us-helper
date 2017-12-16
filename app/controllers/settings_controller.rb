@@ -3,12 +3,14 @@ class SettingsController < ApplicationController
   before_action :load_setting, only: [:edit, :update]
 
   def edit
+    authorize @settings
   end
 
   def update
-    if @setting.update_attributes(setting_params)
+    authorize @settings
+    if @settings.update_attributes(settings_params)
       flash[:success] = 'Settings were successfully updated.'
-      redirect_to edit_setting_url(@setting)
+      redirect_to edit_settings_url
     else
       flash[:alert] = 'Failed to update settings.'
       render :edit
@@ -16,11 +18,11 @@ class SettingsController < ApplicationController
   end
 
   private
-    def setting_params
+    def settings_params
       params.require(:setting).permit(:auto_assign_invitation_codes)
     end
 
     def load_setting
-      @setting = Setting.find(params[:id])
+      @settings = Setting.first
     end
 end

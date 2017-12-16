@@ -27,4 +27,16 @@ namespace :setup do
       Setting.create!(auto_assign_invitation_codes: true)
     end
   end
+
+  desc "Setup roles and role assignments"
+  task(roles_and_role_assignments: :environment) do  |t, args|
+    Role.setup
+    ['mjg994'].each do |username|
+      user = User.where(username: username).first
+      if user && !user.has_role?(Role::ROLE_ALL_OF_US_HELPER_USER)
+        user.roles << Role.where(name: Role::ROLE_ALL_OF_US_HELPER_USER).first
+        user.save!
+      end
+    end
+  end
 end

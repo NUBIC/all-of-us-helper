@@ -9,6 +9,9 @@ RSpec.feature 'Patients', type: :feature do
     FactoryGirl.create(:api_token, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP, token: 'foo')
     @api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
     @harold_user = FactoryGirl.create(:user, username: 'hbaines')
+    Role.setup
+    @harold_user.roles << Role.where(name: Role::ROLE_ALL_OF_US_HELPER_USER).first
+    @harold_user.save!
     login_as(@harold_user, scope: :user)
     visit root_path
   end

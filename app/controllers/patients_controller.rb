@@ -6,6 +6,7 @@ class PatientsController < ApplicationController
   helper_method :sort_column, :sort_direction
 
   def index
+    authorize Patient
     params[:page]||= 1
     options = {}
     options[:sort_column] = sort_column
@@ -14,12 +15,15 @@ class PatientsController < ApplicationController
   end
 
   def show
+    authorize @patient
     @invitation_code_assignment = @patient.invitation_code_assignments.build
   end
 
   def record_id
+    authorize Patient
     redcap_api = initalize_redcap_api
     @patient = Patient.where(record_id: params[:record_id]).first
+
     if @patient.blank?
       redcap_patient_response = redcap_api.patient(params[:record_id])
       if redcap_patient_response[:error].present?

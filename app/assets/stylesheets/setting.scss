@@ -1,8 +1,8 @@
-#setting-header {
+#settings-header {
   @include grid-column-row();
 }
 
-#setting {
+#settings {
   @include grid-column-row();
 
   @include breakpoint(large) {
