@@ -1,3 +1,4 @@
+require 'yaml'
 namespace :setup do
   desc 'Load dummy patients'
   task(load_dummy_patients: :environment) do  |t, args|
@@ -31,8 +32,10 @@ namespace :setup do
   desc "Setup roles and role assignments"
   task(roles_and_role_assignments: :environment) do  |t, args|
     Role.setup
-    ['mjg994'].each do |username|
-      user = User.where(username: username).first
+    users_from_file = YAML.load(ERB.new(File.read("lib/setup/data/users.yml")).result)
+
+    users_from_file.each_pair do |username, user_from_file|
+      user = User.where(user_from_file).first_or_create
       if user && !user.has_role?(Role::ROLE_ALL_OF_US_HELPER_USER)
         user.roles << Role.where(name: Role::ROLE_ALL_OF_US_HELPER_USER).first
         user.save!
