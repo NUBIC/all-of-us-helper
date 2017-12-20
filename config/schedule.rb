@@ -18,3 +18,18 @@
 # end
 
 # Learn more: http://github.com/javan/whenever
+
+set :environment, ENV['RAILS_ENV']
+set :output, {:error => 'log/whenever_error.log', :standard => 'log/whenever.log'}
+
+case environment
+  when 'production'
+    every 5.minutes do # 1.minute 1.day 1.week 1.month 1.year is also supported
+      rake "redcap:assign_invitation_codes"
+    end
+  when 'staging'
+    every 5.minutes do # 1.minute 1.day 1.week 1.month 1.year is also supported
+      rake "redcap:assign_invitation_codes"
+    end
+end
+
