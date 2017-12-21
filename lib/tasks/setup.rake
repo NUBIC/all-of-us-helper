@@ -17,7 +17,7 @@ namespace :setup do
 
   desc 'Load dummy invitation codes'
   task(load_dummy_invitation_codes: :environment) do  |t, args|
-    (1...20)  .to_a.each do |invitation_code|
+    (1...2000)  .to_a.each do |invitation_code|
       InvitationCode.where(code: invitation_code.to_s).first_or_create
     end
   end
