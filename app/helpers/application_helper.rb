@@ -17,7 +17,7 @@ module ApplicationHelper
   def format_validation_errors(object, field_name)
     if object.errors.any?
       if !object.errors.messages[field_name].blank?
-        object.errors.messages[field_name].join(", ")
+        object.errors.messages[field_name].map(&:humanize).join(". ")
       end
     end
   end

@@ -2,9 +2,9 @@ require 'rails_helper'
 describe InvitationCodesController, type: :request do
   before(:each) do
     Setting.create!(auto_assign_invitation_codes: true)
-    @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')
-    @invitation_code_2 = FactoryGirl.create(:invitation_code, code: '2B')
-    @harold_user = FactoryGirl.create(:user, username: 'hbaines')
+    @invitation_code_1 = FactoryBot.create(:invitation_code, code: '1A')
+    @invitation_code_2 = FactoryBot.create(:invitation_code, code: '2B')
+    @harold_user = FactoryBot.create(:user, username: 'hbaines')
   end
 
   describe 'regular user without a role' do

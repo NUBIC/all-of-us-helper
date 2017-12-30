@@ -1,0 +1,18 @@
+.invitation_code_file
+  .field_label{class: 'small-12 large-5 columns' }
+    %label{ for: 'batch_invitation_code_invitation_code_file' }
+      Invitation Code File:
+      %span{ class: 'validation required' }
+  .field{class: 'small-12 large-19 columns' }
+    - if batch_invitation_code.invitation_code_file? && batch_invitation_code.new_record?
+      = link_to batch_invitation_code.invitation_code_file.identifier, "#{batch_invitation_code.invitation_code_file.url}",  class: 'invitation_code_file_url'
+    = f.file_field :invitation_code_file, class: "#{batch_invitation_code.invitation_code_file? ? 'hide' : '' }", id: 'batch_invitation_code_invitation_code_file'
+    - if batch_invitation_code.invitation_code_file_cache
+      = f.hidden_field :invitation_code_file_cache, value: batch_invitation_code.invitation_code_file_cache, id: 'batch_invitation_code_invitation_code_file_cache'
+    - else
+      = f.hidden_field :invitation_code_file_cache, value: batch_invitation_code.invitation_code_file, id: 'batch_invitation_code_invitation_code_file_cache'
+    = link_to 'Remove', '', 'data-turbolinks' => false,  class: "alert button tiny remove_invitation_code_file_link #{batch_invitation_code.invitation_code_file? ? '' : 'hide' }"
+    - if validation_errors?(batch_invitation_code, :invitation_code_file)
+      %p.error= format_validation_errors(batch_invitation_code, :invitation_code_file)
+    .help-text
+      Please provide an invitation code upload file.

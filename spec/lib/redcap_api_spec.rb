@@ -3,11 +3,11 @@ require 'redcap_api'
 
 RSpec.describe RedcapApi do
   before(:each) do
-    @patient_1 = FactoryGirl.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
-    @patient_2 = FactoryGirl.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
-    @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')
-    @invitation_code_2 = FactoryGirl.create(:invitation_code, code: '2B')
-    FactoryGirl.create(:api_token, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP, token: 'foo')
+    @patient_1 = FactoryBot.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
+    @patient_2 = FactoryBot.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
+    @invitation_code_1 = FactoryBot.create(:invitation_code, code: '1A')
+    @invitation_code_2 = FactoryBot.create(:invitation_code, code: '2B')
+    FactoryBot.create(:api_token, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP, token: 'foo')
     @api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
     @record_id = '5'
 

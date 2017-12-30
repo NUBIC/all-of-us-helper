@@ -1,7 +1,7 @@
 #new-invitation-code-assignment-header {
   @include grid-column-row();
 }
-#invitation_code_assignment {
+#invitation-code-assignment {
   @include grid-column-row();
 
   @include breakpoint(large) {

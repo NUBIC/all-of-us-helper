@@ -8,10 +8,10 @@ RSpec.describe InvitationCodeAssignment, type: :model do
   it { should validate_presence_of :invitation_code_id }
 
   before(:each) do
-    @patient_1 = FactoryGirl.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
-    @patient_2 = FactoryGirl.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
-    @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')
-    @invitation_code_2 = FactoryGirl.create(:invitation_code, code: '2B')
+    @patient_1 = FactoryBot.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
+    @patient_2 = FactoryBot.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
+    @invitation_code_1 = FactoryBot.create(:invitation_code, code: '1A')
+    @invitation_code_2 = FactoryBot.create(:invitation_code, code: '2B')
   end
 
   it "defaults active to true for a new record that does not provide an active", focus: false do

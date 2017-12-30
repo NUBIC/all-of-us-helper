@@ -15,4 +15,4 @@
 //= require jquery
 //= require foundation
 //= require init
-//= require_tree .
+//= require all_of_us_helper.batch_invitation_code

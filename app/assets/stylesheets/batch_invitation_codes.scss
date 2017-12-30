@@ -1,0 +1,35 @@
+#new-batch-invitation-code-header {
+  @include grid-column-row();
+}
+
+#batch-invitation-code {
+  @include grid-column-row();
+
+  #batch-invitation-code-form {
+    @include grid-column-row();
+  }
+
+  @include breakpoint(large) {
+    .field_label {
+      @include grid-column($columns: 4);
+    }
+    .field {
+      @include grid-column($columns: 20);
+    }
+  }
+
+  #invitation-code-errors {
+    @include grid-column-row();
+  }
+
+  .navigation {
+    @include breakpoint(medium) {
+      @include grid-column-offset(20);
+      @include grid-column($columns: 4);
+    }
+    @include breakpoint(small only) {
+      @include grid-column-offset(12);
+      @include grid-column($columns: 12);
+    }
+  }
+}

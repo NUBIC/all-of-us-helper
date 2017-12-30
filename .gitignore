@@ -21,6 +21,7 @@
 
 /public/system
 /public/*
+!/public/*.csv
 /uploads/
 playground.rb
 lib/setup/data/users.yml

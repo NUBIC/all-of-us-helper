@@ -6,10 +6,10 @@ RSpec.describe Patient, type: :model do
   it { should have_many :invitation_code_assignments }
 
   before(:each) do
-    @patient_1 = FactoryGirl.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
-    @patient_2 = FactoryGirl.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
-    @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')
-    @invitation_code_2 = FactoryGirl.create(:invitation_code, code: '2B')
+    @patient_1 = FactoryBot.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
+    @patient_2 = FactoryBot.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
+    @invitation_code_1 = FactoryBot.create(:invitation_code, code: '1A')
+    @invitation_code_2 = FactoryBot.create(:invitation_code, code: '2B')
   end
 
   it 'can search across fields (by first_name)', focus: false do
@@ -92,7 +92,7 @@ RSpec.describe Patient, type: :model do
   end
 
   it 'can assign an invitation code without being provided one', focus: false do
-    FactoryGirl.create(:api_token, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP, token: 'foo')
+    FactoryBot.create(:api_token, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP, token: 'foo')
     api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
     redcap_api = RedcapApi.new(api_token.token)
     response = { response: {"count"=>1}, error: nil }
@@ -105,7 +105,7 @@ RSpec.describe Patient, type: :model do
   end
 
   it 'can assign an invitation code with being provided one', focus: false do
-    FactoryGirl.create(:api_token, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP, token: 'foo')
+    FactoryBot.create(:api_token, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP, token: 'foo')
     api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
     redcap_api = RedcapApi.new(api_token.token)
     response = { response: {"count"=>1}, error: nil }

@@ -2,8 +2,8 @@ require 'rails_helper'
 describe UsersController, type: :request do
   before(:each) do
     Setting.create!(auto_assign_invitation_codes: true)
-    @harold_user = FactoryGirl.create(:user, username: 'hbaines', email: 'hbaines@whitesox.com')
-    @paul_user = FactoryGirl.create(:user, username: 'pkonerko', email: 'pkonerko@whitesox.com')
+    @harold_user = FactoryBot.create(:user, username: 'hbaines', email: 'hbaines@whitesox.com')
+    @paul_user = FactoryBot.create(:user, username: 'pkonerko', email: 'pkonerko@whitesox.com')
   end
 
   describe 'regular user without a role' do

@@ -20,13 +20,13 @@
           %button{ type: 'submit', id: 'search-invitation-codes-button', class: 'tiny button' }
             Search
           = link_to 'Clear', invitation_codes_url()
-
 - content_for(:all_of_us_helper_content) do
   #all-of-us-helper-content
     #invitation-codes
       = render 'shared/flash'
       #invitation-codes-list
         = will_paginate @invitation_codes, renderer: FoundationPagination::Rails
+        = link_to 'Upload Invitation Code File', new_batch_invitation_code_url, class: 'new-batch-invitation-code-link'
         %table.hack_stack.hover
           %thead
             %tr

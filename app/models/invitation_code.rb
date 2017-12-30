@@ -6,6 +6,8 @@ class InvitationCode < ApplicationRecord
   ASSIGNMENT_STATUSES = [ASSIGNMENT_STATUS_UNASSIGNED, ASSIGNMENT_STATUS_ASSIGNED]
 
   after_initialize :set_defaults
+  validates_presence_of :code
+  validates :code, uniqueness: { case_sensitive: false }
 
   scope :search_across_fields, ->(search_token, options={}) do
     if search_token

@@ -74,6 +74,10 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    carrierwave (1.1.0)
+      activemodel (>= 4.0.0)
+      activesupport (>= 4.0.0)
+      mime-types (>= 1.16)
     childprocess (0.8.0)
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.10.2)
@@ -105,10 +109,10 @@ GEM
     erubi (1.7.0)
     eventmachine (1.0.9.1)
     execjs (2.7.0)
-    factory_girl (4.9.0)
+    factory_bot (4.8.2)
       activesupport (>= 3.0.0)
-    factory_girl_rails (4.9.0)
-      factory_girl (~> 4.9.0)
+    factory_bot_rails (4.8.2)
+      factory_bot (~> 4.8.2)
       railties (>= 3.0.0)
     ffi (1.9.18)
     foundation-rails (6.4.1.2)
@@ -333,11 +337,12 @@ DEPENDENCIES
   capistrano-rails
   capistrano-rvm
   capybara
+  carrierwave (>= 1.0.0.rc, < 2.0)
   coffee-rails (~> 4.2)
   database_cleaner
   devise (~> 4.2)
   devise_ldap_authenticatable
-  factory_girl_rails
+  factory_bot_rails
   foundation-rails (= 6.4.1.2)
   haml
   jbuilder (~> 2.5)

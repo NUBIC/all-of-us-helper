@@ -2,13 +2,13 @@ require 'rails_helper'
 describe InvitationCodeAssignmentsController, type: :request do
   before(:each) do
     Setting.create!(auto_assign_invitation_codes: true)
-    @patient_1 = FactoryGirl.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
-    @patient_2 = FactoryGirl.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
-    @invitation_code_1 = FactoryGirl.create(:invitation_code, code: '1A')
-    @invitation_code_2 = FactoryGirl.create(:invitation_code, code: '2B')
-    FactoryGirl.create(:api_token, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP, token: 'foo')
+    @patient_1 = FactoryBot.create(:patient, record_id: '1', first_name: 'Little', last_name: 'My', email: 'little.my@moomin.com')
+    @patient_2 = FactoryBot.create(:patient, record_id: '2', first_name: 'The', last_name: 'Groke', email: 'the.groke@moomin.com')
+    @invitation_code_1 = FactoryBot.create(:invitation_code, code: '1A')
+    @invitation_code_2 = FactoryBot.create(:invitation_code, code: '2B')
+    FactoryBot.create(:api_token, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP, token: 'foo')
     @api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
-    @harold_user = FactoryGirl.create(:user, username: 'hbaines')
+    @harold_user = FactoryBot.create(:user, username: 'hbaines')
   end
 
   describe 'regular user without a role' do

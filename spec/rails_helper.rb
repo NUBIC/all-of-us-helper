@@ -6,7 +6,7 @@ require File.expand_path('../../config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
-require 'factory_girl'
+require 'factory_bot'
 require 'capybara/rails'
 require 'capybara/rspec'
 require 'devise'
@@ -91,11 +91,11 @@ RSpec.configure do |config|
     Capybara.page.current_window.resize_to(1280, 800)
   end
 
-  # config.after(:all) do
-  #   if Rails.env.test?
-  #     FileUtils.rm_rf(Dir["#{Rails.root}/spec/support/uploads"])
-  #   end
-  # end
+  config.after(:all) do
+    if Rails.env.test?
+      FileUtils.rm_rf(Dir["#{Rails.root}/spec/support/uploads"])
+    end
+  end
 end
 
 def scroll_to_bottom_of_the_page

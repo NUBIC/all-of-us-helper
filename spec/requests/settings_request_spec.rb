@@ -2,7 +2,7 @@ require 'rails_helper'
 describe SettingsController, type: :request do
   before(:each) do
     Setting.create!(auto_assign_invitation_codes: true)
-    @harold_user = FactoryGirl.create(:user, username: 'hbaines')
+    @harold_user = FactoryBot.create(:user, username: 'hbaines')
   end
 
   describe 'regular user without a role' do

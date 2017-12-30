@@ -33,6 +33,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
 gem 'devise', '~> 4.2'
 gem 'devise_ldap_authenticatable'
 gem 'foundation-rails', '6.4.1.2'
@@ -74,7 +75,7 @@ group :test do
   gem 'capybara'
   gem 'database_cleaner'
   gem 'selenium-webdriver'
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'shoulda'
   gem 'webmock'
 end
