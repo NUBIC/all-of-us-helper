@@ -108,6 +108,9 @@ GEM
       unf (>= 0.0.5, < 1.0.0)
     erubi (1.7.0)
     eventmachine (1.0.9.1)
+    exception_notification (4.2.1)
+      actionmailer (>= 4.0, < 6)
+      activesupport (>= 4.0, < 6)
     execjs (2.7.0)
     factory_bot (4.8.2)
       activesupport (>= 3.0.0)
@@ -342,6 +345,7 @@ DEPENDENCIES
   database_cleaner
   devise (~> 4.2)
   devise_ldap_authenticatable
+  exception_notification
   factory_bot_rails
   foundation-rails (= 6.4.1.2)
   haml

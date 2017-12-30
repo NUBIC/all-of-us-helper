@@ -88,4 +88,16 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = { address: 'smtprelay.northwestern.edu', port: 25, domain: 'northwestern.edu' }
+  config.action_mailer.default_url_options = { host: Rails.configuration.custom.app_config['staging']['server_name'] }
+
+  config.middleware.use ExceptionNotification::Rack,
+    :email => {
+      :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
+      :email_prefix => "[#{Rails.env}] ",
+      sender_address: Rails.configuration.custom.app_config['support']['sender_address'],
+      exception_recipients: Rails.configuration.custom.app_config['support']['recepients']
+    }
 end

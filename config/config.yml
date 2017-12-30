@@ -22,7 +22,7 @@ production:
   key_file: /etc/pki/tls/private/all-of-us-helper_cancer_northwestern_edu.key
 support:
   recepients:
-    - all-of-us-helper@northwestern.edu
+    - m-gurley@northwestern.edu
   sender_address: all-of-us-helper@northwestern.edu
 redcap:
   development:
