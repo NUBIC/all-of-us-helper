@@ -36,5 +36,5 @@ def handle_error(t, error)
   Rails.logger.info(error.class)
   Rails.logger.info(error.message)
   Rails.logger.info(error.backtrace.join("\n"))
-  ExceptionNotifier.notify_exception(e)
+  ExceptionNotifier.notify_exception(error)
 end
