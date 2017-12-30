@@ -22,6 +22,10 @@
 /public/system
 /public/*
 !/public/*.csv
+!/public/*.html
+!/public/favicon.ico
+!/public/robots.txt
+
 /uploads/
 playground.rb
 lib/setup/data/users.yml
