@@ -22,7 +22,7 @@ namespace :redcap do
           end
         end
       end
-    rescue StandardError => error
+    rescue => error
       handle_error(t, error)
     end
   end
