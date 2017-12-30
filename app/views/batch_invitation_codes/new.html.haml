@@ -10,7 +10,7 @@
 - content_for(:all_of_us_helper_content) do
   #all-of-us-helper-content
     #batch-invitation-code
-      = link_to 'Sample Invitation Code File', 'sample_invitation_code_file.csv', target: '_blank'
+      = link_to 'Sample Invitation Code File', '/sample_invitation_code_file.csv', target: '_blank'
       = form_with(model: @batch_invitation_code,  local: true, multipart: true, id: 'batch-invitation-code-form') do |f|
         - if validation_errors?(@batch_invitation_code, :base)
           #batch-invitation-code-errors.callout.alert
