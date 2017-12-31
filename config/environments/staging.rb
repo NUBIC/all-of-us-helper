@@ -98,6 +98,6 @@ Rails.application.configure do
       :deliver_with => :deliver, # Rails >= 4.2.1 do not need this option since it defaults to :deliver_now
       :email_prefix => "[#{Rails.env}] ",
       sender_address: Rails.configuration.custom.app_config['support']['sender_address'],
-      exception_recipients: Rails.configuration.custom.app_config['support']['recepients']
+      exception_recipients: Rails.configuration.custom.app_config['support']['recipients']
     }
 end
