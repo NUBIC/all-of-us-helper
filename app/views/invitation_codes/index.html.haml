@@ -25,7 +25,7 @@
     #invitation-codes
       = render 'shared/flash'
       #invitation-codes-list
-        = will_paginate @invitation_codes, renderer: FoundationPagination::Rails
+        = will_paginate @invitation_codes, renderer: FoundationPagination::Rails, class: 'pagination-top'
         = link_to 'Upload Invitation Code File', new_batch_invitation_code_url, class: 'new-batch-invitation-code-link'
         %table.hack_stack.hover
           %thead

@@ -36,7 +36,7 @@
 		@include grid-column($columns: 24);
 
     @include breakpoint(large) {
-      .pagination {
+      .pagination-top {
         @include grid-column($columns: 16);
 
       }
