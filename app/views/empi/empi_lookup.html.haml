@@ -1,0 +1,46 @@
+%table.hack_stack.hover
+  %thead
+    %tr
+      %th.first_name
+        First Name
+      %th.last_name
+        Last Name
+      %th.birth_date
+        Birth Date
+      %th.gender
+        Gender
+      %th.address
+        Address
+      %th.nmhc_mrn
+        NMHC
+      %th.nmh_mrn
+        NMH
+      %th.nmff_mrn
+        NMFF
+      %th.lfh_mrn
+        LFH
+      %th.select-empi-patient-link
+        Assign?
+  %tbody
+    - @empi_patients.each do |empi_patient|
+      %tr.empi_patient
+        %td.first_name
+          = empi_patient['first_name']
+        %td.last_name
+          = empi_patient['last_name']
+        %td.birth_date
+          = empi_patient['birth_date']
+        %td.gender
+          = empi_patient['gender']
+        %td.address
+          = format_address(empi_patient)
+        %td.nmhc_mrn
+          = empi_patient['nmhc_mrn']
+        %td.nmh_mrn
+          = empi_patient['nmh_mrn']
+        %td.nmff_mrn
+          = empi_patient['nmff_mrn']
+        %td.lfh_mrn
+          = empi_patient['lfh_mrn']
+        %td.assign-empi-patient-link.text-center
+          = radio_button_tag 'assign-empi-patient', class: 'assign-empi-patient'

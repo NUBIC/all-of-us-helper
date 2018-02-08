@@ -1,0 +1,55 @@
+- content_for(:title) do
+  = "Health Pro File"
+- content_for(:all_of_us_helper_header) do
+  = render 'layouts/all_of_us_helper_header'
+- content_for(:all_of_us_helper_content_header) do
+  #all-of-us-helper-content-header
+    #show-batch-health-pro-header
+      = form_tag batch_health_pro_url(@batch_health_pro), method: 'get', id: 'search-batch-health-pro-form' do
+        %h1
+          = 'Health Pro File'
+        .status
+          %label{for: 'status' }
+            Status
+          = select_tag :status, options_for_select(HealthPro::STATUSES.map { |status| [status, status] }, (params[:status].blank? ? '' : params[:status])), { include_blank: 'all' }
+        .search-box
+          %label{for: 'search' }
+            Search
+          = text_field_tag :search, (params[:search].nil? ? '' : params[:search]), type: 'search'
+        .search-buttons
+          %button{ type: 'submit', id: 'search-batch-health-pro-button', class: 'tiny button' }
+            Search
+          = link_to 'Clear', batch_health_pro_url(@batch_health_pro)
+- content_for(:all_of_us_helper_content) do
+  #all-of-us-helper-content
+    #show-batch-health-pro
+      = render 'shared/flash'
+      %table.hack_stack.hover
+        %thead
+          %tr
+            %th.health_pro{ colspan: 8 }
+              Health Pro
+          %tr
+            %th.first_name
+              = sortable 'first_name'
+            %th.last_name
+              = sortable 'last_name'
+            %th.date_of_birth
+              = sortable 'date_of_birth'
+            %th.sex
+              = sortable 'sex'
+            %th.email
+              = sortable 'email'
+            %th.pmi_id
+              = sortable 'pmi_id', 'PMI ID'
+            %th.address
+              Address
+            %th.status
+              = sortable 'status'
+        %tbody
+          - @health_pros.each do |health_pro|
+            = render 'health_pros/health_pro', health_pro: health_pro
+      #empi-lookup-modal.reveal.large{ "data-reveal" => "" }
+        #empi-lookup
+        %button.close-button{"aria-label" => "Close modal", "data-close" => "", :type => "button"}
+          %span{"aria-hidden" => "true"} &times;

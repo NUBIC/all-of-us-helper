@@ -37,3 +37,14 @@ redcap:
     host_url: https://redcap.nubic.northwestern.edu/redcap/api/
   dev:
     host_url: https://redcap.nubic.northwestern.edu/redcap/api/
+study_tracker:
+  development:
+    empi_lookup: http://enotis.dev/api/v2/subjects/empi_lookup.json
+    verify_ssl: false
+  test:
+    empi_lookup: http://enotis.dev/api/v2/subjects/empi_lookup.json
+    verify_ssl: false
+  staging:
+    empi_lookup: http://studytracker-staging.fsm.northwestern.edu/api/v2/subjects/empi_lookup.jsons
+  production:
+    empi_lookup: https://enotis.northwestern.edu/api/v2/subjects/empi_lookup.json

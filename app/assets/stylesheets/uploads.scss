@@ -1,0 +1,7 @@
+#uploads-header {
+  @include grid-column-row();
+}
+
+#uploads {
+  @include grid-column-row();
+}

@@ -1,5 +1,5 @@
 #patients-header {
-  @include grid-row();
+  @include grid-column-row();
   #search-patients-form {
     @include grid-column($columns: 24);
 
@@ -58,8 +58,8 @@
 #patient-show {
   @include grid-column-row();
 
-  .record_id, .first_name, .last_name, .email, .invitation_code, .actions {
-   margin-bottom: 1rem;
+  .record_id, .pmi_id, .first_name, .last_name, .email, .general_consent_status, .general_consent_date, .ehr_consent_status, .ehr_consent_date, .invitation_code, .actions {
+    margin-bottom: 1rem;
   }
   #invitation-code-assignment-form {
     display: inline;

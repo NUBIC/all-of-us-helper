@@ -15,6 +15,10 @@
         %strong
           REDCap Record ID:
         = @patient.record_id
+      .pmi_id
+        %strong
+          PMI ID:
+        = @patient.pmi_id
       .first_name
         %strong
           First Name:
@@ -27,6 +31,22 @@
         %strong
           Email:
         = @patient.email
+      .general_consent_status
+        %strong
+          General Consent Status
+        = @patient.accepted_match.health_pro.general_consent_status if @patient.accepted_match
+      .general_consent_date
+        %strong
+          General Consent Date
+        = @patient.accepted_match.health_pro.general_consent_date if @patient.accepted_match
+      .ehr_consent_status
+        %strong
+          EHR Consent Status
+        = @patient.accepted_match.health_pro.ehr_consent_status if @patient.accepted_match
+      .ehr_consent_date
+        %strong
+          EHR Consent Status
+        = @patient.accepted_match.health_pro.ehr_consent_date if @patient.accepted_match
       .invitation_code
         %strong
           Current Invitation Code:

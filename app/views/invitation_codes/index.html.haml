@@ -11,7 +11,7 @@
         .assignment_status
           %label{for: 'assignment_status' }
             Assignment Status
-          = select_tag :assignment_status, options_for_select(InvitationCode::ASSIGNMENT_STATUSES.map { |assignment_status| [assignment_status, assignment_status] }, (params[:assignment_status].blank? ? '' : params[:assignment_status])), { include_blank: 'all', class: 'status'}
+          = select_tag :assignment_status, options_for_select(InvitationCode::ASSIGNMENT_STATUSES.map { |assignment_status| [assignment_status, assignment_status] }, (params[:assignment_status].blank? ? '' : params[:assignment_status])), { include_blank: 'all' }
         .search-box
           %label{for: 'search' }
             Search

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171228173713) do
+ActiveRecord::Schema.define(version: 20180123210238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,10 +22,84 @@ ActiveRecord::Schema.define(version: 20171228173713) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "batch_health_pros", force: :cascade do |t|
+    t.string "health_pro_file"
+    t.string "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "batch_invitation_codes", force: :cascade do |t|
     t.string "invitation_code_file"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "health_pros", force: :cascade do |t|
+    t.integer "batch_health_pro_id", null: false
+    t.string "status", null: false
+    t.string "pmi_id"
+    t.string "biobank_id"
+    t.string "last_name"
+    t.string "first_name"
+    t.string "date_of_birth"
+    t.string "language"
+    t.string "general_consent_status"
+    t.string "general_consent_date"
+    t.string "ehr_consent_status"
+    t.string "ehr_consent_date"
+    t.string "cabor_consent_status"
+    t.string "cabor_consent_date"
+    t.string "withdrawal_status"
+    t.string "withdrawal_date"
+    t.string "street_address"
+    t.string "city"
+    t.string "state"
+    t.string "zip"
+    t.string "email"
+    t.string "phone"
+    t.string "sex"
+    t.string "gender_identity"
+    t.string "race_ethnicity"
+    t.string "education"
+    t.string "required_ppi_surveys_complete"
+    t.string "completed_surveys"
+    t.string "basics_ppi_survey_complete"
+    t.string "basics_ppi_survey_completion_date"
+    t.string "health_ppi_survey_complete"
+    t.string "health_ppi_survey_completion_date"
+    t.string "lifestyle_ppi_survey_complete"
+    t.string "lifestyle_ppi_survey_completion_date"
+    t.string "hist_ppi_survey_complete"
+    t.string "hist_ppi_survey_completion_date"
+    t.string "meds_ppi_survey_complete"
+    t.string "meds_ppi_survey_completion_date"
+    t.string "family_ppi_survey_complete"
+    t.string "family_ppi_survey_completion_date"
+    t.string "access_ppi_survey_complete"
+    t.string "access_ppi_survey_completion_date"
+    t.string "physical_measurements_status"
+    t.string "physical_measurements_completion_date"
+    t.string "physical_measurements_location"
+    t.string "samples_for_dna_received"
+    t.string "biospecimens"
+    t.string "eight_ml_sst_collected"
+    t.string "eight_ml_sst_collection_date"
+    t.string "eight_ml_pst_collected"
+    t.string "eight_ml_pst_collection_date"
+    t.string "four_ml_na_hep_collected"
+    t.string "four_ml_na_hep_collection_date"
+    t.string "four_ml_edta_collected"
+    t.string "four_ml_edta_collection_date"
+    t.string "first_10_ml_edta_collected"
+    t.string "first_10_ml_edta_collection_date"
+    t.string "second_10_ml_edta_collected"
+    t.string "second_10_ml_edta_collection_date"
+    t.string "urine_10_ml_collected"
+    t.string "urine_10_ml_collection_date"
+    t.string "saliva_collected"
+    t.string "saliva_collection_date"
+    t.string "biospecimens_location"
   end
 
   create_table "invitation_code_assignments", force: :cascade do |t|
@@ -44,6 +118,12 @@ ActiveRecord::Schema.define(version: 20171228173713) do
     t.integer "batch_invitation_code_id"
   end
 
+  create_table "matches", force: :cascade do |t|
+    t.integer "health_pro_id", null: false
+    t.integer "patient_id", null: false
+    t.string "status", null: false
+  end
+
   create_table "patients", force: :cascade do |t|
     t.string "record_id", null: false
     t.string "first_name", null: false
@@ -51,6 +131,7 @@ ActiveRecord::Schema.define(version: 20171228173713) do
     t.string "email", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "pmi_id"
   end
 
   create_table "role_assignments", force: :cascade do |t|

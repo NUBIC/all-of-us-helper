@@ -1,0 +1,52 @@
+= content_tag_for(:tr, health_pro) do
+  %td.first_name
+    = health_pro.first_name
+  %td.last_name
+    = health_pro.last_name
+  %td.date_of_birth
+    = health_pro.date_of_birth
+  %td.sex
+    = health_pro.sex
+  %td.email
+    = health_pro.email
+  %td.pmi_id
+    = health_pro.pmi_id
+  %td.address
+    = health_pro.address
+  %td.status
+    = health_pro.status
+- if health_pro.matchable?
+  %tr
+    %td{ colspan: 8 }
+      %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true"}
+        %li.accordion-item{"data-accordion-item" => ""}
+          / Accordion tab title
+          %a.accordion-title{:href => "#"} Matches?
+          / Accordion tab content: it would start in the open state due to using the `is-active` state class.
+          .accordion-content{"data-tab-content" => ""}
+            %table
+              %thead
+                %tr
+                  %th.health_pro{ colspan: 8 }
+                    REDCap
+                %tr
+                  %th.first_name
+                    First Name
+                  %th.last_name
+                    Last Name
+                  %th.email
+                    Email
+                  %th.make-match-link
+              %tbody
+                - health_pro.matches.each do |match|
+                  = content_tag_for(:tr, match) do
+                    %td.first_name
+                      = match.patient.first_name
+                    %td.last_name
+                      = match.patient.last_name
+                    %td.email
+                      = match.patient.email
+                    %td.make-match-link
+                      = link_to 'EMPI', new_empi_lookup_url(first_name: match.health_pro.first_name, last_name: match.health_pro.last_name, birth_date: match.health_pro.date_of_birth, gender: match.health_pro.sex, address: match.health_pro.address), class: 'new-empi-link button'
+                      = form_with(model: match, url: accept_match_url(match.id), local: false, id: 'match-accept-form') do |f|
+                        = f.submit 'Match', class: 'button', 'data-confirm': 'Make a match?'

@@ -1,6 +1,9 @@
 class Patient < ApplicationRecord
   has_many :invitation_code_assignments
+  has_many :matches
   ERROR_MESSAGE_FAILED_TO_ASSIGN_INVITATION_CODE = 'Failed to assign an invitation code.'
+
+  validates :pmi_id, uniqueness: { case_sensitive: false }, allow_blank: true
 
   scope :search_across_fields, ->(search_token, options={}) do
     if search_token
@@ -9,13 +12,17 @@ class Patient < ApplicationRecord
     options = { sort_column: 'last_name', sort_direction: 'asc' }.merge(options)
 
     if search_token
-      p = where(["lower(record_id) like ? OR lower(last_name) like ? OR lower(first_name) like ? OR lower(email) like ?", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%"])
+      p = where(["lower(record_id) like ? OR lower(pmi_id) like ? OR lower(last_name) like ? OR lower(first_name) like ? OR lower(email) like ?", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%"])
     end
 
     sort = options[:sort_column] + ' ' + options[:sort_direction] + ', patients.id ASC'
     p = p.nil? ? order(sort) : p.order(sort)
 
     p
+  end
+
+  def accepted_match
+    matches.where(status: Match::STATUS_ACCEPTED).first
   end
 
   def invitation_code

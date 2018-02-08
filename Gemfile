@@ -33,6 +33,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'american_date'
 gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
 gem 'devise', '~> 4.2'
 gem 'devise_ldap_authenticatable'

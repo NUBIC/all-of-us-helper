@@ -1,0 +1,18 @@
+.health_pro_file
+  .field_label{class: 'small-12 large-5 columns' }
+    %label{ for: 'batch_health_pro_health_pro_file' }
+      Health Pro File:
+      %span{ class: 'validation required' }
+  .field{class: 'small-12 large-19 columns' }
+    - if batch_health_pro.health_pro_file? && batch_health_pro.new_record?
+      = link_to batch_health_pro.health_pro_file.identifier, "#{batch_health_pro.health_pro_file.url}",  class: 'health-pro-file-url'
+    = f.file_field :health_pro_file, class: "#{batch_health_pro.health_pro_file? ? 'hide' : '' }", id: 'batch-helath_pro-health-pro-file'
+    - if batch_health_pro.health_pro_file_cache
+      = f.hidden_field :health_pro_file_cache, value: batch_health_pro.health_pro_file_cache, id: 'batch-health-pro-health-pro-file-cache'
+    - else
+      = f.hidden_field :health_pro_file_cache, value: batch_health_pro.health_pro_file, id: 'batch-health-pro_health-pro-file-cache'
+    = link_to 'Remove', '', 'data-turbolinks' => false,  class: "alert button tiny remove-health-pro-file-link #{batch_health_pro.health_pro_file? ? '' : 'hide' }"
+    - if validation_errors?(batch_health_pro, :health_pro_file)
+      %p.error= format_validation_errors(batch_health_pro, :health_pro_file)
+    .help-text
+      Please provide a Health Pro upload file.

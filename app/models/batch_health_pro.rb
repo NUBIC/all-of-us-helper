@@ -1,0 +1,139 @@
+require 'csv'
+class BatchHealthPro < ApplicationRecord
+  STATUS_PENDING = 'pending'
+  STATUS_EXPIRED = 'expired'
+  STATUSES = [STATUS_PENDING, STATUS_EXPIRED]
+
+  mount_uploader :health_pro_file, HealthProFileUploader
+  has_many :health_pros
+  validates_presence_of :health_pro_file
+  validates_size_of :health_pro_file, maximum: 10.megabytes, message: 'must be less than 10MB'
+
+  after_destroy :remove_health_pro_file!
+  after_initialize :set_defaults
+
+  scope :by_status, ->(status) do
+    if status.present?
+     where(status: status)
+    end
+  end
+
+  def import
+    begin
+      data = ''
+      f = File.open(health_pro_file.current_path)
+      f.each_line do |line|
+        unless line.match(/^""\n/) || line.include?('Confidential Information') || line.include?('This file contains information that is sensitive and confidential. Do not distribute either the file or its contents.')
+          data += line
+        end
+      end
+      health_pros_from_file = CSV.new(data, headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
+
+      if errors.empty?
+        BatchHealthPro.transaction do
+          health_pros_from_file.each do |health_pro_from_file|
+            row ={}
+            BatchHealthPro.headers_map.each_pair do |k,v|
+              row[v.to_sym] = health_pro_from_file.to_hash[k.to_s]
+            end
+
+            health_pros.build(row)
+          end
+
+          save!
+
+          health_pros.each do |health_pro|
+            health_pro.determine_matches
+            health_pro.save!
+          end
+        end
+      else
+        false
+      end
+    rescue Exception => e
+      errors.add(:base, 'Un-handled error uploading health pro file.')
+      Rails.logger.info(e.class)
+      Rails.logger.info(e.message)
+      Rails.logger.info(e.backtrace.join("\n"))
+      false
+    end
+  end
+
+  def determine_matches
+
+  end
+
+  def self.headers_map
+    {
+      'PMI ID' => 'pmi_id',
+      'Biobank ID' => 'biobank_id',
+      'Last Name' => 'last_name',
+      'First Name' => 'first_name',
+      'Date of Birth' => 'date_of_birth',
+      'Language' => 'language',
+      'General Consent Status' => 'general_consent_status',
+      'General Consent Date' => 'general_consent_date',
+      'EHR Consent Status' => 'ehr_consent_status',
+      'EHR Consent Date' => 'ehr_consent_date',
+      'CABoR Consent Status' => 'cabor_consent_status',
+      'CABoR Consent Date' => 'cabor_consent_date',
+      'Withdrawal Status' => 'withdrawal_status',
+      'Withdrawal Date' => 'withdrawal_date',
+      'Street Address' => 'street_address',
+      'City' => 'city',
+      'State' => 'state',
+      'ZIP' => 'zip',
+      'Email' => 'email',
+      'Phone' => 'phone',
+      'Sex' => 'sex',
+      'Gender Identity' => 'gender_identity',
+      'Race/Ethnicity' => 'race_ethnicity',
+      'Education' => 'education',
+      'Required PPI Surveys Complete' => 'required_ppi_surveys_complete',
+      'Completed Surveys' => 'completed_surveys',
+      'Basics PPI Survey Complete' => 'basics_ppi_survey_complete',
+      'Basics PPI Survey Completion Date' => 'basics_ppi_survey_completion_date',
+      'Health PPI Survey Complete' => 'health_ppi_survey_complete',
+      'Health PPI Survey Completion Date' => 'health_ppi_survey_completion_date',
+      'Lifestyle PPI Survey Complete' => 'lifestyle_ppi_survey_complete',
+      'Lifestyle PPI Survey Completion Date' => 'lifestyle_ppi_survey_completion_date',
+      'Hist PPI Survey Complete' => 'hist_ppi_survey_complete',
+      'Hist PPI Survey Completion Date' => 'hist_ppi_survey_completion_date',
+      'Meds PPI Survey Complete' => 'meds_ppi_survey_complete',
+      'Meds PPI Survey Completion Date' => 'meds_ppi_survey_completion_date',
+      'Family PPI Survey Complete' => 'family_ppi_survey_complete',
+      'Family PPI Survey Completion Date' => 'family_ppi_survey_completion_date',
+      'Access PPI Survey Complete' => 'access_ppi_survey_complete',
+      'Access PPI Survey Completion Date' => 'access_ppi_survey_completion_date',
+      'Physical Measurements Status' => 'physical_measurements_status',
+      'Physical Measurements Completion Date' => 'physical_measurements_completion_date',
+      'Physical Measurements Location' => 'physical_measurements_location',
+      'Samples for DNA Received' => 'samples_for_dna_received',
+      'Biospecimens' => 'biospecimens',
+      '8 mL SST Collected' => 'eight_ml_sst_collected',
+      '8 mL SST Collection Date' => 'eight_ml_sst_collection_date',
+      '8 mL PST Collected' => 'eight_ml_pst_collected',
+      '8 mL PST Collection Date' => 'eight_ml_pst_collection_date',
+      '4 mL Na-Hep Collected' => 'four_ml_na_hep_collected',
+      '4 mL Na-Hep Collection Date' => 'four_ml_na_hep_collection_date',
+      '4 mL EDTA Collected' => 'four_ml_edta_collected',
+      '4 mL EDTA Collection Date' => 'four_ml_edta_collection_date',
+      '1st 10 mL EDTA Collected' => 'first_10_ml_edta_collected',
+      '1st 10 mL EDTA Collection Date' => 'first_10_ml_edta_collection_date',
+      '2nd 10 mL EDTA Collected' => 'second_10_ml_edta_collected',
+      '2nd 10 mL EDTA Collection Date' => 'second_10_ml_edta_collection_date',
+      'Urine 10 mL Collected' => 'urine_10_ml_collected',
+      'Urine 10 mL Collection Date' => 'urine_10_ml_collection_date',
+      'Saliva Collected' => 'saliva_collected',
+      'Saliva Collection Date' => 'saliva_collection_date',
+      'Biospecimens Location' => 'biospecimens_location'
+    }
+  end
+
+  private
+    def set_defaults
+      if self.new_record?
+        self.status = BatchHealthPro::STATUS_PENDING
+      end
+    end
+end

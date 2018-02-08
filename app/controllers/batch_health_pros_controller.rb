@@ -1,0 +1,78 @@
+class BatchHealthProsController < ApplicationController
+  before_action :authenticate_user!
+  before_action :load_batch_health_pro, only: [:show]
+  helper_method :sort_column, :sort_direction
+
+  def index
+    authorize BatchHealthPro
+    params[:page]||= 1
+    options = {}
+    options[:sort_column] = sort_column
+    options[:sort_direction] = sort_direction
+    @pending_batch_health_pros = BatchHealthPro.by_status(BatchHealthPro::STATUS_PENDING).paginate(per_page: 10, page: params[:page])
+    @expired_batch_health_pros = BatchHealthPro.by_status(BatchHealthPro::STATUS_EXPIRED).paginate(per_page: 10, page: params[:page])
+  end
+
+  def new
+    authorize BatchHealthPro
+    @batch_health_pro = BatchHealthPro.new()
+  end
+
+  def create
+    authorize BatchHealthPro
+
+    add_file_uload('health_pro_file')
+
+    @batch_health_pro = BatchHealthPro.new(batch_health_pro_params)
+
+    remove_file_uload('health_pro_file')
+
+    if @batch_health_pro.valid? && @batch_health_pro.import
+      flash[:success] = 'You have successfully uploaded Health Pro file.'
+      redirect_to batch_health_pro_url(@batch_health_pro) and return
+    else
+      flash.now[:alert] = 'Failed to upload Health Pro file.'
+      render action: 'new'
+    end
+  end
+
+  def show
+    authorize BatchHealthPro
+    params[:page]||= 1
+    params[:status]||= HealthPro::STATUS_MATCHABLE
+    options = {}
+    options[:sort_column] = sort_column
+    options[:sort_direction] = sort_direction
+
+    @health_pros = @batch_health_pro.health_pros.search_across_fields(params[:search], options).by_status(params[:status]).paginate(per_page: 10, page: params[:page])
+  end
+
+  private
+    def batch_health_pro_params
+      params.require(:batch_health_pro).permit(id, :health_pro_file, :health_pro_file_cache)
+    end
+
+    def add_file_uload(file)
+      if !params[:batch_health_pro]["#{file}_cache".to_sym].blank? && params[:batch_health_pro][file.to_sym].blank?
+        params[:batch_health_pro][file.to_sym] = params[:batch_health_pro]["#{file}_cache".to_sym]
+      end
+    end
+
+    def remove_file_uload(file)
+      if params[:batch_health_pro]["#{file}_cache".to_sym].blank? && params[:batch_health_pro][file.to_sym].blank?
+        @batch_health_pro[file.to_sym] = nil
+      end
+    end
+
+    def load_batch_health_pro
+      @batch_health_pro = BatchHealthPro.find(params[:id])
+    end
+
+    def sort_column
+      ['created_at', 'status', 'pmi_id', 'first_name', 'last_name', 'sex', 'email', 'date_of_birth'].include?(params[:sort]) ? params[:sort] : 'last_name'
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
+    end
+end

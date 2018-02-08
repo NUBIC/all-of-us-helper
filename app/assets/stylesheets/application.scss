@@ -14,12 +14,14 @@
 
 @import "foundation_and_overrides";
 @import "all_of_us_helper";
+@import "batch_health_pros";
 @import "batch_invitation_codes";
 @import "home";
 @import "invitation_code_assignments";
 @import "invitation_codes";
 @import "patients";
 @import "setting";
+@import "uploads";
 
 //See https://github.com/zurb/foundation-sites/issues/8512
 @mixin hack-stack {

@@ -21,7 +21,7 @@ class PatientsController < ApplicationController
 
   def record_id
     authorize Patient
-    redcap_api = initalize_redcap_api
+    redcap_api = initialize_redcap_api
     @patient = Patient.where(record_id: params[:record_id]).first
 
     if @patient.blank?
@@ -47,7 +47,7 @@ class PatientsController < ApplicationController
     end
 
     def sort_column
-      ['record_id', 'first_name', 'email', 'last_name'].include?(params[:sort]) ? params[:sort] : 'last_name'
+      ['record_id', 'pmi_id', 'first_name', 'email', 'last_name'].include?(params[:sort]) ? params[:sort] : 'last_name'
     end
 
     def sort_direction

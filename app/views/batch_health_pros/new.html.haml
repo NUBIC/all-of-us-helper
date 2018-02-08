@@ -1,0 +1,45 @@
+- content_for(:title) do
+  = "Upload Health Pro"
+- content_for(:all_of_us_helper_header) do
+  = render 'layouts/all_of_us_helper_header'
+- content_for(:all_of_us_helper_content_header) do
+  #all-of-us-helper-content-header
+    #new-batch-health-pro-header
+      %h1
+        = 'Upload Health Pro'
+- content_for(:all_of_us_helper_content) do
+  #all-of-us-helper-content
+    #batch-health-pro
+      = render 'shared/flash'
+      = form_with(model: @batch_health_pro,  local: true, multipart: true, id: 'batch-health-pro-form') do |f|
+        - if validation_errors?(@batch_health_pro, :base)
+          #batch-health-pro-errors.callout.alert
+            %p.error= format_validation_errors(@batch_health_pro, :base)
+        = render 'batch_health_pro',  batch_health_pro: @batch_health_pro,  f: f
+        .navigation
+          %p.help-text
+            %span{ class: 'required' }
+            Indicates required field
+          = f.submit 'Save', class: 'button'
+          = link_to 'Cancel', batch_health_pros_url(), class: 'cancel-link button warning'
+      #health-pro-errors
+        - if validation_errors?(@batch_health_pro, :health_pros)
+          %h2
+            Errors
+        - @batch_health_pro.health_pros.each do |health_pro|
+          - if health_pro.errors.any?
+            .health_pro.callout.alert
+              .pmi_id
+                %strong
+                  PMI ID:
+                = health_pro.pmi_id
+                - health_pro.errors.full_messages.each do |msg|
+                  %div
+                    = msg
+      .actions
+        %hr
+        = link_to 'Patients', patients_url(), { class: 'patients-link' }
+        |
+        = link_to 'Uploads', uploads_url(), { class: 'uploads-link' }
+        |
+        = link_to 'Health Pros', batch_health_pros_url(), { class: 'batch-health-pros-link' }

@@ -27,6 +27,8 @@
             %tr
               %th.record_id
                 = sortable 'record_id'
+              %th.pmi_id
+                = sortable 'pmi_id', 'PMI ID'
               %th.last_name
                 = sortable 'last_name'
               %th.first_name
@@ -41,6 +43,8 @@
               = content_tag_for(:tr, patient) do
                 %td.record_id
                   = patient.record_id
+                %td.pmi_id
+                  = patient.pmi_id
                 %td.last_name
                   = patient.last_name
                 %td.first_name

@@ -22,9 +22,13 @@ class ApplicationController < ActionController::Base
     stored_location_for(resource) || root_path
   end
 
-  def initalize_redcap_api
+  def initialize_redcap_api
     api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
     redcap_api = RedcapApi.new(api_token.token)
+  end
+
+  def initialize_study_tracker_api
+    study_tracker_api = StudyTrackerApi.new
   end
 
   protected
