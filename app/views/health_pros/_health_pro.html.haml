@@ -24,29 +24,56 @@
           %a.accordion-title{:href => "#"} Matches?
           / Accordion tab content: it would start in the open state due to using the `is-active` state class.
           .accordion-content{"data-tab-content" => ""}
-            %table
-              %thead
-                %tr
-                  %th.health_pro{ colspan: 8 }
-                    REDCap
-                %tr
-                  %th.first_name
-                    First Name
-                  %th.last_name
-                    Last Name
-                  %th.email
-                    Email
-                  %th.make-match-link
-              %tbody
-                - health_pro.matches.each do |match|
-                  = content_tag_for(:tr, match) do
-                    %td.first_name
-                      = match.patient.first_name
-                    %td.last_name
-                      = match.patient.last_name
-                    %td.email
-                      = match.patient.email
-                    %td.make-match-link
-                      = link_to 'EMPI', new_empi_lookup_url(first_name: match.health_pro.first_name, last_name: match.health_pro.last_name, birth_date: match.health_pro.date_of_birth, gender: match.health_pro.sex, address: match.health_pro.address), class: 'new-empi-link button'
-                      = form_with(model: match, url: accept_match_url(match.id), local: false, id: 'match-accept-form') do |f|
-                        = f.submit 'Match', class: 'button', 'data-confirm': 'Make a match?'
+            - health_pro.matches.each do |match|
+              .row{ id: "match_#{match.id}"}
+                %table.columns.large-11
+                  %thead
+                    %tr
+                      %th.health_pro{ colspan: 4 }
+                        REDCap
+                    %tr
+                      %th.first_name
+                        First
+                      %th.last_name
+                        Last
+                      %th.email
+                        Email
+                      %th.make-match-link
+                  %tbody
+                    = content_tag_for(:tr, match) do
+                      %td.first_name
+                        = match.patient.first_name
+                      %td.last_name
+                        = match.patient.last_name
+                      %td.email
+                        = match.patient.email
+                      %td.make-match-link
+                        = form_with(model: match, url: accept_match_url(match.id), local: false, id: 'match-accept-form') do |f|
+                          = f.submit 'Match', class: 'button', 'data-confirm': 'Make a match?'
+                %table.columns.large-12
+                  %thead
+                    %tr
+                      %th.health_pro{ colspan: 6 }
+                        EMPI
+                    %tr
+                      %th.gender
+                        Gender
+                      %th.nmhc_mrn
+                        NMHC
+                      %th.nmh_mrn
+                        NMH
+                      %th.nmff_mrn
+                        NMFF
+                      %th.lfh_mrn
+                        LFH
+                  %tbody
+                    %tr.empi_patient
+                      %td.gender
+                      %td.nmhc_mrn
+                      %td.nmh_mrn
+                      %td.nmff_mrn
+                      %td.lfh_mrn
+                .row
+                  .large-offset-20.large-4
+                    = link_to 'EMPI', new_empi_lookup_url(first_name: match.health_pro.first_name, last_name: match.health_pro.last_name, birth_date: match.health_pro.date_of_birth, gender: match.health_pro.sex, address: match.health_pro.address, match_id: match.id), class: 'new-empi-link button'
+

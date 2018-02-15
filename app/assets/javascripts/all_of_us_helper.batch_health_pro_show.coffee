@@ -10,22 +10,18 @@ class AllOfUsHelper.BatchHealthProShow
         init = () ->
           $('#assign-empi-link').on 'click', (e) ->
             empi_patient = $('input[name=assign-empi-patient]:checked').parents('.empi_patient')
-            first_name = empi_patient.find('.first_name').text()
-            last_name = empi_patient.find('.last_name').text()
-            birth_date = empi_patient.find('.birth_date').text()
             gender = empi_patient.find('.gender').text()
             nmhc_mrn = empi_patient.find('.nmhc_mrn').text()
             nmh_mrn = empi_patient.find('.nmh_mrn').text()
             nmff_mrn = empi_patient.find('.nmff_mrn').text()
             lfh_mrn = empi_patient.find('.lfh_mrn').text()
-            alert(first_name)
-            alert(last_name)
-            alert(birth_date)
-            alert(gender)
-            alert(nmhc_mrn)
-            alert(nmh_mrn)
-            alert(nmff_mrn)
-            alert(lfh_mrn)
+            match_id = $(this).parents('#empi-lookup').find('.match_id').val()
+            $("#match_#{match_id}").find('tbody .gender').text(gender)
+            $("#match_#{match_id}").find('tbody .nmhc_mrn').text(nmhc_mrn)
+            $("#match_#{match_id}").find('tbody .nmh_mrn').text(nmh_mrn)
+            $("#match_#{match_id}").find('tbody .nmff_mrn').text(nmff_mrn)
+            $("#match_#{match_id}").find('tbody .lfh_mrn').text(lfh_mrn)
+            $modal.foundation 'close'
             return
           $("#empi-lookup-form").on("ajax:beforeSend", (event) ->
             $('#empi-lookup-results').empty()

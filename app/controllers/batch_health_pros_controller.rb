@@ -49,7 +49,7 @@ class BatchHealthProsController < ApplicationController
 
   private
     def batch_health_pro_params
-      params.require(:batch_health_pro).permit(id, :health_pro_file, :health_pro_file_cache)
+      params.require(:batch_health_pro).permit(:id, :health_pro_file, :health_pro_file_cache)
     end
 
     def add_file_uload(file)

@@ -21,7 +21,6 @@ Rails.application.routes.draw do
 
   get '/empi_lookup/new', to: 'empi#new', as: 'new_empi_lookup'
   get '/empi_lookup', to: 'empi#empi_lookup'
-  # post '/empi_lookup', to: 'empi#empi_lookup', as: 'empi_lookup'
 
   resources :patients,  only: [:index, :show] do
     resources :invitation_code_assignments

@@ -1,5 +1,9 @@
 require 'rest_client'
 class StudyTrackerApi
+  SEARCH_TYPE_IDENTIFIERS = 'identifiers'
+  SEARCH_TYPE_DEMOGRAPHICS = 'demographics'
+  SEARCH_TYPES = [SEARCH_TYPE_IDENTIFIERS, SEARCH_TYPE_DEMOGRAPHICS]
+
   def initialize
     if Rails.env.development? || Rails.env.test?
       @verify_ssl = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['verify_ssl'] || true
@@ -9,9 +13,7 @@ class StudyTrackerApi
   end
 
   def empi_lookup(options)
-    options = { 'study_id' => 'STU00204480', 'proxy_user' => 'jho502' }.merge(options)
-    Rails.logger.info("Love the booch and your family!")
-    Rails.logger.info("#{options}")
+    options = { 'study_id' => 'STU00204480', 'proxy_user' => 'jho502', 'search_type' => StudyTrackerApi::SEARCH_TYPE_DEMOGRAPHICS }.merge(options)
     # url = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['empi_lookup'] + '?' + options.to_query
     url = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['empi_lookup'] + '?' + URI.encode_www_form(options)
     api_response = study_tracker_api_request_wrapper(url: url, method: :get, parse_response: true)
