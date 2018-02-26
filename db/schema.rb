@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180208145938) do
+ActiveRecord::Schema.define(version: 20180223203816) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -124,6 +124,13 @@ ActiveRecord::Schema.define(version: 20180208145938) do
     t.string "status", null: false
   end
 
+  create_table "patient_races", force: :cascade do |t|
+    t.integer "patient_id", null: false
+    t.integer "race_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "patients", force: :cascade do |t|
     t.string "record_id", null: false
     t.string "first_name", null: false
@@ -137,6 +144,23 @@ ActiveRecord::Schema.define(version: 20180208145938) do
     t.string "nmh_mrn"
     t.string "nmff_mrn"
     t.string "lfh_mrn"
+    t.string "registration_status"
+    t.string "general_consent_status"
+    t.string "general_consent_date"
+    t.string "ehr_consent_status"
+    t.string "ehr_consent_date"
+    t.string "withdrawal_status"
+    t.string "withdrawal_date"
+    t.string "biospecimens_location"
+    t.string "uuid"
+    t.date "birth_date"
+    t.string "ethnicity"
+  end
+
+  create_table "races", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "role_assignments", force: :cascade do |t|

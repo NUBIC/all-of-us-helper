@@ -45,6 +45,7 @@ gem 'pundit'
 gem 'record_tag_helper'
 gem 'rest-client'
 # gem 'webpacker'
+gem 'uuid'
 gem 'whenever', :require => false
 gem 'will_paginate'
 gem 'will_paginate-foundation'

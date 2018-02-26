@@ -38,7 +38,8 @@
                         Last
                       %th.email
                         Email
-                      %th.make-match-link
+                      %th.match-links
+                        Match?
                   %tbody
                     = content_tag_for(:tr, match) do
                       %td.first_name
@@ -49,7 +50,16 @@
                         = match.patient.email
                       %td.make-match-link
                         = form_with(model: match, url: accept_match_url(match.id), local: false, id: 'match-accept-form') do |f|
-                          = f.submit 'Match', class: 'button', 'data-confirm': 'Make a match?'
+                          = f.hidden_field :gender, id: 'match_gender'
+                          = f.hidden_field :nmhc_mrn, id: 'match_nmhc_mrn'
+                          = f.hidden_field :nmh_mrn, id: 'match_nmh_mrn'
+                          = f.hidden_field :nmff_mrn, id: 'match_nmff_mrn'
+                          = f.hidden_field :lfh_mrn, id: 'match_lfh_mrn'
+                          = f.submit 'Accept', class: 'button', 'data-confirm': 'Accept match?'
+
+                        = form_with(model: match, url: decline_match_url(match.id), local: false, id: 'match-decline-form') do |f|
+                          = f.submit 'Decline', class: 'button', 'data-confirm': 'Decline match?'
+
                 %table.columns.large-12
                   %thead
                     %tr
@@ -76,4 +86,3 @@
                 .row
                   .large-offset-20.large-4
                     = link_to 'EMPI', new_empi_lookup_url(first_name: match.health_pro.first_name, last_name: match.health_pro.last_name, birth_date: match.health_pro.date_of_birth, gender: match.health_pro.sex, address: match.health_pro.address, match_id: match.id), class: 'new-empi-link button'
-

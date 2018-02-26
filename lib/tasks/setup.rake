@@ -42,4 +42,11 @@ namespace :setup do
       end
     end
   end
+
+  desc "Races"
+  task(races: :environment) do  |t, args|
+    Race::RACES.each do |race|
+      Race.where(name: race).first_or_create
+    end
+  end
 end

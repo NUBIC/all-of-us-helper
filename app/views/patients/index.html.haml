@@ -8,6 +8,10 @@
       = form_tag patients_url, method: 'get', id: 'search-patients-form' do
         %h1
           Patients
+        .registration_status
+          %label{for: 'registration_status' }
+            Registration Status
+          = select_tag :registration_status, options_for_select(Patient::REGISTRATION_STATUSES.map { |registration_status| [registration_status, registration_status] }, (params[:registration_status].blank? ? '' : params[:registration_status])), { include_blank: 'all' }
         .search-box
           %label{for: 'search' }
             Search
@@ -29,6 +33,8 @@
                 = sortable 'record_id'
               %th.pmi_id
                 = sortable 'pmi_id', 'PMI ID'
+              %th.registration_status
+                = sortable 'registration_status', 'Registration Status'
               %th.last_name
                 = sortable 'last_name'
               %th.first_name
@@ -45,6 +51,8 @@
                   = patient.record_id
                 %td.pmi_id
                   = patient.pmi_id
+                %td.registration_status
+                  = patient.registration_status
                 %td.last_name
                   = patient.last_name
                 %td.first_name

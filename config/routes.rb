@@ -16,14 +16,19 @@ Rails.application.routes.draw do
   resources :matches do
     member do
       patch :accept
+      patch :decline
     end
   end
 
   get '/empi_lookup/new', to: 'empi#new', as: 'new_empi_lookup'
   get '/empi_lookup', to: 'empi#empi_lookup'
 
-  resources :patients,  only: [:index, :show] do
+  resources :patients,  only: [:index, :show, :update] do
     resources :invitation_code_assignments
+
+    member do
+      post :register
+    end
   end
 
   resources :users, only: :show

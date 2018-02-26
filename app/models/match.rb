@@ -3,22 +3,56 @@ class Match <  ApplicationRecord
   belongs_to :patient
   STATUS_PENDING        = 'pending'
   STATUS_ACCEPTED       = 'accepted'
-  STATUS_REJECTED       = 'rejected'
-  STATUSES = [STATUS_PENDING, STATUS_ACCEPTED, STATUS_REJECTED]
+  STATUS_DECLINED       = 'declined'
+  STATUSES = [STATUS_PENDING, STATUS_ACCEPTED, STATUS_DECLINED]
   after_initialize :set_defaults
 
-  def accept!(redcap_api)
+  scope :by_status, ->(status) do
+    if status.present?
+     where(status: status)
+    end
+  end
+
+  def decline!
+    Match.transaction do
+      self.status = Match::STATUS_DECLINED
+      save!
+      if !health_pro.pending_matches?
+        health_pro.status = HealthPro::STATUS_DECLINED
+        health_pro.save!
+      end
+    end
+  end
+
+  def accept!(redcap_api, match_params)
     accepted = nil
     begin
       self.status = Match::STATUS_ACCEPTED
       patient.pmi_id = health_pro.pmi_id
+      patient.birth_date = Date.parse(health_pro.date_of_birth)
+      patient.gender = health_pro.sex
+      patient.gender = match_params[:nmhc_mrn] if patient.gender.nil? && match_params[:gender]
+      patient.general_consent_status = health_pro.general_consent_status
+      patient.general_consent_date = health_pro.general_consent_date
+      patient.ehr_consent_status = health_pro.ehr_consent_status
+      patient.ehr_consent_date = health_pro.ehr_consent_date
+      patient.withdrawal_status = health_pro.withdrawal_status
+      patient.withdrawal_date = health_pro.withdrawal_date
+      patient.biospecimens_location = health_pro.biospecimens_location
+
+      patient.nmhc_mrn = match_params[:nmhc_mrn] if match_params[:nmhc_mrn]
+      patient.nmh_mrn = match_params[:nmh_mrn] if match_params[:nmh_mrn]
+      patient.nmff_mrn = match_params[:nmff_mrn] if match_params[:nmff_mrn]
+      patient.lfh_mrn = match_params[:lfh_mrn] if match_params[:lfh_mrn]
       health_pro.status = HealthPro::STATUS_MATCHED
+
       Match.transaction do
-        redcap_match = redcap_api.match(patient.record_id, health_pro.pmi_id, health_pro.general_consent_status, health_pro.ehr_consent_status)
+        redcap_match = redcap_api.match(patient.record_id, health_pro.pmi_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date)
         raise "Error assigning pmi_id code #{health_pro.pmi_id} to record_id #{patient.record_id}." if redcap_match[:error].present?
-        patient.save!
-        health_pro.save!
         save!
+        health_pro.save!
+        patient.set_registration_status
+        patient.save!
       end
       accepted = true
     rescue Exception => e

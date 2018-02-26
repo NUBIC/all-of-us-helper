@@ -10,17 +10,24 @@ class AllOfUsHelper.BatchHealthProShow
         init = () ->
           $('#assign-empi-link').on 'click', (e) ->
             empi_patient = $('input[name=assign-empi-patient]:checked').parents('.empi_patient')
-            gender = empi_patient.find('.gender').text()
-            nmhc_mrn = empi_patient.find('.nmhc_mrn').text()
-            nmh_mrn = empi_patient.find('.nmh_mrn').text()
-            nmff_mrn = empi_patient.find('.nmff_mrn').text()
-            lfh_mrn = empi_patient.find('.lfh_mrn').text()
+            gender = empi_patient.find('.gender').text().trim()
+            nmhc_mrn = empi_patient.find('.nmhc_mrn').text().trim()
+            nmh_mrn = empi_patient.find('.nmh_mrn').text().trim()
+            nmff_mrn = empi_patient.find('.nmff_mrn').text().trim()
+            lfh_mrn = empi_patient.find('.lfh_mrn').text().trim()
             match_id = $(this).parents('#empi-lookup').find('.match_id').val()
             $("#match_#{match_id}").find('tbody .gender').text(gender)
             $("#match_#{match_id}").find('tbody .nmhc_mrn').text(nmhc_mrn)
             $("#match_#{match_id}").find('tbody .nmh_mrn').text(nmh_mrn)
             $("#match_#{match_id}").find('tbody .nmff_mrn').text(nmff_mrn)
             $("#match_#{match_id}").find('tbody .lfh_mrn').text(lfh_mrn)
+
+            $("#match_#{match_id}").find('#match_gender').val(gender)
+            $("#match_#{match_id}").find('#match_nmhc_mrn').val(nmhc_mrn)
+            $("#match_#{match_id}").find('#match_nmh_mrn').val(nmh_mrn)
+            $("#match_#{match_id}").find('#match_nmff_mrn').val(nmff_mrn)
+            $("#match_#{match_id}").find('#match_lfh_mrn').val(lfh_mrn)
+
             $modal.foundation 'close'
             return
           $("#empi-lookup-form").on("ajax:beforeSend", (event) ->
@@ -39,7 +46,6 @@ class AllOfUsHelper.BatchHealthProShow
             return
           ).on("ajax:complete", (event) ->
             $('#empi-lookup .loading').addClass('hide')
-            # $("#new_article").append "<p>ERROR</p>"
             return
           )
           return

@@ -5,13 +5,17 @@
 
     @include breakpoint(large) {
       h1 {
-        @include grid-column($columns: 4);
+        @include grid-column($columns: 8);
+      }
+
+      .registration_status {
+        @include grid-column($columns: 6);
       }
 
       .search-box {
         @include grid-column($columns: 6);
-        @include grid-column-offset(10);
       }
+
       .search-buttons{
         @include grid-column($columns: 4);
       }
@@ -58,10 +62,24 @@
 #patient-show {
   @include grid-column-row();
 
-  .record_id, .pmi_id, .first_name, .last_name, .email, .general_consent_status, .general_consent_date, .ehr_consent_status, .ehr_consent_date, .invitation_code, .actions {
+  .field {
     margin-bottom: 1rem;
   }
   #invitation-code-assignment-form {
+    display: inline;
+  }
+
+  #patient-form {
+    label {
+      font-weight: bold;
+    }
+  }
+
+  #patient-form {
+    display: inline;
+  }
+
+  #register-patient-form {
     display: inline;
   }
 }

@@ -79,6 +79,7 @@ class CreateHealthPros < ActiveRecord::Migration[5.1]
       t.string  :saliva_collected,  null: true
       t.string  :saliva_collection_date,  null: true
       t.string  :biospecimens_location,  null: true
+      t.timestamps
     end
   end
 end

@@ -80,19 +80,23 @@ class RedcapApi
     { response: api_response[:response], error: api_response[:error] }
   end
 
-  def match(record_id, pmi_id, consent_y, ehr_consent_y)
+  def match(record_id, pmi_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d)
+    consent_d = Date.parse(consent_d) if consent_d
+    ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     payload = {
         :token => @api_token,
         :content => 'record',
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent_y,ehr_consent_y
-"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{ehr_consent_y}"),
+        :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d
+"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}"),
         :returnContent => 'count',
         :returnFormat => 'json'
     }
 
+    Rails.logger.info("Love the booch!")
+    Rails.logger.info("Here is the payload #{payload}")
     api_response = redcap_api_request_wrapper(payload)
 
     { response: api_response[:response], error: api_response[:error] }

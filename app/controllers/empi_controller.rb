@@ -14,6 +14,7 @@ class EmpiController < ApplicationController
     @empi_patients = []
     @error = nil
     study_tracker_api = initialize_study_tracker_api
+    params[:proxy_user] = current_user.username
     empi_results = study_tracker_api.empi_lookup(empi_params)
     if empi_results[:error].present?
       @error = empi_results[:error]
@@ -32,6 +33,6 @@ class EmpiController < ApplicationController
 
   private
     def empi_params
-      params.permit(:first_name, :last_name, :birth_date, :gender, :utf8, :commit)
+      params.permit(:first_name, :last_name, :birth_date, :gender, :utf8, :commit, :proxy_user)
     end
 end

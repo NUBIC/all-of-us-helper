@@ -1,18 +1,23 @@
 class HealthPro < ApplicationRecord
   belongs_to :batch_health_pro
   has_many :matches
+
   STATUS_PENDING              = 'pending'
   STATUS_PREVIOUSLY_MATCHED   = 'previously matched'
   STATUS_MATCHABLE            = 'matchable'
   STATUS_UNMATCHABLE          = 'unmatchable'
   STATUS_MATCHED              = 'matched'
-
-  STATUSES = [STATUS_MATCHABLE, STATUS_UNMATCHABLE, STATUS_MATCHED, STATUS_PREVIOUSLY_MATCHED]
-  after_initialize :set_defaults
+  STATUS_DECLINED             = 'declined'
+  STATUSES = [STATUS_MATCHABLE, STATUS_UNMATCHABLE, STATUS_MATCHED, STATUS_PREVIOUSLY_MATCHED, STATUS_DECLINED]
 
   SEX_MALE = 'Male'
   SEX_FEMALE = 'Female'
   SEXES = [SEX_MALE, SEX_FEMALE]
+
+  YES = '1'
+  NO = '0'
+
+  after_initialize :set_defaults
 
   scope :by_status, ->(status) do
     if status.present?
@@ -57,6 +62,14 @@ class HealthPro < ApplicationRecord
 
   def address
     [self.street_address, self.city, self.state, self.zip].compact.join(', ')
+  end
+
+  def pending_matches?
+    pending_matches.any?
+  end
+
+  def pending_matches
+    matches.by_status(Match::STATUS_PENDING)
   end
 
   private

@@ -1,22 +1,34 @@
 require 'redcap_api'
+require 'study_tracker_api'
 class PatientsController < ApplicationController
   PATIENT_CONTROLLER_SHOW_REDCAP_ERROR = 'Failed to communicate with REDCap.'
   before_action :authenticate_user!
-  before_action :load_patient, only: [:show]
+  before_action :load_patient, only: [:show, :register, :update]
   helper_method :sort_column, :sort_direction
 
   def index
     authorize Patient
     params[:page]||= 1
+    params[:registration_status]||= 'all'
     options = {}
     options[:sort_column] = sort_column
     options[:sort_direction] = sort_direction
-    @patients = Patient.search_across_fields(params[:search], options).paginate(per_page: 10, page: params[:page])
+    @patients = Patient.search_across_fields(params[:search], options).by_registration_status(params[:registration_status]).paginate(per_page: 10, page: params[:page])
   end
 
   def show
     authorize @patient
     @invitation_code_assignment = @patient.invitation_code_assignments.build
+  end
+
+  def update
+    if @patient.update_attributes(patient_params)
+      flash[:success] = 'You have successfully updated a patient.'
+      redirect_to patient_url(@patient)
+    else
+      flash.now[:alert] = 'Failed to update architect.'
+      render action: 'edit'
+    end
   end
 
   def record_id
@@ -37,9 +49,45 @@ class PatientsController < ApplicationController
     redirect_to patient_url(@patient)
   end
 
+  def register
+    options = {}
+    # options[:proxy_user] = current_user.username
+    authorize Patient
+    study_tracker_api = initialize_study_tracker_api
+    registraion_results = study_tracker_api.register(options, @patient)
+
+    if registraion_results[:error].nil?
+      @patient.registration_status = Patient::REGISTRATION_STATUS_REGISTERED
+      @patient.save!
+    end
+
+    redirect_to patient_url(@patient)
+  end
+
+  def empi_lookup
+    authorize Patient
+    @empi_patients = []
+    @error = nil
+    study_tracker_api = initialize_study_tracker_api
+    empi_results = study_tracker_api.empi_lookup(empi_params)
+    if empi_results[:error].present?
+      @error = empi_results[:error]
+    elsif empi_results[:response]['error'].present?
+      @error = empi_results[:response]['error']
+    else
+      @empi_patients = empi_results[:response]['patients']
+    end
+
+    ExceptionNotifier.notify_exception(@error) if @error
+
+    respond_to do |format|
+      format.html { render layout: false }
+    end
+  end
+
   private
     def patient_params
-      params.require(:patient).permit(:record_id, :first_name, :last_name, :email)
+      params.require(:patient).permit(:record_id, :first_name, :last_name, :email, :gender, :ethnicity, { race_ids:[] })
     end
 
     def load_patient
@@ -47,7 +95,7 @@ class PatientsController < ApplicationController
     end
 
     def sort_column
-      ['record_id', 'pmi_id', 'first_name', 'email', 'last_name'].include?(params[:sort]) ? params[:sort] : 'last_name'
+      ['record_id', 'pmi_id', 'first_name', 'email', 'last_name', 'registration_status'].include?(params[:sort]) ? params[:sort] : 'last_name'
     end
 
     def sort_direction

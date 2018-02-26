@@ -18,4 +18,8 @@ class PatientPolicy < ApplicationPolicy
   def empi_lookup?
     user.has_role?(Role::ROLE_ALL_OF_US_HELPER_USER)
   end
+
+  def register?
+    user.has_role?(Role::ROLE_ALL_OF_US_HELPER_USER)
+  end
 end
