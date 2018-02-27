@@ -6,31 +6,6 @@ class PatientsController < ApplicationController
   before_action :load_patient, only: [:show, :register, :update]
   helper_method :sort_column, :sort_direction
 
-  def index
-    authorize Patient
-    params[:page]||= 1
-    params[:registration_status]||= 'all'
-    options = {}
-    options[:sort_column] = sort_column
-    options[:sort_direction] = sort_direction
-    @patients = Patient.search_across_fields(params[:search], options).by_registration_status(params[:registration_status]).paginate(per_page: 10, page: params[:page])
-  end
-
-  def show
-    authorize @patient
-    @invitation_code_assignment = @patient.invitation_code_assignments.build
-  end
-
-  def update
-    if @patient.update_attributes(patient_params)
-      flash[:success] = 'You have successfully updated a patient.'
-      redirect_to patient_url(@patient)
-    else
-      flash.now[:alert] = 'Failed to update architect.'
-      render action: 'edit'
-    end
-  end
-
   def record_id
     authorize Patient
     redcap_api = initialize_redcap_api
@@ -47,6 +22,45 @@ class PatientsController < ApplicationController
     end
 
     redirect_to patient_url(@patient)
+  end
+
+  def index
+    authorize Patient
+    params[:page]||= 1
+    params[:registration_status]||= 'all'
+    options = {}
+    options[:sort_column] = sort_column
+    options[:sort_direction] = sort_direction
+    @patients = Patient.search_across_fields(params[:search], options).by_registration_status(params[:registration_status]).paginate(per_page: 10, page: params[:page])
+  end
+
+  def show
+    authorize @patient
+    @invitation_code_assignment = @patient.invitation_code_assignments.build
+  end
+
+  def update
+    authorize @patient
+    options = {}
+    # options[:proxy_user] = current_user.username
+    error = nil
+    if @patient.update_attributes(patient_params)
+      if @patient.registered?
+        study_tracker_api = initialize_study_tracker_api
+        registraion_results = study_tracker_api.register(options, @patient)
+        error = registraion_results[:error]
+      end
+    else
+      error = 'local attributes not updated.'
+    end
+
+    if error.nil?
+      flash[:success] = 'You have successfully updated a patient.'
+      redirect_to patient_url(@patient)
+    else
+      flash.now[:alert] = "Failed to update patient: #{error}."
+      render action: 'show'
+    end
   end
 
   def register

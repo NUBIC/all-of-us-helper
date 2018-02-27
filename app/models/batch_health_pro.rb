@@ -1,4 +1,5 @@
 require 'csv'
+require 'study_tracker_api'
 class BatchHealthPro < ApplicationRecord
   STATUS_PENDING = 'pending'
   STATUS_EXPIRED = 'expired'
@@ -45,6 +46,28 @@ class BatchHealthPro < ApplicationRecord
           health_pros.each do |health_pro|
             health_pro.determine_matches
             health_pro.save!
+
+            if health_pro.status == HealthPro::STATUS_PREVIOUSLY_MATCHED
+              matched_pmi_patient = Patient.where(pmi_id: health_pro.pmi_id).first
+              matched_pmi_patient.birth_date = Date.parse(health_pro.date_of_birth)
+              matched_pmi_patient.gender = health_pro.sex if matched_pmi_patient.gender.blank? && health_pro.sex.present?
+              matched_pmi_patient.general_consent_status = health_pro.general_consent_status
+              matched_pmi_patient.general_consent_date = health_pro.general_consent_date
+              matched_pmi_patient.ehr_consent_status = health_pro.ehr_consent_status
+              matched_pmi_patient.ehr_consent_date = health_pro.ehr_consent_date
+              matched_pmi_patient.withdrawal_status = health_pro.withdrawal_status
+              matched_pmi_patient.withdrawal_date = health_pro.withdrawal_date
+              matched_pmi_patient.biospecimens_location = health_pro.biospecimens_location
+              if matched_pmi_patient.registered? && matched_pmi_patient.changed?
+                options = {}
+                # options[:proxy_user] = current_user.username
+                error = nil
+                study_tracker_api = StudyTrackerApi.new
+                registraion_results = study_tracker_api.register(options, matched_pmi_patient)
+                error = registraion_results[:error]
+              end
+              matched_pmi_patient.save!
+            end
           end
         end
       else

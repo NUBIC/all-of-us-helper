@@ -130,6 +130,10 @@ class Patient < ApplicationRecord
     determined
   end
 
+  def registered?
+    [Patient::REGISTRATION_STATUS_REGISTERED, Patient::REGISTRATION_STATUS_WITHDRAWN].include?(self.registration_status)
+  end
+
   private
     def set_defaults
       if self.new_record? &&

@@ -19,6 +19,10 @@ class PatientPolicy < ApplicationPolicy
     user.has_role?(Role::ROLE_ALL_OF_US_HELPER_USER)
   end
 
+  def update?
+    user.has_role?(Role::ROLE_ALL_OF_US_HELPER_USER)
+  end
+
   def register?
     user.has_role?(Role::ROLE_ALL_OF_US_HELPER_USER)
   end

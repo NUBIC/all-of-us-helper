@@ -53,8 +53,8 @@ class StudyTrackerApi
       if patient.withdrawal_status == HealthPro::YES
         payload[:subject][:events] << { name: EVENT_TYPE_NAME_WITHDRAWN, date: patient.withdrawal_date }
       end
-
-      url = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['register'] + '?' + URI.encode_www_form(options)
+      url = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['register'].gsub(':id', patient.uuid)
+      url = url + '?' + URI.encode_www_form(options)
 
       api_response = study_tracker_api_request_wrapper(url: url, method: :put, parse_response: true, payload: payload)
 

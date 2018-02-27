@@ -56,7 +56,6 @@
                           = f.hidden_field :nmff_mrn, id: 'match_nmff_mrn'
                           = f.hidden_field :lfh_mrn, id: 'match_lfh_mrn'
                           = f.submit 'Accept', class: 'button', 'data-confirm': 'Accept match?'
-
                         = form_with(model: match, url: decline_match_url(match.id), local: false, id: 'match-decline-form') do |f|
                           = f.submit 'Decline', class: 'button', 'data-confirm': 'Decline match?'
 
