@@ -46,6 +46,8 @@ study_tracker:
     empi_lookup: http://enotis.dev/api/v2/empi_lookup.json
     verify_ssl: false
   staging:
+    register: http://studytracker-staging.fsm.northwestern.edu/api/v1/subjects/:id.json
     empi_lookup: http://studytracker-staging.fsm.northwestern.edu/api/v2/empi_lookup.json
   production:
+    register: http://enotis.northwestern.edu/api/v1/subjects/:id.json
     empi_lookup: https://enotis.northwestern.edu/api/v2/empi_lookup.json

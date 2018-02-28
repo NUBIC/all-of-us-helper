@@ -10,6 +10,9 @@ class StudyTrackerApi
   EVENT_TYPE_NAME_WITHDRAWN = 'Withdrawn'
 
   def initialize
+    @user = Rails.application.config.all_of_us_helper_api_users['study_tracker']['api_user']
+    @password = Rails.application.config.all_of_us_helper_api_users['study_tracker']['password']
+
     if Rails.env.development? || Rails.env.test?
       @verify_ssl = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['verify_ssl'] || true
     else
@@ -73,8 +76,8 @@ class StudyTrackerApi
           response = RestClient::Request.execute(
             method: options[:method],
             url: options[:url],
-            user: 'api_user',
-            password: 'test',
+            user: @user,
+            password: @password,
             accept: 'json',
             verify_ssl: @verify_ssl,
             headers: {
@@ -85,8 +88,8 @@ class StudyTrackerApi
            payload = ActiveSupport::JSON.encode(options[:payload])
            response = RestClient::Request.execute(
             method: options[:method],
-            user: 'api_user',
-            password: 'test',
+            user: @user,
+            password: @password,
             url: options[:url],
             payload: payload,
             content_type:  'application/json',

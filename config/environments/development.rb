@@ -53,4 +53,5 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+  config.all_of_us_helper_api_users = ActiveSupport::HashWithIndifferentAccess.new(YAML.load_file('/etc/nubic/all_of_us_helper_api_users.yml'))
 end
