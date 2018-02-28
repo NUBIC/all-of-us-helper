@@ -24,6 +24,7 @@
   #all-of-us-helper-content
     #show-batch-health-pro
       = render 'shared/flash'
+      = will_paginate @health_pros, renderer: FoundationPagination::Rails
       %table.hack_stack.hover
         %thead
           %tr
@@ -49,6 +50,7 @@
         %tbody
           - @health_pros.each do |health_pro|
             = render 'health_pros/health_pro', health_pro: health_pro
+      = will_paginate @health_pros, renderer: FoundationPagination::Rails
       #empi-lookup-modal.reveal.large{ "data-reveal" => "" }
         #empi-lookup
         %button.close-button{"aria-label" => "Close modal", "data-close" => "", :type => "button"}
