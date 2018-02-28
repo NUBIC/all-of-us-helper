@@ -2,8 +2,9 @@ require 'csv'
 require 'study_tracker_api'
 class BatchHealthPro < ApplicationRecord
   STATUS_PENDING = 'pending'
+  STATUS_PROCESSED = 'processed'
   STATUS_EXPIRED = 'expired'
-  STATUSES = [STATUS_PENDING, STATUS_EXPIRED]
+  STATUSES = [STATUS_PENDING, STATUS_PROCESSED, STATUS_EXPIRED]
 
   mount_uploader :health_pro_file, HealthProFileUploader
   has_many :health_pros
@@ -80,10 +81,6 @@ class BatchHealthPro < ApplicationRecord
       Rails.logger.info(e.backtrace.join("\n"))
       false
     end
-  end
-
-  def determine_matches
-
   end
 
   def self.headers_map

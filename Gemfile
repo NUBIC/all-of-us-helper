@@ -35,6 +35,8 @@ gem 'jbuilder', '~> 2.5'
 
 gem 'american_date'
 gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
+gem 'daemons'
+gem 'delayed_job_active_record'
 gem 'devise', '~> 4.2'
 gem 'devise_ldap_authenticatable'
 gem 'exception_notification'

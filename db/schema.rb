@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180223203816) do
+ActiveRecord::Schema.define(version: 20180228133327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,26 @@ ActiveRecord::Schema.define(version: 20180223203816) do
     t.string "invitation_code_file"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", null: false
+    t.text "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string "locked_by"
+    t.string "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer "delayed_reference_id"
+    t.string "delayed_reference_type"
+    t.index ["delayed_reference_id"], name: "delayed_jobs_delayed_reference_id"
+    t.index ["delayed_reference_type"], name: "delayed_jobs_delayed_reference_type"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+    t.index ["queue"], name: "delayed_jobs_queue"
   end
 
   create_table "health_pros", force: :cascade do |t|
@@ -124,13 +144,6 @@ ActiveRecord::Schema.define(version: 20180223203816) do
     t.string "status", null: false
   end
 
-  create_table "patient_races", force: :cascade do |t|
-    t.integer "patient_id", null: false
-    t.integer "race_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "patients", force: :cascade do |t|
     t.string "record_id", null: false
     t.string "first_name", null: false
@@ -155,6 +168,13 @@ ActiveRecord::Schema.define(version: 20180223203816) do
     t.string "uuid"
     t.date "birth_date"
     t.string "ethnicity"
+  end
+
+  create_table "patients_races", id: :bigint, default: -> { "nextval('patient_races_id_seq'::regclass)" }, force: :cascade do |t|
+    t.integer "patient_id", null: false
+    t.integer "race_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "races", force: :cascade do |t|

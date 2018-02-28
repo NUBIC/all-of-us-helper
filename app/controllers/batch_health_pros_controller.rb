@@ -27,7 +27,8 @@ class BatchHealthProsController < ApplicationController
 
     remove_file_uload('health_pro_file')
 
-    if @batch_health_pro.valid? && @batch_health_pro.import
+    if @batch_health_pro.save
+      Delayed::Job.enqueue ProcessBatchHealthProJob.new(@batch_health_pro.id)
       flash[:success] = 'You have successfully uploaded Health Pro file.'
       redirect_to batch_health_pro_url(@batch_health_pro) and return
     else

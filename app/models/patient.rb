@@ -97,7 +97,7 @@ class Patient < ApplicationRecord
   end
 
   def demographics_ready?
-    ethnicity.present? && gender.present? && races.any?
+    nmhc_mrn.present? && ethnicity.present? && gender.present? && races.any?
   end
 
   def ready?
