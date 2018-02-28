@@ -63,6 +63,11 @@ class StudyTrackerApi
 
       { response: api_response[:response], error: api_response[:error] }
     rescue Exception => e
+      error = e
+      Rails.logger.info(e.class)
+      Rails.logger.info(e.message)
+      Rails.logger.info(e.backtrace.join("\n"))
+      { response: nil, error: error }
     end
   end
 
