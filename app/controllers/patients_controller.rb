@@ -70,7 +70,10 @@ class PatientsController < ApplicationController
     study_tracker_api = initialize_study_tracker_api
     registraion_results = study_tracker_api.register(options, @patient)
 
-    if registraion_results[:error].nil?
+    if registraion_results[:errors].present?
+      Rails.logger.info("Here is the registration error:")
+      Rails.logger.info("#{registraion_results[:errors]}")
+    else
       @patient.registration_status = Patient::REGISTRATION_STATUS_REGISTERED
       @patient.save!
     end
