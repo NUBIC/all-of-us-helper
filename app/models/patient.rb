@@ -134,6 +134,12 @@ class Patient < ApplicationRecord
     [Patient::REGISTRATION_STATUS_REGISTERED, Patient::REGISTRATION_STATUS_WITHDRAWN].include?(self.registration_status)
   end
 
+  def match
+    if matches.any?
+      matches.first
+    end
+  end
+
   private
     def set_defaults
       if self.new_record? &&

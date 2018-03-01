@@ -24,8 +24,6 @@ class EmpiController < ApplicationController
       @empi_patients = empi_results[:response]['patients']
     end
 
-    ExceptionNotifier.notify_exception(@error) if @error
-
     respond_to do |format|
       format.html { render layout: false }
     end

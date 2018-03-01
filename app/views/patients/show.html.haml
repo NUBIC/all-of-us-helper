@@ -16,96 +16,115 @@
           .registration_status.field
             %strong
               Registration Status:
-            = @patient.registration_status
+            %span.value
+              = @patient.registration_status
           .record_id.field
             %strong
               REDCap Record ID:
-            = @patient.record_id
+            %span.value
+              = @patient.record_id
           .pmi_id.field
             %strong
               PMI ID:
-            = @patient.pmi_id
+            %span.value
+              = @patient.pmi_id
           .first_name.field
             %strong
               First Name:
-            = @patient.first_name
+            %span.value
+              = @patient.first_name
           .last_name.field
             %strong
               Last Name:
-            = @patient.last_name
+            %span.value
+              = @patient.last_name
           .email.field
             %strong
               Email:
-            = @patient.email
+            %span.value
+              = @patient.email
           .birth_date.field
             %strong
               Birth Date:
-            = @patient.birth_date.to_s(:date) if @patient.birth_date
-          .nmhc_mrn.field
-            %strong
-              NMHC MRN:
-            = @patient.nmhc_mrn
-          .nmh_mrn.field
-            %strong
-              NMH MRN:
-            = @patient.nmh_mrn
-          .nmff_mrn.field
-            %strong
-              NMFF MRN:
-            = @patient.nmff_mrn
-          .lfh_mrn.field
-            %strong
-              LFH MRN:
-            = @patient.lfh_mrn
+            %span.value
+              = @patient.birth_date.to_s(:date) if @patient.birth_date
+          / .nmh_mrn.field
+          /   %strong
+          /     NMH MRN:
+          /   %span.value
+          /     = @patient.nmh_mrn
+          / .nmff_mrn.field
+          /   %strong
+          /     NMFF MRN:
+          /   %span.value
+          /     = @patient.nmff_mrn
+          / .lfh_mrn.field
+          /   %strong
+          /     LFH MRN:
+          /   %span.value
+          /     = @patient.lfh_mrn
         .columns.large-8
           .general_consent_status.field
             %strong
-              General Consent Status
+              General Consent Status:
             = @patient.general_consent_status if @patient.accepted_match
           .general_consent_date.field
             %strong
-              General Consent Date
+              General Consent Date:
             = @patient.general_consent_date if @patient.accepted_match
           .ehr_consent_status.field
             %strong
-              EHR Consent Status
+              EHR Consent Status:
             = @patient.ehr_consent_status if @patient.accepted_match
           .ehr_consent_date.field
             %strong
-              EHR Consent Status Date
+              EHR Consent Status Date:
             = @patient.ehr_consent_date if @patient.accepted_match
           .withdrawal_status.field
             %strong
-              Withdrawal Status
+              Withdrawal Status:
             = @patient.withdrawal_status if @patient.accepted_match
           .withdrawal_status_date.field
             %strong
-              Withdrawal Status Date
+              Withdrawal Status Date:
             = @patient.withdrawal_date if @patient.accepted_match
           .biospecimens_location.field
             %strong
-              Biospecimens Location
+              Biospecimens Location:
             = @patient.biospecimens_location if @patient.accepted_match
         .columns.large-8
           = form_with(model: @patient, local: true, id: 'patient-form') do |f|
+            .row.nmhc_mrn
+              %div{class: 'small-14 large-8 columns' }
+                %label{for: 'patient_nmhc_mrn' }
+                  NMHC MRN:
+                  %span{ class: 'required' }
+              %div{class: 'small-10 large-16 columns' }
+                %span.value
+                  = @patient.nmhc_mrn
+                = f.hidden_field :nmhc_mrn, value: @patient.nmhc_mrn, id: 'patient_nmhc_mrn'
+              / = f.hidden_field :gender, id: 'match_gender'
+              / = f.hidden_field :nmh_mrn, id: 'patient_nmh_mrn'
+              / = f.hidden_field :nmff_mrn, id: 'patient_nmff_mrn'
+              / = f.hidden_field :lfh_mrn, id: 'patient_lfh_mrn'
             .row.gender
               %div{class: 'small-14 large-8 columns' }
                 %label{for: 'patient_gender' }
-                  Gender
+                  Gender:
                   %span{ class: 'required' }
               %div{class: 'small-10 large-16 columns' }
                 = f.select :gender, options_for_select(Patient::GENDERS,  selected: f.object.gender), { include_blank: true }, id: 'patient_gender'
             .row.ethnicity
               %div{class: 'small-14 large-8 columns' }
                 %label{for: 'patient_ethnicity' }
-                  Ethnicity
+                  Ethnicity:
                   %span{ class: 'required' }
               %div{class: 'small-10 large-16 columns' }
                 = f.select :ethnicity, options_for_select(Patient::ETHNICITIES,  selected: f.object.ethnicity), { include_blank: true }, id: 'patient_ethnicity'
             .row.races
               %div{class: 'small-24 large-24 columns' }
                 %label{for: 'patient_races' }
-                  Races
+                  Races:
               %div{class: 'small-24 large-24 columns' }
                 - for race in Race.all
                   %div
@@ -113,9 +132,10 @@
                     %label{for: "patient_race_#{race.id}" }
                       = race.name
             = f.submit 'Update Demographics', class: 'button', data: { confirm: 'Are you sure you want update the patient?' }
-          - if @patient.registration_status == Patient::REGISTRATION_STATUS_READY
-            = form_with(url: register_patient_url(@patient), local: true, id: 'register-patient-form') do |f|
-              = f.submit 'Register Study Tracker', class: 'button', 'data-confirm': 'Register patient?', disabled: !@patient.demographics_ready?
+
+            = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date, gender: @patient.gender, address: @patient.match.health_pro.address, match_id: @patient.match.id), class: 'new-empi-link button', disabled: @patient.registered?
+          = form_with(url: register_patient_url(@patient), local: true, id: 'register-patient-form') do |f|
+            = f.submit 'Register Study Tracker', class: 'button', 'data-confirm': 'Register patient?', disabled: (!@patient.ready? || !@patient.demographics_ready? || @patient.registered?)
       .row
         .columns.large-24
           %hr
@@ -153,3 +173,8 @@
           = link_to 'Patients', patients_url(), { class: 'patients-link' }
           |
           = link_to 'Invitation Codes', invitation_codes_url(), { class: 'invitation-codes-link' }
+
+      #empi-lookup-modal.reveal.large{ "data-reveal" => "" }
+        #empi-lookup
+        %button.close-button{"aria-label" => "Close modal", "data-close" => "", :type => "button"}
+          %span{"aria-hidden" => "true"} &times;

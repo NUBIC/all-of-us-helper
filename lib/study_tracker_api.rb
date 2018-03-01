@@ -107,11 +107,17 @@ class StudyTrackerApi
         end
         response = JSON.parse(response) if options[:parse_response]
       rescue Exception => e
+        ExceptionNotifier.notify_exception(e)
         error = e
         Rails.logger.info(e.class)
         Rails.logger.info(e.message)
         Rails.logger.info(e.backtrace.join("\n"))
       end
+
+      if response[:errors].present?
+        error = response[:errors]
+      end
+
       { response: response, error: error }
     end
 end

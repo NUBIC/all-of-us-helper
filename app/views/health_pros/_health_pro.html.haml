@@ -58,7 +58,6 @@
                           = f.submit 'Accept', class: 'button', 'data-confirm': 'Accept match?'
                         = form_with(model: match, url: decline_match_url(match.id), local: false, id: 'match-decline-form') do |f|
                           = f.submit 'Decline', class: 'button', 'data-confirm': 'Decline match?'
-
                 %table.columns.large-12
                   %thead
                     %tr

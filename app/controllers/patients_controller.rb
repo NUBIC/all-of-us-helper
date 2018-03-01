@@ -68,11 +68,11 @@ class PatientsController < ApplicationController
     # options[:proxy_user] = current_user.username
     authorize Patient
     study_tracker_api = initialize_study_tracker_api
-    registraion_results = study_tracker_api.register(options, @patient)
+    registration_results = study_tracker_api.register(options, @patient)
 
-    if registraion_results[:errors].present?
+    if registration_results[:error].present?
       Rails.logger.info("Here is the registration error:")
-      Rails.logger.info("#{registraion_results[:errors]}")
+      Rails.logger.info("#{registration[:error]}")
     else
       @patient.registration_status = Patient::REGISTRATION_STATUS_REGISTERED
       @patient.save!
@@ -81,30 +81,9 @@ class PatientsController < ApplicationController
     redirect_to patient_url(@patient)
   end
 
-  def empi_lookup
-    authorize Patient
-    @empi_patients = []
-    @error = nil
-    study_tracker_api = initialize_study_tracker_api
-    empi_results = study_tracker_api.empi_lookup(empi_params)
-    if empi_results[:error].present?
-      @error = empi_results[:error]
-    elsif empi_results[:response]['error'].present?
-      @error = empi_results[:response]['error']
-    else
-      @empi_patients = empi_results[:response]['patients']
-    end
-
-    ExceptionNotifier.notify_exception(@error) if @error
-
-    respond_to do |format|
-      format.html { render layout: false }
-    end
-  end
-
   private
     def patient_params
-      params.require(:patient).permit(:record_id, :first_name, :last_name, :email, :gender, :ethnicity, { race_ids:[] })
+      params.require(:patient).permit(:record_id, :first_name, :last_name, :email, :gender, :ethnicity, :nmhc_mrn, :nmh_mrn, :nmff_mrn, :lfh_mrn, { race_ids:[] })
     end
 
     def load_patient

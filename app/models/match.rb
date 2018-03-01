@@ -56,6 +56,7 @@ class Match <  ApplicationRecord
       end
       accepted = true
     rescue Exception => e
+      ExceptionNotifier.notify_exception(e)
       accepted = false
       Rails.logger.info(e.class)
       Rails.logger.info(e.message)
