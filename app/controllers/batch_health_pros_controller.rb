@@ -9,8 +9,12 @@ class BatchHealthProsController < ApplicationController
     options = {}
     options[:sort_column] = sort_column
     options[:sort_direction] = sort_direction
-    @pending_batch_health_pros = BatchHealthPro.by_status(BatchHealthPro::STATUS_PENDING).paginate(per_page: 10, page: params[:page])
-    @expired_batch_health_pros = BatchHealthPro.by_status(BatchHealthPro::STATUS_EXPIRED).paginate(per_page: 10, page: params[:page])
+    @pending_batch_health_pros = BatchHealthPro.order('created_at DESC').by_status(BatchHealthPro::STATUS_PENDING, BatchHealthPro::STATUS_READY).paginate(per_page: 10, page: params[:page])
+    @expired_batch_health_pros = BatchHealthPro.order('created_at DESC').by_status(BatchHealthPro::STATUS_EXPIRED).paginate(per_page: 10, page: params[:page])
+    respond_to do |format|
+      format.html
+      format.js
+    end
   end
 
   def new
@@ -29,8 +33,8 @@ class BatchHealthProsController < ApplicationController
 
     if @batch_health_pro.save
       Delayed::Job.enqueue ProcessBatchHealthProJob.new(@batch_health_pro.id)
-      flash[:success] = 'You have successfully uploaded Health Pro file.'
-      redirect_to batch_health_pro_url(@batch_health_pro) and return
+      # flash[:success] = 'You have successfully uploaded Health Pro file.'
+      redirect_to batch_health_pros_url() and return
     else
       flash.now[:alert] = 'Failed to upload Health Pro file.'
       render action: 'new'

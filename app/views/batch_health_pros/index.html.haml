@@ -12,29 +12,7 @@
     #batch-health-pros
       = render 'shared/flash'
       #pending-batch-health-pros-list
-        %h2
-          Pending
-        = will_paginate @pending_batch_health_pros, renderer: FoundationPagination::Rails, class: 'pagination-top'
-        = link_to 'Upload Health Pro File', new_batch_health_pro_url(), { class: 'new-batch-health-pro-link' }
-        %table.hack_stack.hover
-          %thead
-            %tr
-              %th.created_at
-                = sortable 'created_at'
-              %th.status
-                = sortable 'status'
-              %th.show-batch-health-pro-link
-          %tbody
-            - @pending_batch_health_pros.each do |pending_batch_health_pro|
-              = content_tag_for(:tr, pending_batch_health_pro) do
-                %td.created_at
-                  = pending_batch_health_pro.created_at.to_s(:date)
-                %td.status
-                  = pending_batch_health_pro.status
-                %td.show-batch-health-pro-link
-                  = link_to "Show", batch_health_pro_url(pending_batch_health_pro), class: 'show-batch-health-pro-link'
-        = will_paginate @pending_batch_health_pros, renderer: FoundationPagination::Rails
-
+        = render 'pending_batch_health_pros', pending_batch_health_pros: @pending_batch_health_pros
       #expired-batch-health-pros-list
         %h2
           Expired

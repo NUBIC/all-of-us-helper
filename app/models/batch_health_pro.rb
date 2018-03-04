@@ -2,9 +2,9 @@ require 'csv'
 require 'study_tracker_api'
 class BatchHealthPro < ApplicationRecord
   STATUS_PENDING = 'pending'
-  STATUS_PROCESSED = 'processed'
+  STATUS_READY = 'ready'
   STATUS_EXPIRED = 'expired'
-  STATUSES = [STATUS_PENDING, STATUS_PROCESSED, STATUS_EXPIRED]
+  STATUSES = [STATUS_PENDING, STATUS_READY, STATUS_EXPIRED]
 
   mount_uploader :health_pro_file, HealthProFileUploader
   has_many :health_pros
@@ -14,10 +14,14 @@ class BatchHealthPro < ApplicationRecord
   after_destroy :remove_health_pro_file!
   after_initialize :set_defaults
 
-  scope :by_status, ->(status) do
-    if status.present?
-     where(status: status)
+  scope :by_status, ->(*statuses) do
+    if statuses.any?
+     where(status: statuses)
     end
+  end
+
+  def pending?
+    status == BatchHealthPro::STATUS_PENDING
   end
 
   def import
@@ -41,8 +45,6 @@ class BatchHealthPro < ApplicationRecord
 
             health_pros.build(row)
           end
-
-          save!
 
           health_pros.each do |health_pro|
             health_pro.determine_matches
@@ -71,6 +73,8 @@ class BatchHealthPro < ApplicationRecord
             end
           end
         end
+        self.status = BatchHealthPro::STATUS_READY
+        save!
       else
         false
       end
