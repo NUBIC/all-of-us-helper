@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180228133327) do
+ActiveRecord::Schema.define(version: 20180304213325) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -154,9 +154,6 @@ ActiveRecord::Schema.define(version: 20180228133327) do
     t.string "pmi_id"
     t.string "gender"
     t.string "nmhc_mrn"
-    t.string "nmh_mrn"
-    t.string "nmff_mrn"
-    t.string "lfh_mrn"
     t.string "registration_status"
     t.string "general_consent_status"
     t.string "general_consent_date"

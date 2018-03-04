@@ -48,21 +48,6 @@
               Birth Date:
             %span.value
               = @patient.birth_date.to_s(:date) if @patient.birth_date
-          / .nmh_mrn.field
-          /   %strong
-          /     NMH MRN:
-          /   %span.value
-          /     = @patient.nmh_mrn
-          / .nmff_mrn.field
-          /   %strong
-          /     NMFF MRN:
-          /   %span.value
-          /     = @patient.nmff_mrn
-          / .lfh_mrn.field
-          /   %strong
-          /     LFH MRN:
-          /   %span.value
-          /     = @patient.lfh_mrn
         .columns.large-8
           .general_consent_status.field
             %strong
@@ -102,11 +87,8 @@
               %div{class: 'small-10 large-16 columns' }
                 %span.value
                   = @patient.nmhc_mrn
-                = f.hidden_field :nmhc_mrn, value: @patient.nmhc_mrn, id: 'patient_nmhc_mrn'
               / = f.hidden_field :gender, id: 'match_gender'
-              / = f.hidden_field :nmh_mrn, id: 'patient_nmh_mrn'
-              / = f.hidden_field :nmff_mrn, id: 'patient_nmff_mrn'
-              / = f.hidden_field :lfh_mrn, id: 'patient_lfh_mrn'
+                = f.hidden_field :nmhc_mrn, value: @patient.nmhc_mrn, id: 'patient_nmhc_mrn'
             .row.gender
               %div{class: 'small-14 large-8 columns' }
                 %label{for: 'patient_gender' }

@@ -26,7 +26,7 @@
           .accordion-content{"data-tab-content" => ""}
             - health_pro.matches.each do |match|
               .row{ id: "match_#{match.id}"}
-                %table.columns.large-11
+                %table.columns.large-14
                   %thead
                     %tr
                       %th.health_pro{ colspan: 4 }
@@ -52,13 +52,10 @@
                         = form_with(model: match, url: accept_match_url(match.id), local: false, id: 'match-accept-form') do |f|
                           = f.hidden_field :gender, id: 'match_gender'
                           = f.hidden_field :nmhc_mrn, id: 'match_nmhc_mrn'
-                          = f.hidden_field :nmh_mrn, id: 'match_nmh_mrn'
-                          = f.hidden_field :nmff_mrn, id: 'match_nmff_mrn'
-                          = f.hidden_field :lfh_mrn, id: 'match_lfh_mrn'
                           = f.submit 'Accept', class: 'button', 'data-confirm': 'Accept match?'
                         = form_with(model: match, url: decline_match_url(match.id), local: false, id: 'match-decline-form') do |f|
                           = f.submit 'Decline', class: 'button', 'data-confirm': 'Decline match?'
-                %table.columns.large-12
+                %table.columns.large-9
                   %thead
                     %tr
                       %th.health_pro{ colspan: 6 }
@@ -68,19 +65,10 @@
                         Gender
                       %th.nmhc_mrn
                         NMHC
-                      %th.nmh_mrn
-                        NMH
-                      %th.nmff_mrn
-                        NMFF
-                      %th.lfh_mrn
-                        LFH
                   %tbody
                     %tr.empi_patient
                       %td.gender
                       %td.nmhc_mrn
-                      %td.nmh_mrn
-                      %td.nmff_mrn
-                      %td.lfh_mrn
                 .row
                   .large-offset-20.large-4
                     = link_to 'EMPI', new_empi_lookup_url(first_name: match.health_pro.first_name, last_name: match.health_pro.last_name, birth_date: match.health_pro.date_of_birth, gender: match.health_pro.sex, address: match.health_pro.address, match_id: match.id), class: 'new-empi-link button'

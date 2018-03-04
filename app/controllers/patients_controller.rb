@@ -82,7 +82,7 @@ class PatientsController < ApplicationController
 
   private
     def patient_params
-      params.require(:patient).permit(:record_id, :first_name, :last_name, :email, :gender, :ethnicity, :nmhc_mrn, :nmh_mrn, :nmff_mrn, :lfh_mrn, { race_ids:[] })
+      params.require(:patient).permit(:record_id, :first_name, :last_name, :email, :gender, :ethnicity, :nmhc_mrn, { race_ids:[] })
     end
 
     def load_patient

@@ -24,7 +24,7 @@ class MatchesController < ApplicationController
 
   private
     def match_params
-      params.require(:match).permit(:gender, :nmhc_mrn, :nmh_mrn, :nmff_mrn, :lfh_mrn)
+      params.require(:match).permit(:gender, :nmhc_mrn)
     end
 
     def load_match

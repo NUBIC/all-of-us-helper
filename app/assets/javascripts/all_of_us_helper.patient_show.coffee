@@ -18,20 +18,9 @@ class AllOfUsHelper.PatientShow
             empi_patient = $('input[name=assign-empi-patient]:checked').parents('.empi_patient')
             # gender = empi_patient.find('.gender').text().trim()
             nmhc_mrn = empi_patient.find('.nmhc_mrn').text().trim()
-            # nmh_mrn = empi_patient.find('.nmh_mrn').text().trim()
-            # nmff_mrn = empi_patient.find('.nmff_mrn').text().trim()
-            # lfh_mrn = empi_patient.find('.lfh_mrn').text().trim()
-            # $("#match_#{match_id}").find('.value .gender').text(gender)
             $("#patient-form").find('.nmhc_mrn .value').text(nmhc_mrn)
-            # $("#patient-show").find('.nmh_mrn .value').text(nmh_mrn)
-            # $("#patient-show").find('.nmff_mrn .value').text(nmff_mrn)
-            # $("#patient-show").find('.lfh_mrn .value').text(lfh_mrn)
-            #
             # $("#patient-form").find('#patient_gender').val(gender)
             $("#patient_nmhc_mrn").val(nmhc_mrn)
-            # $("#patient-form").find('#patient_nmh_mrn').val(nmh_mrn)
-            # $("#patient-form").find('#patient_nmff_mrn').val(nmff_mrn)
-            # $("#patient-form").find('#patient_lfh_mrn').val(lfh_mrn)
 
             $modal.foundation 'close'
             return

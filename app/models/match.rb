@@ -41,9 +41,6 @@ class Match <  ApplicationRecord
       patient.biospecimens_location = health_pro.biospecimens_location
 
       patient.nmhc_mrn = match_params[:nmhc_mrn] if match_params[:nmhc_mrn]
-      patient.nmh_mrn = match_params[:nmh_mrn] if match_params[:nmh_mrn]
-      patient.nmff_mrn = match_params[:nmff_mrn] if match_params[:nmff_mrn]
-      patient.lfh_mrn = match_params[:lfh_mrn] if match_params[:lfh_mrn]
       health_pro.status = HealthPro::STATUS_MATCHED
 
       Match.transaction do
