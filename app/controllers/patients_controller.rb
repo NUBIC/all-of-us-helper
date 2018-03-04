@@ -71,13 +71,12 @@ class PatientsController < ApplicationController
     registration_results = study_tracker_api.register(options, @patient)
 
     if registration_results[:error].present?
-      Rails.logger.info("Here is the registration error:")
-      Rails.logger.info("#{registration[:error]}")
+      flash[:alert] = "Failed to register the patient."
     else
       @patient.registration_status = Patient::REGISTRATION_STATUS_REGISTERED
       @patient.save!
+      flash[:success] = 'You have successfully registered a patient.'
     end
-
     redirect_to patient_url(@patient)
   end
 
