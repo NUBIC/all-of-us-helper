@@ -29,12 +29,13 @@ class BatchHealthProsController < ApplicationController
     add_file_uload('health_pro_file')
 
     @batch_health_pro = BatchHealthPro.new(batch_health_pro_params)
+    @batch_health_pro.created_user = current_user.username
 
     remove_file_uload('health_pro_file')
 
     if @batch_health_pro.save
       Delayed::Job.enqueue ProcessBatchHealthProJob.new(@batch_health_pro.id)
-      # flash[:success] = 'You have successfully uploaded Health Pro file.'
+      flash[:success] = 'You have successfully uploaded Health Pro file.'
       redirect_to batch_health_pros_url() and return
     else
       flash.now[:alert] = 'Failed to upload Health Pro file.'

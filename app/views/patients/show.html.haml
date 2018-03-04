@@ -87,7 +87,7 @@
               %div{class: 'small-10 large-16 columns' }
                 %span.value
                   = @patient.nmhc_mrn
-              / = f.hidden_field :gender, id: 'match_gender'
+                / = f.hidden_field :gender, id: 'match_gender'
                 = f.hidden_field :nmhc_mrn, value: @patient.nmhc_mrn, id: 'patient_nmhc_mrn'
             .row.gender
               %div{class: 'small-14 large-8 columns' }

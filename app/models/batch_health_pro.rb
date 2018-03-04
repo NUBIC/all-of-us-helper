@@ -78,9 +78,9 @@ class BatchHealthPro < ApplicationRecord
               matched_pmi_patient.withdrawal_date = health_pro.withdrawal_date
               matched_pmi_patient.biospecimens_location = health_pro.biospecimens_location
               if matched_pmi_patient.registered? && matched_pmi_patient.changed?
-                options = {}
-                # options[:proxy_user] = current_user.username
                 error = nil
+                options = {}
+                options[:proxy_user] = self.created_user
                 study_tracker_api = StudyTrackerApi.new
                 registraion_results = study_tracker_api.register(options, matched_pmi_patient)
                 error = registraion_results[:error]
@@ -95,7 +95,7 @@ class BatchHealthPro < ApplicationRecord
         false
       end
     rescue Exception => e
-      errors.add(:base, 'Un-handled error uploading health pro file.')
+      ExceptionNotifier.notify_exception(e)
       Rails.logger.info(e.class)
       Rails.logger.info(e.message)
       Rails.logger.info(e.backtrace.join("\n"))

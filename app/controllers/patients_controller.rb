@@ -42,7 +42,7 @@ class PatientsController < ApplicationController
   def update
     authorize @patient
     options = {}
-    # options[:proxy_user] = current_user.username
+    options[:proxy_user] = current_user.username
     error = nil
     if @patient.update_attributes(patient_params)
       if @patient.registered?
@@ -51,7 +51,7 @@ class PatientsController < ApplicationController
         error = registraion_results[:error]
       end
     else
-      error = 'local attributes not updated.'
+      error = 'Patient could not be updated.'
     end
 
     if error.nil?
@@ -64,9 +64,9 @@ class PatientsController < ApplicationController
   end
 
   def register
-    options = {}
-    # options[:proxy_user] = current_user.username
     authorize Patient
+    options = {}
+    options[:proxy_user] = current_user.username
     study_tracker_api = initialize_study_tracker_api
     registration_results = study_tracker_api.register(options, @patient)
 

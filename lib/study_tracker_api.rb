@@ -29,7 +29,6 @@ class StudyTrackerApi
 
   def register(options, patient)
     begin
-      options = { 'proxy_user' => 'jho502' }.merge(options)
       payload = {}
       payload[:subject] = {}
       payload[:subject][:irb_number] = StudyTrackerApi::IRB_NUMBER
