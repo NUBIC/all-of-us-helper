@@ -36,8 +36,16 @@ class BatchHealthPro < ApplicationRecord
     end
   end
 
+  def self.expire
+    BatchHealthPro.by_status(BatchHealthPro::STATUS_READY).update_all(status: BatchHealthPro::STATUS_EXPIRED)
+  end
+
   def pending?
     status == BatchHealthPro::STATUS_PENDING
+  end
+
+  def ready?
+    status == BatchHealthPro::STATUS_READY
   end
 
   def import

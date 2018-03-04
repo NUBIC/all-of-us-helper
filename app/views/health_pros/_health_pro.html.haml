@@ -15,7 +15,7 @@
     = health_pro.address
   %td.status
     = health_pro.status
-- if health_pro.matchable?
+- if health_pro.matchable? && @batch_health_pro.ready?
   %tr
     %td{ colspan: 8 }
       %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true"}

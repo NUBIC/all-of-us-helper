@@ -28,6 +28,8 @@ class BatchHealthProsController < ApplicationController
 
     add_file_uload('health_pro_file')
 
+    BatchHealthPro.expire
+
     @batch_health_pro = BatchHealthPro.new(batch_health_pro_params)
     @batch_health_pro.created_user = current_user.username
 
