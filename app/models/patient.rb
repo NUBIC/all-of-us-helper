@@ -9,8 +9,7 @@ class Patient < ApplicationRecord
   REGISTRATION_STATUS_MATCHED = 'matched'
   REGISTRATION_STATUS_READY = 'ready'
   REGISTRATION_STATUS_REGISTERED = 'registered'
-  REGISTRATION_STATUS_WITHDRAWN = 'withdrawn'
-  REGISTRATION_STATUSES = [REGISTRATION_STATUS_UNMATCHED, REGISTRATION_STATUS_MATCHED, REGISTRATION_STATUS_READY, REGISTRATION_STATUS_REGISTERED, REGISTRATION_STATUS_WITHDRAWN]
+  REGISTRATION_STATUSES = [REGISTRATION_STATUS_UNMATCHED, REGISTRATION_STATUS_MATCHED, REGISTRATION_STATUS_READY, REGISTRATION_STATUS_REGISTERED]
 
   ETHNICITY_HISPANIC_OR_LATINO = 'Hispanic or Latino'
   ETHNICITY_NOT_HISPANIC_OR_LATINO = 'Not Hispanic or Latino'
@@ -115,7 +114,7 @@ class Patient < ApplicationRecord
 
     if currently_ready
       determined = case registration_status
-                   when Patient::REGISTRATION_STATUS_UNMATCHED, Patient::REGISTRATION_STATUS_READY, REGISTRATION_STATUS_WITHDRAWN
+                   when Patient::REGISTRATION_STATUS_UNMATCHED, Patient::REGISTRATION_STATUS_READY
                      Patient::REGISTRATION_STATUS_READY
 
                    when Patient::REGISTRATION_STATUS_READY
@@ -123,7 +122,7 @@ class Patient < ApplicationRecord
                    end
     else
       determined = case registration_status
-                   when Patient::REGISTRATION_STATUS_UNMATCHED, Patient::REGISTRATION_STATUS_READY, Patient::REGISTRATION_STATUS_REGISTERED, Patient::REGISTRATION_STATUS_WITHDRAWN
+                   when Patient::REGISTRATION_STATUS_UNMATCHED, Patient::REGISTRATION_STATUS_READY, Patient::REGISTRATION_STATUS_REGISTERED
                      Patient::REGISTRATION_STATUS_MATCHED
                    end
     end
@@ -131,7 +130,7 @@ class Patient < ApplicationRecord
   end
 
   def registered?
-    [Patient::REGISTRATION_STATUS_REGISTERED, Patient::REGISTRATION_STATUS_WITHDRAWN].include?(self.registration_status)
+    [Patient::REGISTRATION_STATUS_REGISTERED].include?(self.registration_status)
   end
 
   def match

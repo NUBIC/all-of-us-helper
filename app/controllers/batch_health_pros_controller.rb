@@ -6,7 +6,7 @@ class BatchHealthProsController < ApplicationController
   def index
     authorize BatchHealthPro
     params[:page]||= 1
-    params[:match_status]||= BatchHealthPro::MATCH_STATUS_OPEN
+    params[:match_status]||= 'all'
     options = {}
     options[:sort_column] = sort_column
     options[:sort_direction] = sort_direction
