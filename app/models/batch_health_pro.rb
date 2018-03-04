@@ -6,7 +6,12 @@ class BatchHealthPro < ApplicationRecord
   STATUS_EXPIRED = 'expired'
   STATUSES = [STATUS_PENDING, STATUS_READY, STATUS_EXPIRED]
 
+  MATCH_STATUS_OPEN = 'open'
+  MATCH_STATUS_CLOSED = 'closed'
+  MATCH_STATUSES = [MATCH_STATUS_OPEN, MATCH_STATUS_CLOSED]
+
   mount_uploader :health_pro_file, HealthProFileUploader
+
   has_many :health_pros
   validates_presence_of :health_pro_file
   validates_size_of :health_pro_file, maximum: 10.megabytes, message: 'must be less than 10MB'
@@ -17,6 +22,17 @@ class BatchHealthPro < ApplicationRecord
   scope :by_status, ->(*statuses) do
     if statuses.any?
      where(status: statuses)
+    end
+  end
+
+  scope :by_match_status, ->(match_status) do
+    case match_status
+      when BatchHealthPro::MATCH_STATUS_OPEN
+        where('EXISTS (SELECT 1 FROM health_pros JOIN matches ON health_pros.id = matches.health_pro_id WHERE batch_health_pros.id = health_pros.batch_health_pro_id AND matches.status = ?)', Match::STATUS_PENDING)
+      when BatchHealthPro::MATCH_STATUS_CLOSED
+        where('NOT EXISTS (SELECT 1 FROM health_pros JOIN matches ON health_pros.id = matches.health_pro_id WHERE batch_health_pros.id = health_pros.batch_health_pro_id AND matches.status = ?)', Match::STATUS_PENDING)
+      else
+        where('1=1')
     end
   end
 

@@ -6,10 +6,11 @@ class BatchHealthProsController < ApplicationController
   def index
     authorize BatchHealthPro
     params[:page]||= 1
+    params[:match_status]||= BatchHealthPro::MATCH_STATUS_OPEN
     options = {}
     options[:sort_column] = sort_column
     options[:sort_direction] = sort_direction
-    @pending_batch_health_pros = BatchHealthPro.order('created_at DESC').by_status(BatchHealthPro::STATUS_PENDING, BatchHealthPro::STATUS_READY).paginate(per_page: 10, page: params[:page])
+    @pending_batch_health_pros = BatchHealthPro.order('created_at DESC').by_status(BatchHealthPro::STATUS_PENDING, BatchHealthPro::STATUS_READY).by_match_status(params[:match_status]).paginate(per_page: 10, page: params[:page])
     @expired_batch_health_pros = BatchHealthPro.order('created_at DESC').by_status(BatchHealthPro::STATUS_EXPIRED).paginate(per_page: 10, page: params[:page])
     respond_to do |format|
       format.html

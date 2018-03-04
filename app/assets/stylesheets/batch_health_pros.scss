@@ -1,5 +1,30 @@
 #batch-health-pros-header {
-  @include grid-column-row();
+  @include grid-row();
+
+  #search-batch-health-pros-form {
+    @include grid-column($columns: 24);
+
+    @include breakpoint(large) {
+      h1 {
+        @include grid-column($columns: 14);
+      }
+
+      .match_status {
+        @include grid-column($columns: 6);
+      }
+
+      .search-buttons{
+        @include grid-column($columns: 4);
+      }
+    };
+
+    .search-buttons{
+      margin-top: 1.5rem;
+      #search-batch-health-pros-button {
+        margin-top: .50rem;
+      }
+    }
+  }
 }
 
 #batch-health-pros {
