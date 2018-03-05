@@ -41,6 +41,8 @@ class User < ApplicationRecord
   end
 
   def after_ldap_authentication
+    login_audit = LoginAudit.new(username: self.username, login_type: LoginAudit::LOGIN_TYPE_INTERACTIVE)
+    login_audit.save!
     hydrate_from_ldap
   end
 end
