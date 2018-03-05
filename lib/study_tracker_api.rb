@@ -8,6 +8,7 @@ class StudyTrackerApi
   EVENT_TYPE_NAME_CONSENTED = 'Consented'
   EVENT_TYPE_NAME_EHR_CONSENT = 'EHR Consent'
   EVENT_TYPE_NAME_WITHDRAWN = 'Withdrawn'
+  SYSTEM = 'study tracker'
 
   def initialize
     @user = Rails.application.config.all_of_us_helper_api_users['study_tracker']['api_user']
@@ -88,6 +89,7 @@ class StudyTrackerApi
               content_type: 'application/json; charset=utf-8'
             }
           )
+          ApiLog.create_api_log(options[:url], nil, response, nil, StudyTrackerApi::SYSTEM)
         else
            payload = ActiveSupport::JSON.encode(options[:payload])
            response = RestClient::Request.execute(
@@ -103,10 +105,12 @@ class StudyTrackerApi
               content_type: 'application/json; charset=utf-8'
             }
           )
+          ApiLog.create_api_log(options[:url], options[:payload], response, nil, StudyTrackerApi::SYSTEM)
         end
         response = JSON.parse(response) if options[:parse_response]
       rescue Exception => e
         ExceptionNotifier.notify_exception(e)
+        ApiLog.create_api_log(options[:url], options[:payload], nil, e.message, StudyTrackerApi::SYSTEM)
         error = e
         Rails.logger.info(e.class)
         Rails.logger.info(e.message)

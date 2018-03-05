@@ -10,10 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180304215220) do
+ActiveRecord::Schema.define(version: 20180304232314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "api_logs", force: :cascade do |t|
+    t.string "system", null: false
+    t.text "url"
+    t.text "payload"
+    t.text "response"
+    t.text "error"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["system"], name: "index_api_logs_on_system"
+  end
 
   create_table "api_tokens", force: :cascade do |t|
     t.string "api_token_type", null: false

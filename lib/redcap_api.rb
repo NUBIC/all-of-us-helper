@@ -2,6 +2,7 @@ require 'rest_client'
 class RedcapApi
   ERROR_MESSAGE_DUPLICATE_PATIENT = 'More than one patient with record_id.'
   attr_accessor :api_token, :api_url
+  SYSTEM = 'redcap'
 
   def initialize(api_token)
     @api_token = api_token
@@ -95,8 +96,6 @@ class RedcapApi
         :returnFormat => 'json'
     }
 
-    Rails.logger.info("Love the booch!")
-    Rails.logger.info("Here is the payload #{payload}")
     api_response = redcap_api_request_wrapper(payload)
 
     { response: api_response[:response], error: api_response[:error] }
@@ -115,9 +114,11 @@ class RedcapApi
           accept: 'json',
           verify_ssl: @verify_ssl
         )
+        ApiLog.create_api_log(@api_url, payload, response, nil, RedcapApi::SYSTEM)
         response = JSON.parse(response) if parse_response
       rescue Exception => e
         ExceptionNotifier.notify_exception(e)
+        ApiLog.create_api_log(@api_url, payload, nil, e.message, RedcapApi::SYSTEM)
         error = e
         Rails.logger.info(e.class)
         Rails.logger.info(e.message)
