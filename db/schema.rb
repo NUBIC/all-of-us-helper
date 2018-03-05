@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180305004004) do
+ActiveRecord::Schema.define(version: 20180305004936) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,6 +31,19 @@ ActiveRecord::Schema.define(version: 20180305004004) do
     t.string "token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "audit_actions", force: :cascade do |t|
+    t.string "user_id", null: false
+    t.string "controller", null: false
+    t.string "action", null: false
+    t.string "browser"
+    t.string "params"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["controller", "action"], name: "index_audit_actions_on_controller_and_action"
+    t.index ["user_id", "action"], name: "index_audit_actions_on_user_id_and_action"
+    t.index ["user_id", "controller"], name: "index_audit_actions_on_user_id_and_controller"
   end
 
   create_table "batch_health_pros", force: :cascade do |t|

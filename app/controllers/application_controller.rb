@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
       flash[:alert] = 'You need to sign in or sign up before continuing.'
       redirect_to new_user_session_url
     end
+    audit_action
   end
 
   def after_sign_in_path_for(resource)
@@ -51,5 +52,11 @@ class ApplicationController < ActionController::Base
     def user_not_authorized
       flash[:alert] = UNAUTHORIZED_MESSAGE
       redirect_to(request.referrer || root_path)
+    end
+
+    def audit_action
+      if current_user
+        AuditAction.create(user: current_user, controller: controller_name, action: request.path, browser: request.env['HTTP_USER_AGENT'], params: params.except(:utf8, :_method, :authenticity_token, :controller, :action))
+      end
     end
 end
