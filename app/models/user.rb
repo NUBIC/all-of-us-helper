@@ -1,5 +1,6 @@
 require './lib/ldap'
 class User < ApplicationRecord
+  has_paper_trail
   has_many :role_assignments
   has_many :roles, through: :role_assignments
   # Include default devise modules. Others available are:

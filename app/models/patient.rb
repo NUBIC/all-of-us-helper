@@ -1,4 +1,5 @@
 class Patient < ApplicationRecord
+  has_paper_trail
   has_many :invitation_code_assignments
   has_many :matches
   has_and_belongs_to_many :races

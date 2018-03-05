@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
     render :text => exception, :status => 500
   end
 
+  before_action :set_paper_trail_whodunnit
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   def authenticate_user!

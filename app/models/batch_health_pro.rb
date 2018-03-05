@@ -1,6 +1,7 @@
 require 'csv'
 require 'study_tracker_api'
 class BatchHealthPro < ApplicationRecord
+  has_paper_trail
   STATUS_PENDING = 'pending'
   STATUS_READY = 'ready'
   STATUS_EXPIRED = 'expired'
