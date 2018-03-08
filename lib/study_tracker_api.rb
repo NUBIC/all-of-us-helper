@@ -42,19 +42,19 @@ class StudyTrackerApi
       payload[:subject][:birth_date] = patient.birth_date
       payload[:subject][:races] = patient.races.map { |race| race.name }
       payload[:subject][:record_numbers] = []
-      payload[:subject][:record_numbers] << { org: ORG_NMHC, record_number: patient.nmhc_mrn }
+      payload[:subject][:record_numbers] << { org: StudyTrackerApi::ORG_NMHC, record_number: patient.nmhc_mrn }
       payload[:subject][:events] = []
 
       if patient.general_consent_status == HealthPro::YES
-        payload[:subject][:events] << { name: EVENT_TYPE_NAME_CONSENTED, date: patient.general_consent_date }
+        payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_CONSENTED, date: patient.general_consent_date }
       end
 
       if patient.ehr_consent_status == HealthPro::YES
-        payload[:subject][:events] << { name: EVENT_TYPE_NAME_EHR_CONSENT, date: patient.ehr_consent_date }
+        payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_EHR_CONSENT, date: patient.ehr_consent_date }
       end
 
       if patient.withdrawal_status == HealthPro::YES
-        payload[:subject][:events] << { name: EVENT_TYPE_NAME_WITHDRAWN, date: patient.withdrawal_date }
+        payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_WITHDRAWN, date: patient.withdrawal_date }
       end
       url = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['register'].gsub(':id', patient.uuid)
       url = url + '?' + URI.encode_www_form(options)

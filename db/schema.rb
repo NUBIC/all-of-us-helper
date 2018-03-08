@@ -145,6 +145,8 @@ ActiveRecord::Schema.define(version: 20180305012732) do
     t.string "saliva_collected"
     t.string "saliva_collection_date"
     t.string "biospecimens_location"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "invitation_code_assignments", force: :cascade do |t|
@@ -174,6 +176,8 @@ ActiveRecord::Schema.define(version: 20180305012732) do
     t.integer "health_pro_id", null: false
     t.integer "patient_id", null: false
     t.string "status", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "patients", force: :cascade do |t|
@@ -199,7 +203,7 @@ ActiveRecord::Schema.define(version: 20180305012732) do
     t.string "ethnicity"
   end
 
-  create_table "patients_races", id: :bigint, default: -> { "nextval('patient_races_id_seq'::regclass)" }, force: :cascade do |t|
+  create_table "patients_races", force: :cascade do |t|
     t.integer "patient_id", null: false
     t.integer "race_id", null: false
     t.datetime "created_at", null: false

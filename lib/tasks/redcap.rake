@@ -26,6 +26,20 @@ namespace :redcap do
       handle_error(t, error)
     end
   end
+
+  desc "Synch patients."
+  task(synch_patients: :environment) do  |t, args|
+    api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
+    redcap_api = RedcapApi.new(api_token.token)
+    patients = redcap_api.patients
+    if patients[:error].blank? && patients[:response].any?
+      patients[:response].each do |patient|
+        # puts patient['record_id']
+        # puts patient.slice('record_id', 'first_name', 'last_name', 'email')
+        @patient = Patient.create_or_update!(patient.slice('record_id', 'first_name', 'last_name', 'email'))
+      end
+    end
+  end
 end
 
 def handle_error(t, error)

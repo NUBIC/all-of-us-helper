@@ -15,6 +15,25 @@ class RedcapApi
     end
   end
 
+  def patients
+    payload = {
+        :token => @api_token,
+        :content => 'record',
+        :format => 'json',
+        :type => 'flat',
+        'fields[0]' => 'email',
+        'fields[1]' => 'first_name',
+        'fields[2]' => 'last_name',
+        'fields[3]' => 'record_id',
+        'forms[0]' => 'code_assignment',
+        :returnFormat => 'json'
+    }
+
+    api_response = redcap_api_request_wrapper(payload)
+
+    { response: api_response[:response], error: api_response[:error] }
+  end
+
   def pending_invitation_code_assignments
     payload = {
         :token => @api_token,

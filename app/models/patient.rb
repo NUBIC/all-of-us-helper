@@ -144,10 +144,10 @@ class Patient < ApplicationRecord
     def set_defaults
       if self.new_record? &&
         if self.registration_status.blank?
-          self.status = Patient::REGISTRATION_STATUS_UNMATCHED
+          self.registration_status = Patient::REGISTRATION_STATUS_UNMATCHED
         end
         uuid = UUID.new
-        patient.uuid = uuid.generate
+        self.uuid = uuid.generate
       end
     end
 end
