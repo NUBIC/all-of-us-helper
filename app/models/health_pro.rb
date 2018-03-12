@@ -48,7 +48,7 @@ class HealthPro < ApplicationRecord
 
   def determine_matches
     matched_pmi_patients = Patient.where(pmi_id: self.pmi_id)
-    matched_demographic_patients = Patient.where('pmi_id IS NULL AND lower(first_name) = ? AND lower(last_name) = ? AND lower(email) = ?', self.first_name.try(:downcase), self.last_name.try(:downcase), self.email.try(:downcase))
+    matched_demographic_patients = Patient.where('NOT EXISTS (SELECT 1 FROM matches JOIN health_pros ON matches.health_pro_id = health_pros.id WHERE patients.id = matches.patient_id AND matches.status = ?)', Match::STATUS_DECLINED).where('registration_status = ? AND pmi_id IS NULL AND lower(first_name) = ? AND lower(last_name) = ?', Patient::REGISTRATION_STATUS_UNMATCHED, self.first_name.try(:downcase), self.last_name.try(:downcase))
     if matched_pmi_patients.count == 1
       self.status = HealthPro::STATUS_PREVIOUSLY_MATCHED
     elsif matched_demographic_patients.size > 0
