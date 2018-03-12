@@ -13,10 +13,14 @@ class HealthPro < ApplicationRecord
 
   SEX_MALE = 'Male'
   SEX_FEMALE = 'Female'
-  SEXES = [SEX_MALE, SEX_FEMALE]
+  SEX_INTERSEX = 'Intersex'
+  SEX_NONE = 'None of these describe me (optional free text)'
+  SEXES = [SEX_MALE, SEX_FEMALE, SEX_INTERSEX, SEX_NONE]
 
   YES = '1'
   NO = '0'
+
+  BIOSPECIMEN_LOCATION_NORTHWESTERN =   'nwfeinberggalter'
 
   after_initialize :set_defaults
 
@@ -71,6 +75,15 @@ class HealthPro < ApplicationRecord
 
   def pending_matches
     matches.by_status(Match::STATUS_PENDING)
+  end
+
+  def sex_to_patient_gender
+    mapped = Patient::GENDERS.detect { |gender| gender == self.sex }
+    if mapped.present?
+      mapped
+    else
+      Patient::GENDER_UNKNOWN_OR_NOT_REPORTED
+    end
   end
 
   private

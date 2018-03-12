@@ -8,6 +8,12 @@ class AllOfUsHelper.BatchHealthProShow
         $modal.foundation 'open'
         $empi_lookup.html(response)
         init = () ->
+          $('#empi_gender').on 'change', (e) ->
+            if ($(this).val())
+              $('#empi-search-button').prop('disabled', false)
+            else
+              $('#empi-search-button').prop('disabled', true)
+
           $('#assign-empi-link').on 'click', (e) ->
             empi_patient = $('input[name=assign-empi-patient]:checked').parents('.empi_patient')
             gender = empi_patient.find('.gender').text().trim()
@@ -31,8 +37,8 @@ class AllOfUsHelper.BatchHealthProShow
               $('#assign-empi-link').attr('disabled', false)
             return
           ).on("ajax:error", (event) ->
-            alert('hello booch error')
-            # $("#new_article").append "<p>ERROR</p>"
+            alert('hello booch')
+            $("#empi-lookup").append "<p>Mooomin ERROR</p>"
             return
           ).on("ajax:complete", (event) ->
             $('#empi-lookup .loading').addClass('hide')

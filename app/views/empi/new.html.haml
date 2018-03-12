@@ -1,5 +1,6 @@
 %h2
   EMPI
+
 = form_with(url: empi_lookup_url, method: :get, local: false, id: 'empi-lookup-form') do |f|
   = f.hidden_field :match_id, value: params[:match_id], class: 'match_id'
   .row
@@ -41,10 +42,10 @@
           Gender
           %span{ class: 'required' }
       %div{class: 'small-10 large-20 columns' }
-        = f.select :gender, options_for_select(HealthPro::SEXES, selected: params[:gender]), { include_blank: 'Select a gender' }, disabled: params[:gender].present?
+        = f.select :gender, options_for_select(Patient::GENDERS, selected: params[:gender]), { include_blank: 'Select a gender' }, id: 'empi_gender'
   .row
     .navigation{class: 'columns small-offset-12 small-12 large-offset-20 large-4' }
-      = f.submit 'Search', class: 'button'
+      = f.submit 'Search', class: 'button', id: 'empi-search-button'
       = link_to 'Cancel', '', class: 'cancel-link button warning'
 %h3
   EMPI Patients

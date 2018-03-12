@@ -7,6 +7,8 @@
     = health_pro.date_of_birth
   %td.sex
     = health_pro.sex
+  %td.gender
+    = health_pro.sex_to_patient_gender
   %td.email
     = health_pro.email
   %td.pmi_id
@@ -17,7 +19,7 @@
     = health_pro.status
 - if health_pro.matchable? && @batch_health_pro.ready?
   %tr
-    %td{ colspan: 8 }
+    %td{ colspan: 9 }
       %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true"}
         %li.accordion-item{"data-accordion-item" => ""}
           / Accordion tab title
@@ -71,4 +73,4 @@
                       %td.nmhc_mrn
                 .row
                   .large-offset-20.large-4
-                    = link_to 'EMPI', new_empi_lookup_url(first_name: match.health_pro.first_name, last_name: match.health_pro.last_name, birth_date: match.health_pro.date_of_birth, gender: match.health_pro.sex, address: match.health_pro.address, match_id: match.id), class: 'new-empi-link button'
+                    = link_to 'EMPI', new_empi_lookup_url(first_name: match.health_pro.first_name, last_name: match.health_pro.last_name, birth_date: match.health_pro.date_of_birth, gender: match.health_pro.sex_to_patient_gender, address: match.health_pro.address, match_id: match.id), class: 'new-empi-link button'

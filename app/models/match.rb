@@ -25,14 +25,14 @@ class Match <  ApplicationRecord
     end
   end
 
+
   def accept!(redcap_api, match_params)
     accepted = nil
     begin
       self.status = Match::STATUS_ACCEPTED
       patient.pmi_id = health_pro.pmi_id
       patient.birth_date = Date.parse(health_pro.date_of_birth)
-      patient.gender = health_pro.sex
-      patient.gender = match_params[:nmhc_mrn] if patient.gender.nil? && match_params[:gender]
+      patient.gender =  match_params[:gender] || health_pro.sex_to_patient_gender
       patient.general_consent_status = health_pro.general_consent_status
       patient.general_consent_date = health_pro.general_consent_date
       patient.ehr_consent_status = health_pro.ehr_consent_status
