@@ -49,6 +49,14 @@
             %span.value
               = @patient.birth_date.to_s(:date) if @patient.birth_date
         .columns.large-8
+          .health_pro_race_ethnicity.field
+            %strong
+              Race/Ethnicity:
+            = @patient.accepted_match.health_pro.race_ethnicity if @patient.accepted_match
+          .health_pro_sex.field
+            %strong
+              Sex:
+            = @patient.accepted_match.health_pro.sex if @patient.accepted_match
           .general_consent_status.field
             %strong
               General Consent Status:
