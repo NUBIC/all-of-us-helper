@@ -101,7 +101,7 @@ class Patient < ApplicationRecord
   end
 
   def ready?
-    accepted_match && general_consent_status == HealthPro::YES && general_consent_date.present? && ehr_consent_status == HealthPro::YES && ehr_consent_date.present? && withdrawal_status == HealthPro::NO && withdrawal_date.blank?
+    accepted_match && general_consent_status == HealthPro::YES && general_consent_date.present? && ehr_consent_status == HealthPro::YES && ehr_consent_date.present? && withdrawal_status == HealthPro::NO && withdrawal_date.blank? && biospecimens_location  == HealthPro::BIOSPECIMEN_LOCATION_NORTHWESTERN
   end
 
   def set_registration_status
