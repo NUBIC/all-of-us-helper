@@ -87,7 +87,6 @@
               %div{class: 'small-10 large-16 columns' }
                 %span.value
                   = @patient.nmhc_mrn
-                / = f.hidden_field :gender, id: 'match_gender'
                 = f.hidden_field :nmhc_mrn, value: @patient.nmhc_mrn, id: 'patient_nmhc_mrn'
             .row.gender
               %div{class: 'small-14 large-8 columns' }
@@ -116,7 +115,7 @@
             = f.submit 'Update Demographics', class: 'button', data: { confirm: 'Are you sure you want update the patient?' }
 
             - if @patient.match
-              = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date, gender: @patient.gender, address: @patient.match.health_pro.address, match_id: @patient.match.id), class: 'new-empi-link button', disabled: @patient.registered?
+              = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date, gender: @patient.gender.present? ? @patient.gender : @patient.match.health_pro.sex_to_patient_gender, address: @patient.match.health_pro.address, match_id: @patient.match.id), class: 'new-empi-link button', disabled: @patient.registered?
           = form_with(url: register_patient_url(@patient), local: true, id: 'register-patient-form') do |f|
             = f.submit 'Register Study Tracker', class: 'button', 'data-confirm': 'Register patient?', disabled: (!@patient.ready? || !@patient.demographics_ready? || @patient.registered?)
       .row

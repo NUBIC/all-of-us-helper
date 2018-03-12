@@ -37,8 +37,7 @@ class AllOfUsHelper.BatchHealthProShow
               $('#assign-empi-link').attr('disabled', false)
             return
           ).on("ajax:error", (event) ->
-            alert('hello booch')
-            $("#empi-lookup").append "<p>Mooomin ERROR</p>"
+            $("#empi-lookup").append '<div data-closable="" class="callout small alert"><button aria-label="dismiss alert" class="close-button" data-close="" type="button"><span aria-hidden="true">×</span></button>Error calling EMPI</div>'
             return
           ).on("ajax:complete", (event) ->
             $('#empi-lookup .loading').addClass('hide')

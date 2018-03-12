@@ -16,10 +16,10 @@ class AllOfUsHelper.PatientShow
         init = () ->
           $('#assign-empi-link').on 'click', (e) ->
             empi_patient = $('input[name=assign-empi-patient]:checked').parents('.empi_patient')
-            # gender = empi_patient.find('.gender').text().trim()
+            gender = empi_patient.find('.gender').text().trim()
             nmhc_mrn = empi_patient.find('.nmhc_mrn').text().trim()
             $("#patient-form").find('.nmhc_mrn .value').text(nmhc_mrn)
-            # $("#patient-form").find('#patient_gender').val(gender)
+            $("#patient-form").find('#patient_gender').val(gender)
             $("#patient_nmhc_mrn").val(nmhc_mrn)
 
             $modal.foundation 'close'
@@ -35,8 +35,7 @@ class AllOfUsHelper.PatientShow
               $('#assign-empi-link').attr('disabled', false)
             return
           ).on("ajax:error", (event) ->
-            alert('hello booch error')
-            # $("#new_article").append "<p>ERROR</p>"
+            $("#empi-lookup").append '<div data-closable="" class="callout small alert"><button aria-label="dismiss alert" class="close-button" data-close="" type="button"><span aria-hidden="true">×</span></button>Error calling EMPI</div>'
             return
           ).on("ajax:complete", (event) ->
             $('#empi-lookup .loading').addClass('hide')
