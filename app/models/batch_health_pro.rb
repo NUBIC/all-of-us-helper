@@ -5,7 +5,8 @@ class BatchHealthPro < ApplicationRecord
   STATUS_PENDING = 'pending'
   STATUS_READY = 'ready'
   STATUS_EXPIRED = 'expired'
-  STATUSES = [STATUS_PENDING, STATUS_READY, STATUS_EXPIRED]
+  STATUS_ERROR = 'error'
+  STATUSES = [STATUS_PENDING, STATUS_READY, STATUS_EXPIRED, STATUS_ERROR]
 
   MATCH_STATUS_OPEN = 'open'
   MATCH_STATUS_CLOSED = 'closed'
@@ -105,10 +106,19 @@ class BatchHealthPro < ApplicationRecord
       end
     rescue Exception => e
       ExceptionNotifier.notify_exception(e)
+      set_status_to_error
       Rails.logger.info(e.class)
       Rails.logger.info(e.message)
       Rails.logger.info(e.backtrace.join("\n"))
       false
+    end
+  end
+
+  def set_status_to_error
+    begin
+      self.status = BatchHealthPro::STATUS_ERROR
+      save!
+    rescue Exception => e
     end
   end
 

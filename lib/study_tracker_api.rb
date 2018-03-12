@@ -89,6 +89,7 @@ class StudyTrackerApi
               content_type: 'application/json; charset=utf-8'
             }
           )
+
           ApiLog.create_api_log(options[:url], nil, response, nil, StudyTrackerApi::SYSTEM)
         else
            payload = ActiveSupport::JSON.encode(options[:payload])
@@ -108,6 +109,9 @@ class StudyTrackerApi
           ApiLog.create_api_log(options[:url], options[:payload], response, nil, StudyTrackerApi::SYSTEM)
         end
         response = JSON.parse(response) if options[:parse_response]
+        if response[:errors].present?
+          error = response[:errors]
+        end
       rescue Exception => e
         ExceptionNotifier.notify_exception(e)
         ApiLog.create_api_log(options[:url], options[:payload], nil, e.message, StudyTrackerApi::SYSTEM)
@@ -115,10 +119,6 @@ class StudyTrackerApi
         Rails.logger.info(e.class)
         Rails.logger.info(e.message)
         Rails.logger.info(e.backtrace.join("\n"))
-      end
-
-      if response[:errors].present?
-        error = response[:errors]
       end
 
       { response: response, error: error }
