@@ -74,12 +74,12 @@ namespace :deploy do
       execute :sudo, "service httpd graceful"
     end
   end
-  #12/15/2017 Come back if we want monit later.
-  # task :monit do
-  #   on roles(:web), in: :sequence, wait: 5 do
-  #     execute :sudo, "monit restart delayed_job"
-  #   end
-  # end
+
+  task :monit do
+    on roles(:web), in: :sequence, wait: 5 do
+      execute :sudo, "monit restart delayed_job_all_of_us_helper"
+    end
+  end
 end
 
 namespace :deploy_prepare do
@@ -127,5 +127,4 @@ after "deploy:updated", "deploy:cleanup"
 after "deploy:finished", "deploy_prepare:create_vhost"
 after "deploy_prepare:create_vhost", "deploy:httpd_graceful"
 after "deploy:httpd_graceful", "deploy:restart"
-#12/15/2017 Come back if we want monit later.
-# after "deploy:restart", "deploy:monit"
+after "deploy:restart", "deploy:monit"
