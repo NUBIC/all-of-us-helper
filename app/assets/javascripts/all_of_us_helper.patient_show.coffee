@@ -35,7 +35,8 @@ class AllOfUsHelper.PatientShow
               $('#assign-empi-link').attr('disabled', false)
             return
           ).on("ajax:error", (event) ->
-            $("#empi-lookup").append '<div data-closable="" class="callout small alert"><button aria-label="dismiss alert" class="close-button" data-close="" type="button"><span aria-hidden="true">×</span></button>Error calling EMPI</div>'
+            $('#empi-lookup-results').empty()
+            $("#empi-lookup-results").append '<div data-closable="" class="callout small alert"><button aria-label="dismiss alert" class="close-button" data-close="" type="button"><span aria-hidden="true">×</span></button>Error calling EMPI</div>'
             return
           ).on("ajax:complete", (event) ->
             $('#empi-lookup .loading').addClass('hide')
