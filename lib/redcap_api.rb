@@ -120,6 +120,24 @@ class RedcapApi
     { response: api_response[:response], error: api_response[:error] }
   end
 
+  def decline(record_id)
+    payload = {
+        :token => @api_token,
+        :content => 'record',
+        :format => 'csv',
+        :type => 'flat',
+        :overwriteBehavior => 'overwrite',
+        :data => %(record_id,donotcontact,studystatus_ehr_y
+"#{record_id}","0","0"),
+        :returnContent => 'count',
+        :returnFormat => 'json'
+    }
+
+    api_response = redcap_api_request_wrapper(payload)
+
+    { response: api_response[:response], error: api_response[:error] }
+  end
+
   private
     def redcap_api_request_wrapper(payload, parse_response = true)
       response = nil

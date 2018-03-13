@@ -14,17 +14,29 @@ class Match <  ApplicationRecord
     end
   end
 
-  def decline!
-    Match.transaction do
-      self.status = Match::STATUS_DECLINED
-      save!
-      if !health_pro.pending_matches?
-        health_pro.status = HealthPro::STATUS_DECLINED
-        health_pro.save!
+  def decline!(redcap_api)
+    declined = nil
+    begin
+      Match.transaction do
+        redcap_decline = redcap_api.decline(patient.record_id)
+        raise "Error declining record_id  #{health_pro.pmi_id} to record_id #{patient.record_id}." if redcap_decline[:error].present?
+        self.status = Match::STATUS_DECLINED
+        save!
+        if !health_pro.pending_matches?
+          health_pro.status = HealthPro::STATUS_DECLINED
+          health_pro.save!
+        end
       end
+      declined = true
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e)
+      declined = false
+      Rails.logger.info(e.class)
+      Rails.logger.info(e.message)
+      Rails.logger.info(e.backtrace.join("\n"))
     end
+    declined
   end
-
 
   def accept!(redcap_api, match_params)
     accepted = nil
@@ -46,7 +58,7 @@ class Match <  ApplicationRecord
 
       Match.transaction do
         redcap_match = redcap_api.match(patient.record_id, health_pro.pmi_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date)
-        raise "Error assigning pmi_id code #{health_pro.pmi_id} to record_id #{patient.record_id}." if redcap_match[:error].present?
+        raise "Error assigning pmi_id #{health_pro.pmi_id} to record_id #{patient.record_id}." if redcap_match[:error].present?
         save!
         health_pro.save!
         patient.set_registration_status

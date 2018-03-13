@@ -15,7 +15,8 @@ class MatchesController < ApplicationController
 
   def decline
     authorize @match
-    if @match.decline!
+    redcap_api = initialize_redcap_api
+    if @match.decline!(redcap_api)
       flash[:success] = 'You have successfully declined a match.'
     else
       flash[:alert] = 'Failed to decline a match.'
