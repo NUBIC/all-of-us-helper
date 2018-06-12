@@ -3,6 +3,7 @@ class Patient < ApplicationRecord
   has_many :invitation_code_assignments
   has_many :matches
   has_and_belongs_to_many :races
+  has_one :patient_empi_match
 
   ERROR_MESSAGE_FAILED_TO_ASSIGN_INVITATION_CODE = 'Failed to assign an invitation code.'
 
@@ -26,6 +27,7 @@ class Patient < ApplicationRecord
 
   after_initialize :set_defaults
 
+
   scope :by_registration_status, ->(registration_status) do
     if registration_status.present? && registration_status != 'all'
       where(registration_status: registration_status)
@@ -46,6 +48,14 @@ class Patient < ApplicationRecord
     p = p.nil? ? order(sort) : p.order(sort)
 
     p
+  end
+
+  scope :no_previously_declined_match, -> do
+    where('NOT EXISTS (SELECT 1 FROM matches JOIN health_pros ON matches.health_pro_id = health_pros.id WHERE patients.id = matches.patient_id AND matches.status = ?)', Match::STATUS_DECLINED)
+  end
+
+  scope :by_matchable_criteria, ->(first_name, last_name) do
+    where('registration_status = ? AND pmi_id IS NULL AND lower(first_name) = ? AND lower(last_name) = ?', Patient::REGISTRATION_STATUS_UNMATCHED, first_name.try(:downcase), last_name.try(:downcase))
   end
 
   def accepted_match

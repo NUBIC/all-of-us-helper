@@ -1,0 +1,5 @@
+- patient = Patient.new
+= form_with(model: patient, local: false, class: 'match-patient-form match-form') do |f|
+  = f.hidden_field :health_pro_id, value: health_pro.id
+  = f.hidden_field :empi_match_id, class: 'empi_match_id'
+  = f.submit 'Add match & patient', class: 'button', 'data-confirm': 'Add patient?'

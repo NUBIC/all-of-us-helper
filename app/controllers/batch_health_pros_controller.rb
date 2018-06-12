@@ -53,6 +53,7 @@ class BatchHealthProsController < ApplicationController
     options[:sort_column] = sort_column
     options[:sort_direction] = sort_direction
 
+    @unmatched_patients = Patient.by_registration_status(Patient::REGISTRATION_STATUS_UNMATCHED).map { |patient| ["#{patient.full_name} (#{patient.email})", patient.id] }
     @health_pros = @batch_health_pro.health_pros.search_across_fields(params[:search], options).by_status(params[:status]).paginate(per_page: 10, page: params[:page])
   end
 

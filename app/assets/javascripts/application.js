@@ -15,6 +15,7 @@
 //= require jquery
 //= require foundation
 //= require init
+//= require select2/select2.full
 //= require all_of_us_helper.batch_invitation_code
 //= require all_of_us_helper.batch_health_pro
 //= require all_of_us_helper.batch_health_pros

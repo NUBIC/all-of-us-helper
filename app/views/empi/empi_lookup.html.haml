@@ -14,6 +14,10 @@
         Birth Date
       %th.gender
         Gender
+      %th.race
+        Race
+      %th.ethnicity
+        Ethnicity
       %th.address
         Address
       %th.nmhc_mrn
@@ -31,6 +35,10 @@
           = empi_patient['birth_date']
         %td.gender
           = empi_patient['gender']
+        %td.race
+          = empi_patient['races'].join('|')
+        %td.ethnicity
+          = empi_patient['ethnicity']
         %td.address
           = format_address(empi_patient)
         %td.nmhc_mrn

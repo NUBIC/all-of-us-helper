@@ -154,11 +154,15 @@
     text-align: center;
   }
 
-  #match-accept-form {
+  .match-accept-form {
     display: inline;
   }
 
-  #match-decline-form {
+  .match-decline-form {
     display: inline;
+  }
+
+  .select2 {
+    margin-bottom: 1rem;
   }
 }

@@ -25,8 +25,7 @@ class ApplicationController < ActionController::Base
   end
 
   def initialize_redcap_api
-    api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
-    redcap_api = RedcapApi.new(api_token.token)
+    redcap_api = RedcapApi.initialize_redcap_api
   end
 
   def initialize_study_tracker_api

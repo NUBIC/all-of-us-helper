@@ -9,7 +9,6 @@ class AllOfUsHelper.BatchHealthPro
         $('#batch_health_pro_health_pro_file').val('')
         $('#batch-health-pro-health-pro-file-cache').val('')
       else
-        alert('hello booch')
         $('#batch-helath_pro-health-pro-file').addClass('hide')
       e.preventDefault()
 

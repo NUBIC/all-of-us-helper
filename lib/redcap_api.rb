@@ -4,6 +4,11 @@ class RedcapApi
   attr_accessor :api_token, :api_url
   SYSTEM = 'redcap'
 
+  def self.initialize_redcap_api
+    api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
+    redcap_api = RedcapApi.new(api_token.token)
+  end
+
   def initialize(api_token)
     @api_token = api_token
 
@@ -32,6 +37,23 @@ class RedcapApi
     api_response = redcap_api_request_wrapper(payload)
 
     { response: api_response[:response], error: api_response[:error] }
+  end
+
+  def next_record_id
+    payload = {
+      :token => @api_token,
+      :content => 'record',
+      :format => 'json',
+      :type => 'flat',
+      'fields[0]' => 'record_id',
+      :returnFormat => 'json'
+    }
+
+    api_response = redcap_api_request_wrapper(payload)
+    record_id = api_response[:response].map { |r| r['record_id'].to_i }.max
+    record_id+=1
+
+    { response: record_id, error: api_response[:error] }
   end
 
   def pending_invitation_code_assignments
@@ -80,6 +102,29 @@ class RedcapApi
     end
 
     { response: response, error: error }
+  end
+
+  def create_patient(first_name, last_name, email, phone, pmi_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d)
+    record_id = next_record_id
+    record_id = record_id[:response]
+    consent_d = Date.parse(consent_d) if consent_d
+    ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
+    payload = {
+        :token => @api_token,
+        :content => 'record',
+        :format => 'csv',
+        :type => 'flat',
+        :overwriteBehavior => 'overwrite',
+        :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d
+"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}"),
+        :returnContent => 'ids',
+        :returnFormat => 'json'
+    }
+
+    api_response = redcap_api_request_wrapper(payload)
+    record_id = api_response[:response].first
+
+    { response: record_id, error: api_response[:error] }
   end
 
   def assign_invitation_code(record_id, invitation_code)

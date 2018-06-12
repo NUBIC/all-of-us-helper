@@ -8,6 +8,8 @@ class Match <  ApplicationRecord
   STATUSES = [STATUS_PENDING, STATUS_ACCEPTED, STATUS_DECLINED]
   after_initialize :set_defaults
 
+  validates_presence_of :patient_id
+
   scope :by_status, ->(status) do
     if status.present?
      where(status: status)
@@ -44,7 +46,6 @@ class Match <  ApplicationRecord
       self.status = Match::STATUS_ACCEPTED
       patient.pmi_id = health_pro.pmi_id
       patient.birth_date = Date.parse(health_pro.date_of_birth)
-      patient.gender =  match_params[:gender] || health_pro.sex_to_patient_gender
       patient.general_consent_status = health_pro.general_consent_status
       patient.general_consent_date = health_pro.general_consent_date
       patient.ehr_consent_status = health_pro.ehr_consent_status
@@ -53,7 +54,18 @@ class Match <  ApplicationRecord
       patient.withdrawal_date = health_pro.withdrawal_date
       patient.biospecimens_location = health_pro.biospecimens_location
 
-      patient.nmhc_mrn = match_params[:nmhc_mrn] if match_params[:nmhc_mrn]
+      if match_params[:empi_match_id].present?
+        empi_match = EmpiMatch.find(match_params[:empi_match_id])
+        patient.gender =  empi_match.gender
+        patient.nmhc_mrn = empi_match.nmhc_mrn
+        patient.ethnicity = empi_match.ethnicity if empi_match.ethnicity
+        empi_match.empi_race_matches.each do |empi_race_match|
+          patient.races << empi_race_match.race
+        end
+        patient.build_patient_empi_match(empi_match: empi_match)
+      end
+
+      patient.gender ||=  health_pro.sex_to_patient_gender
       health_pro.status = HealthPro::STATUS_MATCHED
 
       Match.transaction do
