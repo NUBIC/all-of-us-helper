@@ -16,21 +16,26 @@ class AllOfUsHelper.PatientShow
         init = () ->
           $('#assign-empi-link').on 'click', (e) ->
             empi_patient = $('input[name=assign-empi-patient]:checked').parents('.empi_patient')
+            first_name = empi_patient.find('.first_name').text().trim()
+            last_name = empi_patient.find('.last_name').text().trim()
             gender = empi_patient.find('.gender').text().trim()
             ethnicity = empi_patient.find('.ethnicity').text().trim()
             races = empi_patient.find('.race').text().trim()
             races = races.split('|')
             nmhc_mrn = empi_patient.find('.nmhc_mrn').text().trim()
-
             $("#patient-form").find('.nmhc_mrn .value').text(nmhc_mrn)
+            $("#patient-form").find('.first_name .value').text(first_name)
+            $("#patient-form").find('.last_name .value').text(last_name)
             $("#patient-form").find('#patient_gender').val(gender)
             $("#patient-form").find('#patient_ethnicity').val(ethnicity)
             i = 0
             while i < races.length
-              # alert("input[data-text='#{races[i]}']")
               $("input[data-text='#{races[i]}']").prop('checked', true)
               i++
+
             $("#patient_nmhc_mrn").val(nmhc_mrn)
+            $("#patient_first_name").val(first_name)
+            $("#patient_last_name").val(last_name)
 
             $modal.foundation 'close'
             return

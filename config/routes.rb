@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   resources :batch_health_pros, only: [:index, :new, :create, :show]
   resources :batch_invitation_codes, only: [:new, :create]
+  resources :health_pros, only: :update
   resources :invitation_codes,  only: [:index, :show]
 
   resources :matches do

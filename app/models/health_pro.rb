@@ -49,12 +49,15 @@ class HealthPro < ApplicationRecord
     p
   end
 
+  scope :previously_declined, ->(pmi_id, batch_health_pro_id) do
+    where('pmi_id = ? AND batch_health_pro_id != ? AND status = ?', pmi_id, batch_health_pro_id, HealthPro::STATUS_DECLINED)
+  end
+
   def determine_matches
-    if self.paired_organization != HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN
-      self.status = HealthPro::STATUS_UNMATCHABLE
-    else
+    if (self.paired_organization == HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN || self.paired_organization.blank?) && HealthPro.previously_declined(self.pmi_id, self.batch_health_pro_id).count == 0
       matched_pmi_patients = Patient.where(pmi_id: self.pmi_id)
       matched_demographic_patients = Patient.no_previously_declined_match.by_matchable_criteria(self.first_name, self.last_name)
+
       if matched_pmi_patients.count == 1
         self.status = HealthPro::STATUS_PREVIOUSLY_MATCHED
       elsif matched_demographic_patients.size > 0
@@ -65,6 +68,8 @@ class HealthPro < ApplicationRecord
       else
         self.status = HealthPro::STATUS_MATCHABLE
       end
+    else
+      self.status = HealthPro::STATUS_UNMATCHABLE
     end
   end
 

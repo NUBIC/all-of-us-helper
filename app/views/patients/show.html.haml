@@ -28,16 +28,6 @@
               PMI ID:
             %span.value
               = @patient.pmi_id
-          .first_name.field
-            %strong
-              First Name:
-            %span.value
-              = @patient.first_name
-          .last_name.field
-            %strong
-              Last Name:
-            %span.value
-              = @patient.last_name
           .email.field
             %strong
               Email:
@@ -87,6 +77,24 @@
             = @patient.biospecimens_location if @patient.accepted_match
         .columns.large-8
           = form_with(model: @patient, local: true, id: 'patient-form') do |f|
+            .row.first_name
+              %div{class: 'small-14 large-8 columns' }
+                %label{for: 'patient_first_name' }
+                  First Name:
+                  %span{ class: 'required' }
+              %div{class: 'small-10 large-16 columns' }
+                %span.value
+                  = @patient.first_name
+                = f.hidden_field :first_name, value: @patient.first_name, id: 'patient_first_name'
+            .row.last_name
+              %div{class: 'small-14 large-8 columns' }
+                %label{for: 'patient_last_name' }
+                  Last Name:
+                  %span{ class: 'required' }
+              %div{class: 'small-10 large-16 columns' }
+                %span.value
+                  = @patient.last_name
+                = f.hidden_field :last_name, value: @patient.last_name, id: 'patient_last_name'
             .row.nmhc_mrn
               %div{class: 'small-14 large-8 columns' }
                 %label{for: 'patient_nmhc_mrn' }

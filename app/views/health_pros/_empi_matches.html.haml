@@ -1,0 +1,45 @@
+%table.columns.large-24
+  %thead
+    %tr
+      %th{ colspan: 9 }
+        EMPI
+    %tr
+      %th.first_name
+        First Name
+      %th.last_name
+        Last Name
+      %th.birth_date
+        Birth Date
+      %th.gender
+        Gender
+      %th.race
+        Race
+      %th.ethnicity
+        Ethnicity
+      %th.address
+        Address
+      %th.nmhc_mrn
+        NMHC
+      %th.assign-empi-patient-link.text-center
+        Assign?
+  %tbody
+    - health_pro.empi_matches.each do |empi_match|
+      %tr.empi_match
+        %td.first_name
+          = empi_match.first_name
+        %td.last_name
+          = empi_match.last_name
+        %td.birth_date
+          = empi_match.birth_date.to_s(:date)
+        %td.gender
+          = empi_match.gender
+        %td.race
+          = empi_match.empi_race_matches.map { |empi_race_match| empi_race_match.race.name }.join("|")
+        %td.ethnicity
+          = empi_match.ethnicity
+        %td.address
+          = empi_match.address
+        %td.nmhc_mrn
+          = empi_match.nmhc_mrn
+        %td.assign-empi-match-link.text-center
+          = radio_button_tag 'assign-empi-match', empi_match.id

@@ -55,7 +55,10 @@ class Patient < ApplicationRecord
   end
 
   scope :by_matchable_criteria, ->(first_name, last_name) do
-    where('registration_status = ? AND pmi_id IS NULL AND lower(first_name) = ? AND lower(last_name) = ?', Patient::REGISTRATION_STATUS_UNMATCHED, first_name.try(:downcase), last_name.try(:downcase))
+    first_names = Nickname.for(first_name.downcase).map(&:name)
+    first_names << first_name.downcase
+    first_names.uniq!
+    where('registration_status = ? AND pmi_id IS NULL AND lower(first_name) in(?) AND lower(last_name) = ?', Patient::REGISTRATION_STATUS_UNMATCHED, first_names, last_name.try(:downcase))
   end
 
   def accepted_match

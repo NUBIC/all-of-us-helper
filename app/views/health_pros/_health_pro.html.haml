@@ -7,25 +7,33 @@
     = health_pro.date_of_birth
   %td.sex
     = health_pro.sex
-  %td.gender
-    = health_pro.sex_to_patient_gender
   %td.email
     = health_pro.email
-  %td.pmi_id
-    = health_pro.pmi_id
   %td.address
     = health_pro.address
+  %td.pmi_id
+    = health_pro.pmi_id
+  %td.paried
+    = health_pro.paired_organization
+    %hr
+    = health_pro.paired_site
   %td.status
     = health_pro.status
 - if health_pro.matchable? && @batch_health_pro.ready?
   = content_tag_for(:tr, health_pro) do
-    %td{ colspan: 9 }
+    %td{ colspan: 12 }
       %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true"}
         %li.accordion-item{"data-accordion-item" => ""}
           / Accordion tab title
           %a.accordion-title{:href => "#"} Matches?
           / Accordion tab content: it would start in the open state due to using the `is-active` state class.
           .accordion-content{"data-tab-content" => ""}
+            .row
+              .columns.large-offset-20.large-4
+                - if health_pro.matchable?
+                  = form_with(model: health_pro, local: false, class: 'healthpro-decline-form healthpro-form') do |f|
+                    = f.hidden_field :status, value: HealthPro::STATUS_DECLINED
+                    = f.submit 'Decline Health Pro', class: 'button', 'data-confirm': 'Decline Health Pro?'
             .row
               - health_pro.matches.each do |match|
                 %table.columns.large-24
@@ -53,58 +61,20 @@
                       %td.make-match-link.text-right
                         = form_with(model: match, url: accept_match_url(match.id), local: false, class: 'match-accept-form match-form') do |f|
                           = f.hidden_field :empi_match_id, class: 'empi_match_id'
-                          = f.submit 'Accept', class: 'button', 'data-confirm': 'Accept match?'
+                          = f.submit 'Accept Match', class: 'button', 'data-confirm': 'Accept match?'
                         = form_with(model: match, url: decline_match_url(match.id), local: false, class: 'match-decline-form match-form') do |f|
-                          = f.submit 'Decline', class: 'button', 'data-confirm': 'Decline match?'
-              %table.columns.large-24
-                %thead
-                  %tr
-                    %th{ colspan: 9 }
-                      EMPI
-                  %tr
-                    %th.first_name
-                      First Name
-                    %th.last_name
-                      Last Name
-                    %th.birth_date
-                      Birth Date
-                    %th.gender
-                      Gender
-                    %th.race
-                      Race
-                    %th.ethnicity
-                      Ethnicity
-                    %th.address
-                      Address
-                    %th.nmhc_mrn
-                      NMHC
-                    %th.assign-empi-patient-link.text-center
-                      Assign?
-                %tbody
-                  - health_pro.empi_matches.each do |empi_match|
-                    %tr.empi_match
-                      %td.first_name
-                        = empi_match.first_name
-                      %td.last_name
-                        = empi_match.last_name
-                      %td.birth_date
-                        = empi_match.birth_date.to_s(:date)
-                      %td.gender
-                        = empi_match.gender
-                      %td.race
-                        = empi_match.empi_race_matches.map { |empi_race_match| empi_race_match.race.name }.join("|")
-                      %td.ethnicity
-                        = empi_match.ethnicity
-                      %td.address
-                        = empi_match.address
-                      %td.nmhc_mrn
-                        = empi_match.nmhc_mrn
-                      %td.assign-empi-match-link.text-center
-                        = radio_button_tag 'assign-empi-match', empi_match.id
+                          = f.submit 'Decline Match', class: 'button', 'data-confirm': 'Decline match?'
+              .row
+                .columns.large-4
+                  - if health_pro.empi_matches.empty?
+                    = link_to 'EMPI', new_empi_lookup_url(first_name: health_pro.first_name, last_name: health_pro.last_name, birth_date: health_pro.date_of_birth, gender: health_pro.sex_to_patient_gender, address: health_pro.address), class: 'new-empi-link button'
+              .empi-matches
+                = render 'health_pros/empi_matches', health_pro: health_pro
             .row
-              .columns.large-12
-                .match-create-patient-form-container
-                  = render 'health_pros/match_create_patient_form', health_pro: health_pro
               .columns.large-12
                 .match-create-form-container
                   = render 'health_pros/match_create_form', health_pro: health_pro, unmatched_patients: @unmatched_patients
+              .columns.large-offset-8.large-4
+                .match-create-patient-form-container
+                  = render 'health_pros/match_create_patient_form', health_pro: health_pro
+

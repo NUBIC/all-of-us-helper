@@ -4,7 +4,7 @@ class CreateEmpiMatches < ActiveRecord::Migration[5.1]
       t.integer :health_pro_id,   null: false
       t.string :first_name, null: false
       t.string :last_name, null: false
-      t.date   :birth_date, null: false
+      t.date   :birth_date, null: true
       t.string :address, null: true
       t.string :gender,   null: true
       t.string :nmhc_mrn,   null: false

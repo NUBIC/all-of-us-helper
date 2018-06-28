@@ -4,9 +4,12 @@ namespace :ehr do
   task(compare_healthpro_to_study_tracker: :environment) do  |t, args|
     subjects = []
     subject_template = { source: nil, pmi_id: nil, biospecimens_location: nil, general_consent_status: nil, general_consent_date: nil, general_consent_status_st: nil, general_consent_date_st: nil,  ehr_consent_status: nil, ehr_consent_date: nil, ehr_consent_status_st: nil, ehr_consent_date_st: nil, withdrawal_status: nil, withdrawal_date: nil, withdrawal_status_st: nil, withdrawal_date_st: nil, nmhc_mrn: nil, status: nil, participant_status: nil }
+    st_subjects = CSV.new(File.open('lib/setup/data/STU00204480_subjects.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
+    pmi_ids = st_subjects.map { |subject| subject.to_hash['case number']  }
 
     batch_health_pro = BatchHealthPro.last
-    batch_health_pro.health_pros.where("biospecimens_location = ? AND general_consent_status = '1' AND general_consent_date IS NOT NULL AND ehr_consent_status = '1' AND ehr_consent_date IS NOT NULL AND withdrawal_status = '0' AND withdrawal_date IS NULL", 'nwfeinberggalter').each do |health_pro|
+    batch_health_pro.health_pros.where("pmi_id in (?)", pmi_ids).each do |health_pro|
+    # batch_health_pro.health_pros.where("pmi_id in (?) AND biospecimens_location = ? AND general_consent_status = '1' AND general_consent_date IS NOT NULL AND ehr_consent_status = '1' AND ehr_consent_date IS NOT NULL AND withdrawal_status = '0' AND withdrawal_date IS NULL", 'nwfeinberggalter').each do |health_pro|
       study_tracker_activities  = CSV.new(File.open('lib/setup/data/STU00204480_activities.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
       study_tracker_activities = study_tracker_activities.select { |study_tracker_activity| study_tracker_activity.to_hash['case number'] ==  health_pro.pmi_id }
       subject = subject_template.dup
@@ -27,7 +30,7 @@ namespace :ehr do
       end
 
       subject[:ehr_consent_status] = health_pro.ehr_consent_status
-      subject[:ehr_consent_date] = Date.parse(health_pro.ehr_consent_date)
+      subject[:ehr_consent_date] = Date.parse(health_pro.ehr_consent_date) if health_pro.ehr_consent_date
       study_tracker_activity_ehr_consent = study_tracker_activities.select { |study_tracker_activity| study_tracker_activity.to_hash['name'] == 'EHR Consent' && study_tracker_activity.to_hash['date'].present? &&  study_tracker_activity.to_hash['state'] == 'completed' }.first
       if study_tracker_activity_ehr_consent
         subject[:ehr_consent_status_st] = '1'

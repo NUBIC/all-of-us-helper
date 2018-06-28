@@ -28,7 +28,7 @@
       %table.hack_stack.hover
         %thead
           %tr
-            %th{ colspan: 9 }
+            %th{ colspan: 12 }
               Health Pro
           %tr
             %th.first_name
@@ -39,14 +39,14 @@
               = sortable 'date_of_birth'
             %th.sex
               = sortable 'sex'
-            %th.gender
-              Gender
+            %th.address
+              Address
             %th.email
               = sortable 'email'
             %th.pmi_id
               = sortable 'pmi_id', 'PMI ID'
-            %th.address
-              Address
+            %th.paring
+              Organization|Site
             %th.status
               = sortable 'status'
         %tbody
