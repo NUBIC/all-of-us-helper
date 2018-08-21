@@ -1,5 +1,63 @@
+# consent date <  4/24/2018
+#
+# OR
+#
+# consent date >  6/7/2018
+
 require 'csv'
 namespace :ehr do
+  desc "Validate consents"
+  task(validate_consents: :environment) do  |t, args|
+    subject_template = { pmi_id: nil, ehr_consent_date: nil, status: nil }
+    vibrent_subjects_file = CSV.new(File.open('lib/setup/data/new_illinois_query_24_June_no_filters_corrected.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
+    vibrent_subjects = vibrent_subjects_file.map { |vibrent_subject| vibrent_subject.to_hash }
+    vibrent_subjects_file = CSV.new(File.open('lib/setup/data/new_illinois_query_24_June_no_filters_corrected.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
+    invalid_vibrent_subjects = vibrent_subjects_file.select { |vibrent_subject| vibrent_subject.to_hash['questionnaire_id'].strip == '126' }
+    puts vibrent_subjects.size
+    puts invalid_vibrent_subjects.size
+
+    invalid_subjects= []
+    batch_health_pro = BatchHealthPro.last
+    invalid_vibrent_subjects.each do |invalid_vibrent_subject|
+      subject = subject_template.dup
+      pmi_id = "P#{invalid_vibrent_subject.to_hash['participant_id']}"
+      subject[:pmi_id] = pmi_id
+      puts pmi_id
+      health_pro = batch_health_pro.health_pros.where("pmi_id in (?)", pmi_id).first
+      if health_pro.present?
+        ehr_consent_date = Date.parse(health_pro.ehr_consent_date)
+        subject[:ehr_consent_date] = ehr_consent_date
+        puts ehr_consent_date
+        if ehr_consent_date >= Date.parse('4/24/2018') && ehr_consent_date <= Date.parse('6/7/2018')
+          puts "Invalid pmi_id #{pmi_id} is within the dark age."
+          subject[:status] = 'Within the dark age'
+        else
+          puts "Invalid pmi_id #{pmi_id} has escaped the dark age."
+          subject[:status] = 'Outside the dark age'
+        end
+      else
+        subject[:ehr_consent_date] = nil
+        subject[:status] = 'Disappeared.'
+      end
+      invalid_subjects << subject
+    end
+
+    headers = subject_template.keys
+    row_header = CSV::Row.new(headers, headers, true)
+    row_template = CSV::Row.new(headers, [], false)
+
+    CSV.open('lib/setup/data_out/invalid_subjects.csv', "wb") do |csv|
+      csv << row_header
+      invalid_subjects.each do |subject|
+        row = row_template.dup
+        row[:pmi_id] = subject[:pmi_id]
+        row[:ehr_consent_date] = subject[:ehr_consent_date]
+        row[:status] = subject[:status]
+        csv << row
+      end
+    end
+  end
+
   desc 'Compare HelathPro to StudyTracker'
   task(compare_healthpro_to_study_tracker: :environment) do  |t, args|
     subjects = []
@@ -78,7 +136,15 @@ namespace :ehr do
          puts subject[:withdrawal_date_st]
 
          puts 'end'
-         subject[:status] = 'mismatches'
+
+         if match_status(subject[:general_consent_status], subject[:general_consent_date], subject[:general_consent_status_st], subject[:general_consent_date_st]) &&
+            match_status(subject[:ehr_consent_status], subject[:ehr_consent_date], subject[:ehr_consent_status_st], subject[:ehr_consent_date_st]) &&
+            match_status(subject[:withdrawal_status], subject[:withdrawal_date],subject[:withdrawal_status_st], subject[:withdrawal_date_st])
+
+            subject[:status] = 'matches'
+          else
+            subject[:status] = 'mismatches'
+          end
        end
 
       subjects << subject
@@ -129,12 +195,9 @@ namespace :ehr do
         subject[:withdrawal_status_st] = '0'
       end
 
-      if subject[:general_consent_status] == subject[:general_consent_status_st] &&
-         subject[:general_consent_date] == subject[:general_consent_date_st] &&
-         subject[:ehr_consent_status] == subject[:ehr_consent_status_st] &&
-         subject[:ehr_consent_date] == subject[:ehr_consent_date_st] &&
-         subject[:withdrawal_status] == subject[:withdrawal_status_st] &&
-         subject[:withdrawal_date] == subject[:withdrawal_date_st]
+      if match_status(subject[:general_consent_status], subject[:general_consent_date], subject[:general_consent_status_st], subject[:general_consent_date_st]) &&
+         match_status(subject[:ehr_consent_status], subject[:ehr_consent_date], subject[:ehr_consent_status_st], subject[:ehr_consent_date_st]) &&
+         match_status(subject[:withdrawal_status], subject[:withdrawal_date] , subject[:withdrawal_status_st], subject[:withdrawal_date_st])
          subject[:status] = 'matches'
        else
          subject[:status] = 'mismatches'
@@ -176,4 +239,16 @@ namespace :ehr do
       end
     end
   end
+end
+
+def match_status(status, date, status_st, date_st)
+  match = false
+  if status == status_st && status == '1' && date == date_st
+    match = true
+  elsif status == status_st && status == '1' && date != date_st
+    match = false
+  elsif status == status_st && status == '0'
+    match = true
+  end
+  match
 end
