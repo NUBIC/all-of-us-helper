@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180612145710) do
+ActiveRecord::Schema.define(version: 20180823184005) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(version: 20180612145710) do
     t.integer "health_pro_id", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
-    t.date "birth_date", null: false
+    t.date "birth_date"
     t.string "address"
     t.string "gender"
     t.string "nmhc_mrn", null: false
@@ -170,6 +170,7 @@ ActiveRecord::Schema.define(version: 20180612145710) do
     t.string "participant_status"
     t.string "paired_site"
     t.string "paired_organization"
+    t.index ["pmi_id", "batch_health_pro_id"], name: "test"
   end
 
   create_table "invitation_code_assignments", force: :cascade do |t|
@@ -219,7 +220,7 @@ ActiveRecord::Schema.define(version: 20180612145710) do
     t.string "record_id", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
-    t.string "email", null: false
+    t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "pmi_id"
