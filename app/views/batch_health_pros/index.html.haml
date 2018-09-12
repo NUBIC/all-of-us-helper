@@ -1,0 +1,46 @@
+- content_for(:title) do
+  Batch Health Pros
+- content_for(:all_of_us_helper_header) do
+  = render 'layouts/all_of_us_helper_header'
+- content_for(:all_of_us_helper_content_header) do
+  #all-of-us-helper-content-header
+    #batch-health-pros-header
+      = form_tag batch_health_pros_url, method: 'get', id: 'search-batch-health-pros-form' do
+        %h1
+          Health Pros
+        .match_status
+          %label{for: 'match_status' }
+            Match Status
+          = select_tag :match_status, options_for_select(BatchHealthPro::MATCH_STATUSES.map { |match_status| [match_status, match_status] }, (params[:match_status].blank? ? '' : params[:match_status])), { include_blank: 'all' }
+        .search-buttons
+          %button{ type: 'submit', id: 'search-batch-health-pros-button', class: 'tiny button' }
+            Search
+          = link_to 'Clear', batch_health_pros_url()
+- content_for(:all_of_us_helper_content) do
+  #all-of-us-helper-content
+    #batch-health-pros
+      = render 'shared/flash'
+      #pending-batch-health-pros-list
+        = render 'pending_batch_health_pros', pending_batch_health_pros: @pending_batch_health_pros
+      #expired-batch-health-pros-list
+        %h2
+          Expired
+        = will_paginate @expired_batch_health_pros, renderer: FoundationPagination::Rails, class: 'pagination-top'
+        %table.hack_stack.hover
+          %thead
+            %tr
+              %th.created_at
+                = sortable 'created_at'
+              %th.status
+                = sortable 'status'
+              %th.show-batch-health-pro-link
+          %tbody
+            - @expired_batch_health_pros.each do |expired_batch_health_pro|
+              = content_tag_for(:tr, expired_batch_health_pro) do
+                %td.created_at
+                  = expired_batch_health_pro.created_at.to_s(:date)
+                %td.status
+                  = expired_batch_health_pro.status
+                %td.show-batch-health-pro-link
+                  = link_to "Show", batch_health_pro_url(expired_batch_health_pro), class: 'show-batch-health-pro-link'
+        = will_paginate @expired_batch_health_pros, renderer: FoundationPagination::Rails

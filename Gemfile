@@ -33,17 +33,22 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'american_date'
 gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
+gem 'daemons'
+gem 'delayed_job_active_record'
 gem 'devise', '~> 4.2'
 gem 'devise_ldap_authenticatable'
 gem 'exception_notification'
 gem 'foundation-rails', '6.4.1.2'
 gem 'haml'
 gem 'jquery-rails'
+gem 'paper_trail'
 gem 'pundit'
 gem 'record_tag_helper'
 gem 'rest-client'
 # gem 'webpacker'
+gem 'uuid'
 gem 'whenever', :require => false
 gem 'will_paginate'
 gem 'will_paginate-foundation'

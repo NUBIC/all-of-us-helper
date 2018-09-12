@@ -1,0 +1,11 @@
+= link_to 'Select existing patient', '', class: 'add-match-link'
+- match = Match.new
+= form_with(model: match, local: false, class: 'hide match-create-form match-form') do |f|
+  = f.hidden_field :health_pro_id, value:  health_pro.id
+  = f.hidden_field :empi_match_id, class: 'empi_match_id'
+  = f.select :patient_id, options_for_select(unmatched_patients), { include_blank: true }, class: 'patient_id', required: true
+  - if validation_errors?(match, :patient_id)
+    #patient-id-errors.callout.alert
+      %p.error= format_validation_errors(match, :patient_id)
+  = f.submit 'Add match', class: 'button', 'data-confirm': 'Add match?'
+  = link_to 'Cancel', '', class: 'cancel-link button warning'

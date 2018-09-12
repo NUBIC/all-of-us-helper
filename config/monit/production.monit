@@ -1,0 +1,5 @@
+check process delayed_job
+  with pidfile /var/www/apps/all-of-us-helper/shared/pids/delayed_job.pid
+  start program = "/bin/sh /etc/delayed_job_start_all_of_us_helper.sh"
+  stop program = "/bin/sh /etc/delayed_job_stop_all_of_us_helper.sh"
+  set alert m-gurley@northwestern.edu

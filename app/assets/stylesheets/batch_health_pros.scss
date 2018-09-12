@@ -1,0 +1,168 @@
+#batch-health-pros-header {
+  @include grid-row();
+
+  #search-batch-health-pros-form {
+    @include grid-column($columns: 24);
+
+    @include breakpoint(large) {
+      h1 {
+        @include grid-column($columns: 14);
+      }
+
+      .match_status {
+        @include grid-column($columns: 6);
+      }
+
+      .search-buttons{
+        @include grid-column($columns: 4);
+      }
+    };
+
+    .search-buttons{
+      margin-top: 1.5rem;
+      #search-batch-health-pros-button {
+        margin-top: .50rem;
+      }
+    }
+  }
+}
+
+#batch-health-pros {
+  @include grid-column-row();
+  #pending-batch-health-pros-list, #expired-batch-health-pros-list {
+		@include grid-column($columns: 24);
+
+    @include breakpoint(large) {
+      .pagination-top {
+        @include grid-column($columns: 16);
+
+      }
+
+      .new-batch-health-pro-link {
+        @include grid-column($columns: 8);
+      }
+    }
+
+    th .current {
+      padding-right: 2em;
+      background-repeat: no-repeat;
+      background-position: right center;
+    }
+
+    th .asc {
+      background-image: image_url("drop25.png");
+    }
+
+    th .desc {
+      background-image: image_url("drop27.png");
+    }
+
+    table {
+      @include grid-column($columns: 24);
+    }
+  }
+}
+
+
+#new-batch-health-pro-header {
+  @include grid-column-row();
+}
+
+#batch-health-pro {
+  @include grid-column-row();
+
+  #batch-health-pro-form {
+    @include grid-column-row();
+  }
+
+  @include breakpoint(large) {
+    .field_label {
+      @include grid-column($columns: 4);
+    }
+    .field {
+      @include grid-column($columns: 20);
+    }
+  }
+
+  #health-pro-errors {
+    @include grid-column-row();
+  }
+
+  .navigation {
+    @include breakpoint(medium) {
+      @include grid-column-offset(20);
+      @include grid-column($columns: 4);
+    }
+    @include breakpoint(small only) {
+      @include grid-column-offset(12);
+      @include grid-column($columns: 12);
+    }
+  }
+}
+
+#show-batch-health-pro-header {
+  @include grid-column-row();
+
+  #search-batch-health-pro-form {
+    @include grid-column($columns: 24);
+
+    @include breakpoint(large) {
+      h1 {
+        @include grid-column($columns: 8);
+      }
+
+      .status {
+        @include grid-column($columns: 6);
+      }
+
+      .search-box {
+        @include grid-column($columns: 6);
+      }
+
+      .search-buttons{
+        @include grid-column($columns: 4);
+      }
+    };
+
+    .search-buttons{
+      margin-top: 1.5rem;
+      #search-batch-health-pro-button {
+        margin-top: .50rem;
+      }
+    }
+  }
+}
+
+#show-batch-health-pro {
+  @include grid-column-row();
+
+  th .current {
+    padding-right: 2em;
+    background-repeat: no-repeat;
+    background-position: right center;
+  }
+
+  th .asc {
+    background-image: image_url("drop25.png");
+  }
+
+  th .desc {
+    background-image: image_url("drop27.png");
+  }
+
+  th.health_pro {
+    text-align: center;
+  }
+
+  .match-accept-form {
+    display: inline;
+  }
+
+  .match-decline-form {
+    display: inline;
+  }
+
+  .select2 {
+    margin-bottom: 1rem;
+  }
+}

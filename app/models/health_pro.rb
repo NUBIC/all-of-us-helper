@@ -1,0 +1,138 @@
+class HealthPro < ApplicationRecord
+  has_paper_trail
+  belongs_to :batch_health_pro
+  has_many :matches
+  has_many :empi_matches
+
+  STATUS_PENDING              = 'pending'
+  STATUS_PREVIOUSLY_MATCHED   = 'previously matched'
+  STATUS_MATCHABLE            = 'matchable'
+  STATUS_UNMATCHABLE          = 'unmatchable'
+  STATUS_MATCHED              = 'matched'
+  STATUS_DECLINED             = 'declined'
+  STATUS_ADDED                = 'added'
+  STATUSES = [STATUS_MATCHABLE, STATUS_UNMATCHABLE, STATUS_MATCHED, STATUS_PREVIOUSLY_MATCHED, STATUS_DECLINED, STATUS_ADDED]
+
+  SEX_MALE = 'Male'
+  SEX_FEMALE = 'Female'
+  SEX_INTERSEX = 'Intersex'
+  SEX_NONE = 'None of these describe me (optional free text)'
+  SEXES = [SEX_MALE, SEX_FEMALE, SEX_INTERSEX, SEX_NONE]
+
+  YES = '1'
+  NO = '0'
+
+  BIOSPECIMEN_LOCATION_NORTHWESTERN = 'nwfeinberggalter'
+  PAIRED_ORGANIZATION_NORTHWESTERN = 'ILLINOIS_NORTHWESTERN'
+
+  after_initialize :set_defaults
+
+  scope :by_status, ->(status) do
+    if status.present?
+     where(status: status)
+    end
+  end
+
+  scope :search_across_fields, ->(search_token, options={}) do
+    if search_token
+      search_token.downcase!
+    end
+    options = { sort_column: 'last_name', sort_direction: 'asc' }.merge(options)
+
+    if search_token
+      p = where(["lower(pmi_id) like ? OR lower(last_name) like ? OR lower(first_name) like ? OR lower(email) like ? OR lower(street_address) like ? OR lower(city) like ? OR lower(state) like ? OR lower(zip) like ?", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%"])
+    end
+
+    sort = options[:sort_column] + ' ' + options[:sort_direction] + ', health_pros.id ASC'
+    p = p.nil? ? order(sort) : p.order(sort)
+
+    p
+  end
+
+  scope :previously_declined, ->(pmi_id, batch_health_pro_id) do
+    where('pmi_id = ? AND batch_health_pro_id != ? AND status = ?', pmi_id, batch_health_pro_id, HealthPro::STATUS_DECLINED)
+  end
+
+  def determine_matches
+    if (self.paired_organization == HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN || self.paired_organization.blank?) && HealthPro.previously_declined(self.pmi_id, self.batch_health_pro_id).count == 0
+      matched_pmi_patients = Patient.where(pmi_id: self.pmi_id)
+      matched_demographic_patients = Patient.no_previously_declined_match.by_matchable_criteria(self.first_name, self.last_name)
+
+      if matched_pmi_patients.count == 1
+        self.status = HealthPro::STATUS_PREVIOUSLY_MATCHED
+      elsif matched_demographic_patients.size > 0
+        self.status = HealthPro::STATUS_MATCHABLE
+        matched_demographic_patients.each do |matched_demographic_patient|
+          matches.build(patient: matched_demographic_patient)
+        end
+      else
+        self.status = HealthPro::STATUS_MATCHABLE
+      end
+    else
+      self.status = HealthPro::STATUS_UNMATCHABLE
+    end
+  end
+
+  def determine_empi_matches
+    empi_params = {}
+    empi_patients = []
+    error = nil
+    study_tracker_api = StudyTrackerApi.new
+    empi_params[:proxy_user] = self.batch_health_pro.created_user
+    empi_params[:first_name] = self.first_name
+    empi_params[:last_name] = self.last_name
+    empi_params[:birth_date] = self.date_of_birth
+    empi_params[:address] = self.address
+    empi_params[:gender] = self.sex_to_patient_gender
+    empi_results = study_tracker_api.empi_lookup(empi_params)
+    if empi_results[:error].present? || empi_results[:response]['error'].present?
+    else
+      empi_results[:response]['patients'].each do |empi_patient|
+        empi_race_matches = []
+        empi_patient['races'].each do |empi_race|
+          race = Race.where(name: empi_race).first
+          if race.present?
+            empi_race_matches << EmpiRaceMatch.new(race_id: race.id)
+          end
+        end
+        self.empi_matches.build(first_name: empi_patient['first_name'], last_name: empi_patient['last_name'], birth_date: empi_patient['birth_date'], gender: empi_patient['gender'], address: format_address(empi_patient), nmhc_mrn: empi_patient['nmhc_mrn'], ethnicity: empi_patient['ethnicity'], empi_race_matches: empi_race_matches)
+      end
+    end
+  end
+
+  def format_address(empi_patient)
+    [empi_patient['address_line1'], empi_patient['city'], empi_patient['state'], empi_patient['zip']].compact.join(' ')
+  end
+
+  def matchable?
+    self.status == HealthPro::STATUS_MATCHABLE
+  end
+
+  def address
+    [self.street_address, self.city, self.state, self.zip].compact.join(', ')
+  end
+
+  def pending_matches?
+    pending_matches.any?
+  end
+
+  def pending_matches
+    matches.by_status(Match::STATUS_PENDING)
+  end
+
+  def sex_to_patient_gender
+    mapped = Patient::GENDERS.detect { |gender| gender == self.sex }
+    if mapped.present?
+      mapped
+    else
+      Patient::GENDER_UNKNOWN_OR_NOT_REPORTED
+    end
+  end
+
+  private
+    def set_defaults
+      if self.new_record? && self.status.blank?
+        self.status = HealthPro::STATUS_PENDING
+      end
+    end
+end

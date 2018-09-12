@@ -1,5 +1,6 @@
 require './lib/ldap'
 class User < ApplicationRecord
+  has_paper_trail
   has_many :role_assignments
   has_many :roles, through: :role_assignments
   # Include default devise modules. Others available are:
@@ -40,6 +41,8 @@ class User < ApplicationRecord
   end
 
   def after_ldap_authentication
+    login_audit = LoginAudit.new(username: self.username, login_type: LoginAudit::LOGIN_TYPE_INTERACTIVE)
+    login_audit.save!
     hydrate_from_ldap
   end
 end

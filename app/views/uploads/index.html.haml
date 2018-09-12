@@ -1,0 +1,18 @@
+- content_for(:title) do
+  Uploads
+- content_for(:all_of_us_helper_header) do
+  = render 'layouts/all_of_us_helper_header'
+- content_for(:all_of_us_helper_content_header) do
+  #all-of-us-helper-content-header
+    #uploads-header
+      %h1
+        Uploads
+- content_for(:all_of_us_helper_content) do
+  #all-of-us-helper-content
+    #uploads
+      = render 'shared/flash'
+      %ul.menu.vertical
+        %li.menu-text
+          = link_to 'Invitation Codes', invitation_codes_url(), { class: 'invitation-codes-link' }
+        %li.menu-text
+          = link_to 'Health Pros', batch_health_pros_url(), { class: 'batch-health-pros-link' }

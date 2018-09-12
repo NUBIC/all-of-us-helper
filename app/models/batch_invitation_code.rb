@@ -1,5 +1,6 @@
 require 'csv'
 class BatchInvitationCode < ApplicationRecord
+  has_paper_trail
   mount_uploader :invitation_code_file, InvitationCodeFileUploader
   has_many :invitation_codes
   validates_associated :invitation_codes

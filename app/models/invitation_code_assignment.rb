@@ -1,4 +1,5 @@
 class InvitationCodeAssignment < ApplicationRecord
+  has_paper_trail
   belongs_to :patient
   belongs_to :invitation_code
 

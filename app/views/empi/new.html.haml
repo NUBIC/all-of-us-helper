@@ -1,0 +1,57 @@
+%h2
+  EMPI
+= form_with(url: empi_lookup_url, method: :get, local: false, id: 'empi-lookup-form') do |f|
+  = f.hidden_field :match_id, value: params[:match_id], class: 'match_id'
+  .row
+    .name
+      %div{class: 'small-14 large-4 columns' }
+        %label{for: 'first_name' }
+          First Name
+          %span{ class: 'required' }
+      %div{class: 'small-10 large-20 columns' }
+        = f.text_field :first_name, value: params[:first_name], disabled: false
+  .row
+    .name
+      %div{class: 'small-14 large-4 columns' }
+        %label{for: 'last_name' }
+          Last Name
+          %span{ class: 'required' }
+      %div{class: 'small-10 large-20 columns' }
+        = f.text_field :last_name, value: params[:last_name], disabled: false
+  .row
+    .name
+      %div{class: 'small-14 large-4 columns' }
+        %label{for: 'birth_date' }
+          Birth Date
+          %span{ class: 'required' }
+      %div{class: 'small-10 large-20 columns' }
+        = f.text_field :birth_date, value: params[:birth_date], disabled: false
+  .row
+    .address
+      %div{class: 'small-14 large-4 columns' }
+        %label{for: 'address' }
+          Address
+          %span{ class: 'required' }
+      %div{class: 'small-10 large-20 columns' }
+        = f.text_area :address, value: params[:address], disabled: false
+  .row
+    .gender
+      %div{class: 'small-14 large-4 columns' }
+        %label{for: 'gender' }
+          Gender
+          %span{ class: 'required' }
+      %div{class: 'small-10 large-20 columns' }
+        = f.select :gender, options_for_select(Patient::GENDERS, selected: params[:gender]), { include_blank: 'Select a gender' }, id: 'empi_gender'
+  .row
+    .navigation{class: 'columns small-offset-12 small-12 large-offset-20 large-4' }
+      = f.submit 'Search', class: 'button', id: 'empi-search-button'
+      = link_to 'Cancel', '', class: 'cancel-link button warning'
+%h3
+  EMPI Patients
+.row.text-center
+  = image_tag 'loading.gif', class: 'loading hide'
+#empi-lookup-results
+.row
+  %div{class: 'columns small-offset-12 small-12 large-offset-20 large-4' }
+    %button{ id: 'assign-empi-link', class: 'button disabled', disabled: true }
+      Assign EMPI

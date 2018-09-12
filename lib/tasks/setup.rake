@@ -1,3 +1,5 @@
+require 'net/http'
+require 'uri'
 require 'yaml'
 namespace :setup do
   desc 'Load dummy patients'
@@ -39,6 +41,32 @@ namespace :setup do
       if user && !user.has_role?(Role::ROLE_ALL_OF_US_HELPER_USER)
         user.roles << Role.where(name: Role::ROLE_ALL_OF_US_HELPER_USER).first
         user.save!
+      end
+    end
+  end
+
+  desc "Races"
+  task(races: :environment) do  |t, args|
+    Race::RACES.each do |race|
+      Race.where(name: race).first_or_create
+    end
+  end
+
+  desc "Populate Nickname table"
+  task(populate_nicknames: :environment) do  |t, args|
+    # Processes file in CSV format from http://code.google.com/p/nickname-and-diminutive-names-lookup/
+    puts "Truncating nicknames table"
+    Nickname.delete_all
+    file = Net::HTTP.get(URI.parse('https://raw.githubusercontent.com/carltonnorthern/nickname-and-diminutive-names-lookup/master/names.csv'))
+
+    file.split("\r\n").each do |row|
+      puts row
+      nicknames = row.split(',')
+      puts nicknames
+      master_nickname = Nickname.create!(name: nicknames[0])
+      nicknames.shift
+      nicknames.each do |nickname|
+        Nickname.create!(name: nickname, nickname_id: master_nickname.id)
       end
     end
   end

@@ -1,6 +1,5 @@
 class BatchInvitationCodesController < ApplicationController
   before_action :authenticate_user!
-  before_action :load_batch_invitation_code, only: [:update]
 
   def new
     authorize BatchInvitationCode
@@ -41,8 +40,4 @@ class BatchInvitationCodesController < ApplicationController
         @batch_invitation_code[file.to_sym] = nil
       end
     end
-
-    def load_batch_invitation_code
-      @batch_invitation_code = BatchInvitationCode.find(:id)
-    end
-end
+  end

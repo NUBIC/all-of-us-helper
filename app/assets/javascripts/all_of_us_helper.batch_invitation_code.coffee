@@ -10,7 +10,6 @@ class AllOfUsHelper.BatchInvitationCode
         $('#batch_invitation_code_invitation_code_file_cache').val('')
       else
         $('#batch_invitation_code_invitation_code_file').addClass('hide')
-
       e.preventDefault()
 
 $(document).on 'turbolinks:load', ->

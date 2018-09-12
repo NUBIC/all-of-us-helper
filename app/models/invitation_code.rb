@@ -1,4 +1,5 @@
 class InvitationCode < ApplicationRecord
+  has_paper_trail
   has_one :invitation_code_assignment
 
   ASSIGNMENT_STATUS_UNASSIGNED = 'Unassigned'
