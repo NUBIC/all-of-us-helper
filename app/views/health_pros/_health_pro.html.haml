@@ -61,9 +61,9 @@
                       %td.make-match-link.text-right
                         = form_with(model: match, url: accept_match_url(match.id), local: false, class: 'match-accept-form match-form') do |f|
                           = f.hidden_field :empi_match_id, class: 'empi_match_id'
-                          = f.submit 'Accept Match', class: 'button', 'data-confirm': 'Accept match?'
+                          = f.submit 'Link to REDCap', class: 'button', 'data-confirm': 'Link to REDCap?'
                         = form_with(model: match, url: decline_match_url(match.id), local: false, class: 'match-decline-form match-form') do |f|
-                          = f.submit 'Decline Match', class: 'button', 'data-confirm': 'Decline match?'
+                          = f.submit 'Decline Link to REDCap', class: 'button', 'data-confirm': 'Decline link to REDCap?'
               .row
                 .columns.large-4
                   - if health_pro.empi_matches.empty?
