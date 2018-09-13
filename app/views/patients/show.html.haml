@@ -50,7 +50,7 @@
           .general_consent_status.field
             %strong
               General Consent Status:
-            = @patient.general_consent_status if @patient.accepted_match
+            = @patient.general_consent_status_display if @patient.accepted_match
           .general_consent_date.field
             %strong
               General Consent Date:
@@ -58,7 +58,7 @@
           .ehr_consent_status.field
             %strong
               EHR Consent Status:
-            = @patient.ehr_consent_status if @patient.accepted_match
+            = @patient.ehr_consent_status_display if @patient.accepted_match
           .ehr_consent_date.field
             %strong
               EHR Consent Status Date:
@@ -66,7 +66,7 @@
           .withdrawal_status.field
             %strong
               Withdrawal Status:
-            = @patient.withdrawal_status if @patient.accepted_match
+            = @patient.withdrawal_status_display if @patient.accepted_match
           .withdrawal_status_date.field
             %strong
               Withdrawal Status Date:
