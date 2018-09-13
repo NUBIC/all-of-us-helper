@@ -114,11 +114,11 @@ class Patient < ApplicationRecord
   end
 
   def general_consent_status_ready?
-    patient.general_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED || patient.general_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
+    self.general_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED || self.general_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
   end
 
   def ehr_consent_status_ready?
-    patient.ehr_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED || patient.ehr_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
+    self.ehr_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED || self.ehr_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
   end
 
   def ready?
