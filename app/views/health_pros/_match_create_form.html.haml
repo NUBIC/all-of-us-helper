@@ -1,4 +1,4 @@
-= link_to 'Select existing patient', '', class: 'add-match-link'
+= link_to 'Search REDCap participants for match', '', class: 'add-match-link'
 - match = Match.new
 = form_with(model: match, local: false, class: 'hide match-create-form match-form') do |f|
   = f.hidden_field :health_pro_id, value:  health_pro.id
@@ -7,5 +7,5 @@
   - if validation_errors?(match, :patient_id)
     #patient-id-errors.callout.alert
       %p.error= format_validation_errors(match, :patient_id)
-  = f.submit 'Add match', class: 'button', 'data-confirm': 'Add match?'
+  = f.submit 'Match REDCap Participant', class: 'button', 'data-confirm': 'Add match?'
   = link_to 'Cancel', '', class: 'cancel-link button warning'

@@ -20,7 +20,7 @@
         Address
       %th.nmhc_mrn
         NMHC
-      %th.assign-empi-patient-link.text-center
+      %th.assign-empi-patient-link.text-center.hide
         Assign?
   %tbody
     - health_pro.empi_matches.each do |empi_match|
@@ -41,5 +41,5 @@
           = empi_match.address
         %td.nmhc_mrn
           = empi_match.nmhc_mrn
-        %td.assign-empi-match-link.text-center
+        %td.assign-empi-match-link.text-center.hide
           = radio_button_tag 'assign-empi-match', empi_match.id

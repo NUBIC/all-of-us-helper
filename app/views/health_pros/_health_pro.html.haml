@@ -29,52 +29,66 @@
           / Accordion tab content: it would start in the open state due to using the `is-active` state class.
           .accordion-content{"data-tab-content" => ""}
             .row
+              %h3
+                REDCap Participant Matches
+              - if health_pro.matches.empty?
+                ='None found'
+                %i
+                  (please double-check by manually searching for a match to a REDCap participant)
+                ='.'
+              -else
+                - health_pro.matches.each do |match|
+                  %table.columns.large-24
+                    %thead
+                      %tr
+                        %th{ colspan: 4 }
+                          REDCap
+                      %tr
+                        %th.first_name
+                          First
+                        %th.last_name
+                          Last
+                        %th.email
+                          Email
+                        %th.match-links
+                          Match?
+                    %tbody
+                      = content_tag_for(:tr, match) do
+                        %td.first_name
+                          = match.patient.first_name
+                        %td.last_name
+                          = match.patient.last_name
+                        %td.email
+                          = match.patient.email
+                        %td.make-match-link.text-right
+                          = form_with(model: match, url: accept_match_url(match.id), local: false, class: 'match-accept-form match-form') do |f|
+                            = f.hidden_field :empi_match_id, class: 'empi_match_id'
+                            = f.submit 'Match to REDCap', class: 'button', 'data-confirm': 'Link to REDCap?'
+                          = form_with(model: match, url: decline_match_url(match.id), local: false, class: 'match-decline-form match-form') do |f|
+                            = f.submit 'Decline match to REDCap', class: 'button', 'data-confirm': 'Decline link to REDCap?'
+            .row
+              .columns.large-12
+                .match-create-form-container
+                  = render 'health_pros/match_create_form', health_pro: health_pro, unmatched_patients: @unmatched_patients
+              .columns.large-offset-7.large-5
+                .match-create-patient-form-container
+                  = render 'health_pros/match_create_patient_form', health_pro: health_pro
+            .row
+              %h3
+                EMPI Matches
+              - if health_pro.empi_matches.empty?
+                ='None found'
+                %i
+                  (please double-check by manually searching for an EMPI match)
+                ='.'
+                &nbsp;
+                = link_to 'EMPI', new_empi_lookup_url(first_name: health_pro.first_name, last_name: health_pro.last_name, birth_date: health_pro.date_of_birth, gender: health_pro.sex_to_patient_gender, address: health_pro.address), class: 'new-empi-link button'
+            .empi-matches
+              - if health_pro.empi_matches.any?
+                = render 'health_pros/empi_matches', health_pro: health_pro
+            .row
               .columns.large-offset-20.large-4
                 - if health_pro.matchable?
                   = form_with(model: health_pro, local: false, class: 'healthpro-decline-form healthpro-form') do |f|
                     = f.hidden_field :status, value: HealthPro::STATUS_DECLINED
                     = f.submit 'Decline Health Pro', class: 'button', 'data-confirm': 'Decline Health Pro?'
-            .row
-              - health_pro.matches.each do |match|
-                %table.columns.large-24
-                  %thead
-                    %tr
-                      %th{ colspan: 4 }
-                        REDCap
-                    %tr
-                      %th.first_name
-                        First
-                      %th.last_name
-                        Last
-                      %th.email
-                        Email
-                      %th.match-links
-                        Match?
-                  %tbody
-                    = content_tag_for(:tr, match) do
-                      %td.first_name
-                        = match.patient.first_name
-                      %td.last_name
-                        = match.patient.last_name
-                      %td.email
-                        = match.patient.email
-                      %td.make-match-link.text-right
-                        = form_with(model: match, url: accept_match_url(match.id), local: false, class: 'match-accept-form match-form') do |f|
-                          = f.hidden_field :empi_match_id, class: 'empi_match_id'
-                          = f.submit 'Link to REDCap', class: 'button', 'data-confirm': 'Link to REDCap?'
-                        = form_with(model: match, url: decline_match_url(match.id), local: false, class: 'match-decline-form match-form') do |f|
-                          = f.submit 'Decline Link to REDCap', class: 'button', 'data-confirm': 'Decline link to REDCap?'
-              .row
-                .columns.large-4
-                  - if health_pro.empi_matches.empty?
-                    = link_to 'EMPI', new_empi_lookup_url(first_name: health_pro.first_name, last_name: health_pro.last_name, birth_date: health_pro.date_of_birth, gender: health_pro.sex_to_patient_gender, address: health_pro.address), class: 'new-empi-link button'
-              .empi-matches
-                = render 'health_pros/empi_matches', health_pro: health_pro
-            .row
-              .columns.large-12
-                .match-create-form-container
-                  = render 'health_pros/match_create_form', health_pro: health_pro, unmatched_patients: @unmatched_patients
-              .columns.large-offset-8.large-4
-                .match-create-patient-form-container
-                  = render 'health_pros/match_create_patient_form', health_pro: health_pro
-

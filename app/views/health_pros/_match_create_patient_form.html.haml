@@ -2,4 +2,4 @@
 = form_with(model: patient, local: false, class: 'match-patient-form match-form') do |f|
   = f.hidden_field :health_pro_id, value: health_pro.id
   = f.hidden_field :empi_match_id, class: 'empi_match_id'
-  = f.submit 'Add match & patient', class: 'button', 'data-confirm': 'Add patient?'
+  = f.submit 'Add participant to REDCap ', class: 'button', 'data-confirm': 'Add participant to REDCap?'
