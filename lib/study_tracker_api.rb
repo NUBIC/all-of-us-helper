@@ -47,17 +47,18 @@ class StudyTrackerApi
       payload[:subject][:record_numbers] << { org: StudyTrackerApi::ORG_NMHC, record_number: patient.nmhc_mrn }
       payload[:subject][:events] = []
 
-      if patient.general_consent_status == HealthPro::YES && patient.general_consent_date
+      if patient.general_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED
         payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_CONSENTED, date: Date.parse(patient.general_consent_date).to_s }
       end
 
-      if patient.ehr_consent_status == HealthPro::YES && patient.ehr_consent_date
+      if patient.ehr_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED
         payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_EHR_CONSENT, date: Date.parse(patient.ehr_consent_date).to_s }
       end
 
-      if patient.withdrawal_status == HealthPro::YES && patient.withdrawal_date
+      if patient.withdrawal_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_WITHDRAWN
         payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_WITHDRAWN, date: Date.parse(patient.withdrawal_date).to_s }
       end
+
       url = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['register'].gsub(':id', patient.uuid)
 
       api_response = study_tracker_api_request_wrapper(url: url, method: :put, parse_response: true, payload: payload)
