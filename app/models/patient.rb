@@ -154,29 +154,29 @@ class Patient < ApplicationRecord
   end
 
   def general_consent_status_display
-    if self.general_consent_status == 0 && self.general_consent_date.blank?
+    if self.general_consent_status == '0' && self.general_consent_date.blank?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_UNDETERMINED
-    elsif self.general_consent_status == 0 && self.general_consent_date.present?
+    elsif self.general_consent_status == '0' && self.general_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
-    else self.general_consent_status == 1 && self.general_consent_date.present?
+    else self.general_consent_status == '1' && self.general_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED
     end
   end
 
   def ehr_consent_status_display
-    if self.ehr_consent_status == 0 && self.ehr_consent_date.blank?
+    if self.ehr_consent_status == '0' && self.ehr_consent_date.blank?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_UNDETERMINED
-    elsif self.ehr_consent_status == 0 && self.ehr_consent_date.present?
+    elsif self.ehr_consent_status == '0' && self.ehr_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
-    else self.ehr_consent_status == 1 && self.ehr_consent_date.present?
+    else self.ehr_consent_status == '1' && self.ehr_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED
     end
   end
 
   def withdrawal_status_display
-    if self.withdrawal_status == 0 && self.withdrawal_date.blank?
+    if self.withdrawal_status == '0' && self.withdrawal_date.blank?
       nil
-    elsif self.withdrawal_status == 1 && self.withdrawal_date.present?
+    elsif self.withdrawal_status == '1' && self.withdrawal_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_WITHDRAWN
     end
   end
