@@ -113,8 +113,16 @@ class Patient < ApplicationRecord
     nmhc_mrn.present? && ethnicity.present? && gender.present? && races.any?
   end
 
+  def general_consent_status_ready?
+    patient.general_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED || patient.general_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
+  end
+
+  def ehr_consent_status_ready?
+    patient.ehr_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED || patient.ehr_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
+  end
+
   def ready?
-    accepted_match && general_consent_status == HealthPro::YES && general_consent_date.present? && ehr_consent_status == HealthPro::YES && ehr_consent_date.present? && withdrawal_status == HealthPro::NO && withdrawal_date.blank? && biospecimens_location  == HealthPro::BIOSPECIMEN_LOCATION_NORTHWESTERN
+    self.accepted_match && self.general_consent_status_ready? && self.ehr_consent_status_ready? && self.withdrawal_status_display.blank? && self.biospecimens_location == HealthPro::BIOSPECIMEN_LOCATION_NORTHWESTERN && self.participant_status == HeatlhPro::HEALTH_PRO_PARTICIPANT_STATUS_FULL PARTICIPANT
   end
 
   def set_registration_status
