@@ -38,6 +38,7 @@ class MatchesController < ApplicationController
       patient.withdrawal_status = @health_pro.withdrawal_status
       patient.withdrawal_date = @health_pro.withdrawal_date
       patient.biospecimens_location = @health_pro.biospecimens_location
+      patient.participant_status = @health_pro.participant_status
     end
 
     @match = Match.new(health_pro_id: match_params[:health_pro_id], patient_id: match_params[:patient_id], status: Match::STATUS_ACCEPTED)

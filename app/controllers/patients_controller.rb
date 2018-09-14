@@ -52,6 +52,7 @@ class PatientsController < ApplicationController
     patient.withdrawal_date = health_pro.withdrawal_date
     patient.biospecimens_location = health_pro.biospecimens_location
     patient.birth_date = health_pro.date_of_birth
+    patient.participant_status = health_pro.participant_status
 
     if patient_params[:empi_match_id].present?
       empi_match = EmpiMatch.find(patient_params[:empi_match_id])
