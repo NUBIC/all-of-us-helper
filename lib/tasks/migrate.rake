@@ -54,7 +54,7 @@ namespace :migrate do
         patient.nmhc_mrn = subject.to_h['nmhc_record_number']
         patient.ethnicity = subject.to_h['ethnicity']
         patient.record_id = health_pro.pmi_id
-        patient.email = health_pro.pmi_id
+        patient.email = health_pro.email
 
         subject.to_h['races'].split(',').each do |race|
           race = Race.where(name: race).first
