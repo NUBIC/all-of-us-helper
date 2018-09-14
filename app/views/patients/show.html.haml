@@ -50,31 +50,35 @@
           .general_consent_status.field
             %strong
               General Consent Status:
-            = @patient.general_consent_status_display if @patient.accepted_match
+            = @patient.general_consent_status_display
           .general_consent_date.field
             %strong
               General Consent Date:
-            = @patient.general_consent_date if @patient.accepted_match
+            = @patient.general_consent_date
           .ehr_consent_status.field
             %strong
               EHR Consent Status:
-            = @patient.ehr_consent_status_display if @patient.accepted_match
+            = @patient.ehr_consent_status_display
           .ehr_consent_date.field
             %strong
               EHR Consent Status Date:
-            = @patient.ehr_consent_date if @patient.accepted_match
+            = @patient.ehr_consent_date
           .withdrawal_status.field
             %strong
               Withdrawal Status:
-            = @patient.withdrawal_status_display if @patient.accepted_match
+            = @patient.withdrawal_status_display
           .withdrawal_status_date.field
             %strong
               Withdrawal Status Date:
-            = @patient.withdrawal_date if @patient.accepted_match
+            = @patient.withdrawal_date
           .biospecimens_location.field
             %strong
               Biospecimens Location:
-            = @patient.biospecimens_location if @patient.accepted_match
+            = @patient.biospecimens_location
+          .participant_status.field
+            %strong
+              Participant Status:
+            = @patient.participant_status
         .columns.large-8
           = form_with(model: @patient, local: true, id: 'patient-form') do |f|
             .row.first_name
