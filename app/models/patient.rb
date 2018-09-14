@@ -122,7 +122,7 @@ class Patient < ApplicationRecord
   end
 
   def ready?
-    self.accepted_match && self.general_consent_status_ready? && self.ehr_consent_status_ready? && self.withdrawal_status_display.blank? && self.biospecimens_location == HealthPro::BIOSPECIMEN_LOCATION_NORTHWESTERN && self.participant_status == HeatlhPro::HEALTH_PRO_PARTICIPANT_STATUS_FULL_PARTICIPANT
+    self.accepted_match && self.general_consent_status_ready? && self.ehr_consent_status_ready? && self.withdrawal_status_display.blank? && self.biospecimens_location == HealthPro::BIOSPECIMEN_LOCATION_NORTHWESTERN && self.participant_status == HealthPro::HEALTH_PRO_PARTICIPANT_STATUS_FULL_PARTICIPANT
   end
 
   def set_registration_status
