@@ -77,6 +77,14 @@ namespace :migrate do
       existing_patient.save!
     end
   end
+
+  desc "Rollback patients to matched from registered"
+  task(rollback_patients: :environment) do |t, args|
+    Patient.where(registration_status: Patient::REGISTRATION_STATUS_REGISTERED, nmhc_mrn: '').each do |patient|
+      patient.registration_status = Patient::REGISTRATION_STATUS_MATCHED
+      patient.save!
+    end
+  end
 end
 
 def handle_error(t, error)
