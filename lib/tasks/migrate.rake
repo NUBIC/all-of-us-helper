@@ -85,6 +85,15 @@ namespace :migrate do
       patient.save!
     end
   end
+
+  desc "Create matches for rollbacked patients"
+  task(create_matches_for_rollbacked_patients: :environment) do |t, args|
+    last_batch_health_pro_id = BatchHealthPro.maximum(:id)
+    Patient.where(registration_status: Patient::REGISTRATION_STATUS_MATCHED).where('NOT EXISTS(SELECT 1 FROM matches WHERE patients.id = matches.patient_id)').each do |patient|
+      health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: patient.pmi_id).first
+      Match.create(health_pro_id: health_pro.id, patient_id: patient.id, status: Match::STATUS_ACCEPTED)
+    end
+  end
 end
 
 def handle_error(t, error)
