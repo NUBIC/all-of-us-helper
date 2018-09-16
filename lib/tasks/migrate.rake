@@ -5,7 +5,7 @@ namespace :migrate do
   desc "Accept matches"
   task(auto_accept_matches: :environment) do |t, args|
     subjects = CSV.new(File.open('lib/setup/data/STU00204480_subjects.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
-    pmi_ids = subjects.map { |subject| subject.to_hash['case number']  }
+    pmi_ids = subjects.map { |subject| subject.to_hash['case number'].strip  }
     batch_health_pro = BatchHealthPro.last
     health_pros = HealthPro.where(batch_health_pro_id: batch_health_pro.id, pmi_id: pmi_ids, status: HealthPro::STATUS_MATCHABLE)
 
