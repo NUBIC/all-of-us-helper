@@ -72,7 +72,7 @@ namespace :migrate do
     existing_patients.each do |existing_patient|
       subjects = CSV.new(File.open('lib/setup/data/STU00204480_subjects.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
       subject = subjects.select { |subject| subject.to_hash['case number'] ==  existing_patient.pmi_id }.first
-      existing_patient.uuid = subject.to_hash['uuid']
+      existing_patient.uuid = subject.to_h['uuid']
       existing_patient.registration_status = Patient::REGISTRATION_STATUS_REGISTERED
       existing_patient.save!
     end
