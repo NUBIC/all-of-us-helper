@@ -46,6 +46,7 @@ class Patient < ApplicationRecord
 
     sort = options[:sort_column] + ' ' + options[:sort_direction] + ', patients.id ASC'
     p = p.nil? ? order(sort) : p.order(sort)
+    p = p.where('last_name IS NOT NULL')
 
     p
   end
