@@ -111,7 +111,7 @@ class Patient < ApplicationRecord
   end
 
   def demographics_ready?
-    nmhc_mrn.present? && ethnicity.present? && gender.present? && races.any?
+     ethnicity.present? && gender.present? && races.any?
   end
 
   def general_consent_status_ready?
