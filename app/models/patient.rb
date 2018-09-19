@@ -190,7 +190,18 @@ class Patient < ApplicationRecord
     end
   end
 
+  def health_pro_race_ethnicity
+    health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
+    if health_pro.present?
+      health_pro.race_ethnicity
+    end
+  end
+
   private
+    def last_batch_health_pro_id
+      last_batch_health_pro_id = BatchHealthPro.maximum(:id)
+    end
+
     def set_defaults
       if self.new_record? &&
         if self.registration_status.blank?
