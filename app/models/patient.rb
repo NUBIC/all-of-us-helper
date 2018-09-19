@@ -11,8 +11,7 @@ class Patient < ApplicationRecord
   REGISTRATION_STATUS_MATCHED = 'matched'
   REGISTRATION_STATUS_READY = 'ready'
   REGISTRATION_STATUS_REGISTERED = 'registered'
-  REGISTRATION_STATUS_REGISTERED_EARLY = 'registered early'
-  REGISTRATION_STATUSES = [REGISTRATION_STATUS_UNMATCHED, REGISTRATION_STATUS_MATCHED, REGISTRATION_STATUS_READY, REGISTRATION_STATUS_REGISTERED, REGISTRATION_STATUS_REGISTERED_EARLY]
+  REGISTRATION_STATUSES = [REGISTRATION_STATUS_UNMATCHED, REGISTRATION_STATUS_MATCHED, REGISTRATION_STATUS_READY, REGISTRATION_STATUS_REGISTERED]
 
   ETHNICITY_HISPANIC_OR_LATINO = 'Hispanic or Latino'
   ETHNICITY_NOT_HISPANIC_OR_LATINO = 'Not Hispanic or Latino'
@@ -143,8 +142,10 @@ class Patient < ApplicationRecord
                    end
     else
       determined = case registration_status
-                   when Patient::REGISTRATION_STATUS_UNMATCHED, Patient::REGISTRATION_STATUS_READY
+                   when Patient::REGISTRATION_STATUS_UNMATCHED
                      Patient::REGISTRATION_STATUS_MATCHED
+                   else
+                     registration_status
                    end
     end
     determined
