@@ -197,6 +197,13 @@ class Patient < ApplicationRecord
     end
   end
 
+  def health_pro_sex
+    health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
+    if health_pro.present?
+      health_pro.sex
+    end
+  end
+
   private
     def last_batch_health_pro_id
       last_batch_health_pro_id = BatchHealthPro.maximum(:id)
