@@ -93,6 +93,7 @@ class BatchHealthPro < ApplicationRecord
               matched_pmi_patient.withdrawal_date = health_pro.withdrawal_date
               matched_pmi_patient.biospecimens_location = health_pro.biospecimens_location
               matched_pmi_patient.participant_status = health_pro.participant_status
+              matched_pmi_patient.set_registration_status
               if matched_pmi_patient.registered? && matched_pmi_patient.changed?
                 error = nil
                 options = {}
