@@ -134,11 +134,12 @@ class Patient < ApplicationRecord
     determined = nil
     currently_ready = ready?
 
-
     if currently_ready
       determined = case registration_status
                    when Patient::REGISTRATION_STATUS_UNMATCHED, Patient::REGISTRATION_STATUS_MATCHED, Patient::REGISTRATION_STATUS_READY
                      Patient::REGISTRATION_STATUS_READY
+                   else
+                     registration_status
                    end
     else
       determined = case registration_status
