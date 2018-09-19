@@ -43,8 +43,10 @@ class StudyTrackerApi
       payload[:subject][:last_name] = patient.last_name
       payload[:subject][:birth_date] = patient.birth_date.to_s
       payload[:subject][:races] = patient.races.map { |race| race.name }
-      payload[:subject][:record_numbers] = []
-      payload[:subject][:record_numbers] << { org: StudyTrackerApi::ORG_NMHC, record_number: patient.nmhc_mrn }
+      if patient.nmhc_mrn.present?
+        payload[:subject][:record_numbers] = []
+        payload[:subject][:record_numbers] << { org: StudyTrackerApi::ORG_NMHC, record_number: patient.nmhc_mrn }
+      end
       payload[:subject][:events] = []
 
       if patient.general_consent_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED
