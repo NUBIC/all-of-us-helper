@@ -41,19 +41,23 @@
                   %table.columns.large-24
                     %thead
                       %tr
-                        %th{ colspan: 4 }
+                        %th{ colspan: 5 }
                           REDCap
                       %tr
+                        %th.record_id
+                          Record ID
                         %th.first_name
                           First
                         %th.last_name
                           Last
                         %th.email
                           Email
-                        %th.match-links
+                        %th.match-links.text-right
                           Match?
                     %tbody
                       = content_tag_for(:tr, match) do
+                        %td.record_id
+                          = match.patient.record_id
                         %td.first_name
                           = match.patient.first_name
                         %td.last_name
