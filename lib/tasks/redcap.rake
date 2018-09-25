@@ -36,11 +36,16 @@ namespace :redcap do
         patient = patient.slice('record_id', 'first_name', 'last_name', 'email')
         patient['first_name'].strip!
         patient['last_name'].strip!
-        @patient = Patient.where(record_id: patient['record_id'])
+        @patient = Patient.where(record_id: patient['record_id']).first
         if @patient.blank?
           if patient['first_name'].present? && patient['last_name'].present?
             @patient = Patient.create!(patient)
           end
+        else
+          @patient.first_name = patient['first_name']
+          @patient.last_name = patient['last_name']
+          @patient.email = patient['email']
+          @patient.save!
         end
       end
     end
