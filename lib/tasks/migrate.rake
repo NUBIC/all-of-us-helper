@@ -2,6 +2,18 @@ require 'csv'
 require 'study_tracker_api'
 require 'redcap_api'
 namespace :migrate do
+  desc "Synch uuid"
+  task(synch_uuid: :environment) do |t, args|
+    subjects = CSV.new(File.open('lib/setup/data/STU00204480_subjects.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
+    subjects.each do |subject|
+      patient = Patient.where(pmi_id: subject.to_hash['case_number'].strip)
+      if patient
+        patient.uuid = subject.to_hash['uuid']
+        patient.save!
+      end
+    end
+  end
+
   desc "Accept matches"
   task(auto_accept_matches: :environment) do |t, args|
     subjects = CSV.new(File.open('lib/setup/data/STU00204480_subjects.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
