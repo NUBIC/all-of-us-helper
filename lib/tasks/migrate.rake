@@ -6,10 +6,12 @@ namespace :migrate do
   task(synch_uuid: :environment) do |t, args|
     subjects = CSV.new(File.open('lib/setup/data/STU00204480_subjects.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
     subjects.each do |subject|
-      patient = Patient.where(pmi_id: subject.to_hash['case_number'].strip)
-      if patient
-        patient.uuid = subject.to_hash['uuid']
-        patient.save!
+      if subject.to_hash['case number'].present?
+        patient = Patient.where(pmi_id: subject.to_hash['case number'].strip).first
+        if patient
+          patient.uuid = subject.to_hash['uuid']
+          patient.save!
+        end
       end
     end
   end
