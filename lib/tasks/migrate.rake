@@ -2,6 +2,11 @@ require 'csv'
 require 'study_tracker_api'
 require 'redcap_api'
 namespace :migrate do
+  desc "Delete Patient"
+  task :delete_patient, [:patient_id] => [:environment] do |t, args|
+    patient = Patient.find(args[:patient_id]).destroy
+  end
+
   desc "Synch uuid"
   task(synch_uuid: :environment) do |t, args|
     subjects = CSV.new(File.open('lib/setup/data/STU00204480_subjects.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
