@@ -13,6 +13,7 @@
 //= require rails-ujs
 //= require turbolinks
 //= require jquery
+//= require jquery-ui
 //= require foundation
 //= require init
 //= require select2/select2.full

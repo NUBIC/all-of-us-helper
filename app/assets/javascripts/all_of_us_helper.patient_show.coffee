@@ -13,6 +13,9 @@ class AllOfUsHelper.PatientShow
       $.ajax(this.href).done (response) ->
         $modal.foundation 'open'
         $empi_lookup.html(response)
+        yearRange = "1900:#{(new Date()).getFullYear()}"
+        $('.datepicker').datepicker(changeMonth: true, changeYear: true, yearRange: yearRange)
+        $('.datepicker').datepicker("option", "dateFormat", "yy-mm-dd")
         init = () ->
           $('#assign-empi-link').on 'click', (e) ->
             empi_patient = $('input[name=assign-empi-patient]:checked').parents('.empi_patient')
