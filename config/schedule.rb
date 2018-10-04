@@ -28,7 +28,7 @@ case environment
     #   rake "redcap:assign_invitation_codes"
     # end
     #
-    every 5.minutes do # 1.minute 1.day 1.week 1.month 1.year is also supported
+    every 3.minutes do # 1.minute 1.day 1.week 1.month 1.year is also supported
       rake "redcap:synch_patients"
     end
   when 'staging'
