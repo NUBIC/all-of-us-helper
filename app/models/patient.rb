@@ -1,9 +1,9 @@
 class Patient < ApplicationRecord
   has_paper_trail
-  has_many :invitation_code_assignments
-  has_many :matches
+  has_many :invitation_code_assignments, dependent: :destroy
+  has_many :matches, dependent: :destroy
   has_and_belongs_to_many :races
-  has_one :patient_empi_match
+  has_one :patient_empi_match, dependent: :destroy
 
   ERROR_MESSAGE_FAILED_TO_ASSIGN_INVITATION_CODE = 'Failed to assign an invitation code.'
 
@@ -123,7 +123,7 @@ class Patient < ApplicationRecord
   end
 
   def ready?
-    self.accepted_match && self.general_consent_status_ready? && self.ehr_consent_status_ready? && self.withdrawal_status_display.blank? && self.biospecimens_location == HealthPro::BIOSPECIMEN_LOCATION_NORTHWESTERN && self.participant_status == HealthPro::HEALTH_PRO_PARTICIPANT_STATUS_FULL_PARTICIPANT
+    self.accepted_match && self.general_consent_status_ready? && self.ehr_consent_status_ready? && self.withdrawal_status_display.blank? && HealthPro::BIOSPECIMEN_LOCATIONS.inclue?(self.biospecimens_location) && self.participant_status == HealthPro::HEALTH_PRO_PARTICIPANT_STATUS_FULL_PARTICIPANT
   end
 
   def set_registration_status
