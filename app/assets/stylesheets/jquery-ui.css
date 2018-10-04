@@ -2,3 +2,5 @@
  *= require jquery-ui/core
  *= require jquery-ui/theme
  */
+
+#ui-datepicker-div {display: none;}
