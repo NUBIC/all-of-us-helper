@@ -159,7 +159,7 @@ class RedcapApi
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
         :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d
-"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}"),"#{withdrawn_y}","#{withdrawal_d}"),
+"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}"),
         :returnContent => 'count',
         :returnFormat => 'json'
     }
