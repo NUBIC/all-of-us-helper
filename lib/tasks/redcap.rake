@@ -54,6 +54,9 @@ namespace :redcap do
     Patient.where('record_id != pmi_id OR pmi_id IS NULL').each do |patient|
       puts patient.record_id
       if !record_ids.include?(patient.record_id)
+        if patient.matched?
+          patient.pmi_id = nil
+        end
         patient.soft_delete!
       end
     end
