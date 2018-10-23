@@ -24,11 +24,11 @@ class MatchesController < ApplicationController
   end
 
   def create
-    @unmatched_patients = Patient.by_registration_status(Patient::REGISTRATION_STATUS_UNMATCHED).map { |patient| ["#{patient.full_name} (#{patient.email})", patient.id] }
+    @unmatched_patients = Patient.not_deleted.by_registration_status(Patient::REGISTRATION_STATUS_UNMATCHED).map { |patient| ["#{patient.full_name} (#{patient.email})", patient.id] }
     @health_pro = HealthPro.find(match_params[:health_pro_id])
     @health_pro.status = HealthPro::STATUS_MATCHED
     if match_params[:patient_id].present?
-      patient = Patient.find(match_params[:patient_id])
+      patient = Patient.not_deleted.find(match_params[:patient_id])
       patient.pmi_id = @health_pro.pmi_id
       patient.birth_date = Date.parse(@health_pro.date_of_birth)
       patient.general_consent_status = @health_pro.general_consent_status

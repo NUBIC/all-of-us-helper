@@ -1,4 +1,5 @@
 class Patient < ApplicationRecord
+  include SoftDelete
   has_paper_trail
   has_many :invitation_code_assignments, dependent: :destroy
   has_many :matches, dependent: :destroy
@@ -77,7 +78,7 @@ class Patient < ApplicationRecord
   end
 
   def self.create_or_update!(patient)
-    p = Patient.where(record_id: patient['record_id']).first
+    p = Patient.not_deleted.where(record_id: patient['record_id']).first
     if p
       p.attributes = patient
     else

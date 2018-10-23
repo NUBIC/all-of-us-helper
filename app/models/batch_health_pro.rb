@@ -82,7 +82,7 @@ class BatchHealthPro < ApplicationRecord
             health_pro.save!
 
             if health_pro.status == HealthPro::STATUS_PREVIOUSLY_MATCHED
-              matched_pmi_patient = Patient.where(pmi_id: health_pro.pmi_id).first
+              matched_pmi_patient = Patient.not_deleted.where(pmi_id: health_pro.pmi_id).first
               matched_pmi_patient.birth_date = Date.parse(health_pro.date_of_birth)
               matched_pmi_patient.gender = health_pro.sex if matched_pmi_patient.gender.blank? && health_pro.sex.present?
               matched_pmi_patient.general_consent_status = health_pro.general_consent_status

@@ -19,6 +19,6 @@ class InvitationCodeAssignmentsController < ApplicationController
     end
 
     def load_patient
-      @patient = Patient.find(params[:patient_id])
+      @patient = Patient.not_deleted.find(params[:patient_id])
     end
 end

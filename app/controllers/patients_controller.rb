@@ -9,7 +9,7 @@ class PatientsController < ApplicationController
   def record_id
     authorize Patient
     redcap_api = initialize_redcap_api
-    @patient = Patient.where(record_id: params[:record_id]).first
+    @patient = Patient.not_deleted.where(record_id: params[:record_id]).first
 
     if @patient.blank?
       redcap_patient_response = redcap_api.patient(params[:record_id])
@@ -31,7 +31,7 @@ class PatientsController < ApplicationController
     options = {}
     options[:sort_column] = sort_column
     options[:sort_direction] = sort_direction
-    @patients = Patient.search_across_fields(params[:search], options).by_registration_status(params[:registration_status]).paginate(per_page: 10, page: params[:page])
+    @patients = Patient.not_deleted.search_across_fields(params[:search], options).by_registration_status(params[:registration_status]).paginate(per_page: 10, page: params[:page])
   end
 
   def create
@@ -144,7 +144,7 @@ class PatientsController < ApplicationController
     end
 
     def load_patient
-      @patient = Patient.find(params[:id])
+      @patient = Patient.not_deleted.find(params[:id])
     end
 
     def sort_column

@@ -67,8 +67,8 @@ class HealthPro < ApplicationRecord
 
   def determine_matches
     if (self.paired_organization == HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN || self.paired_organization.blank?) && HealthPro.previously_declined(self.pmi_id, self.batch_health_pro_id).count == 0
-      matched_pmi_patients = Patient.where(pmi_id: self.pmi_id)
-      matched_demographic_patients = Patient.no_previously_declined_match.by_matchable_criteria(self.first_name, self.last_name)
+      matched_pmi_patients = Patient.not_deleted.where(pmi_id: self.pmi_id)
+      matched_demographic_patients = Patient.not_deleted.no_previously_declined_match.by_matchable_criteria(self.first_name, self.last_name)
 
       if matched_pmi_patients.count == 1
         self.status = HealthPro::STATUS_PREVIOUSLY_MATCHED

@@ -49,6 +49,14 @@ namespace :redcap do
         end
       end
     end
+
+    record_ids = patients[:response].map { |patient| patient['record_id']  }
+    Patient.where('record_id != pmi_id OR pmi_id IS NULL').each do |patient|
+      puts patient.record_id
+      if !record_ids.include?(patient.record_id)
+        patient.soft_delete!
+      end
+    end
   end
 end
 
