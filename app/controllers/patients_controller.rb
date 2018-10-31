@@ -102,7 +102,8 @@ class PatientsController < ApplicationController
     options = {}
     options[:proxy_user] = current_user.username
     error = nil
-    if @patient.update_attributes(patient_params)
+    @patient.attributes = patient_params
+    if @patient.valid_demographics? && @patient.update_attributes(patient_params)
       if @patient.registered?
         study_tracker_api = initialize_study_tracker_api
         registraion_results = study_tracker_api.register(options, @patient)
@@ -140,7 +141,7 @@ class PatientsController < ApplicationController
 
   private
     def patient_params
-      params.require(:patient).permit(:record_id, :first_name, :last_name, :email, :gender, :ethnicity, :nmhc_mrn, :empi_match_id, :health_pro_id, { race_ids:[] })
+      params.require(:patient).permit(:record_id, :first_name, :last_name, :birth_date, :email, :gender, :ethnicity, :nmhc_mrn, :empi_match_id, :health_pro_id, { race_ids:[] })
     end
 
     def load_patient

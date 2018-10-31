@@ -33,11 +33,6 @@
               Email:
             %span.value
               = @patient.email
-          .birth_date.field
-            %strong
-              Birth Date:
-            %span.value
-              = @patient.birth_date.to_s(:date) if @patient.birth_date
         .columns.large-8
           .health_pro_race_ethnicity.field
             %strong
@@ -87,18 +82,27 @@
                   First Name:
                   %span{ class: 'required' }
               %div{class: 'small-10 large-16 columns' }
-                %span.value
-                  = @patient.first_name
-                = f.hidden_field :first_name, value: @patient.first_name, id: 'patient_first_name'
+                = f.text_field :first_name, id: 'patient_first_name'
+                - if validation_errors?(@patient, :first_name)
+                  %p.error= format_validation_errors(@patient, :first_name)
             .row.last_name
               %div{class: 'small-14 large-8 columns' }
                 %label{for: 'patient_last_name' }
                   Last Name:
-                  %span{ class: 'required' }
+                  %span{ class: 'required' }'
               %div{class: 'small-10 large-16 columns' }
-                %span.value
-                  = @patient.last_name
-                = f.hidden_field :last_name, value: @patient.last_name, id: 'patient_last_name'
+                = f.text_field :last_name, id: 'patient_last_name'
+                - if validation_errors?(@patient, :last_name)
+                  %p.error= format_validation_errors(@patient, :last_name)
+            .row.birth_date
+              %div{class: 'small-14 large-8 columns' }
+                %label{for: 'patient_birth_date' }
+                  Birth Date:
+                  %span{ class: 'required' }'
+              %div{class: 'small-10 large-16 columns' }
+                = f.text_field :birth_date, value: @patient.birth_date.present? ? @patient.birth_date.to_s(:date) : nil, id: 'patient_birth_date', class: 'datepicker'
+                - if validation_errors?(@patient, :birth_date)
+                  %p.error= format_validation_errors(@patient, :birth_date)
             .row.nmhc_mrn
               %div{class: 'small-14 large-8 columns' }
                 %label{for: 'patient_nmhc_mrn' }
@@ -137,9 +141,9 @@
             - if @patient.accepted_match
               = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date.present? ? @patient.birth_date.to_s(:date) : nil, gender: @patient.gender.present? ? @patient.gender : @patient.accepted_match.health_pro.sex_to_patient_gender, address: @patient.accepted_match.health_pro.address, match_id: @patient.match.id), class: 'new-empi-link button', disabled: @patient.registered?
             -else
-              = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date, gender: @patient.gender, address: nil, match_id: nil), class: 'new-empi-link button', disabled: @patient.registered?
+              = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date.present? ? @patient.birth_date.to_s(:date): nil, gender: @patient.gender, address: nil, match_id: nil), class: 'new-empi-link button', disabled: @patient.registered?
             - if current_user.username == 'mjg994'
-              = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date, gender: @patient.gender, address: nil, match_id: nil), class: 'new-empi-link button'
+              = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date.present? ? @patient.birth_date.to_s(:date) : nil, gender: @patient.gender, address: nil, match_id: nil), class: 'new-empi-link button'
           = form_with(url: register_patient_url(@patient), local: true, id: 'register-patient-form') do |f|
             = f.submit 'Register Study Tracker', class: 'button', 'data-confirm': 'Register patient?', disabled: (!@patient.ready? || !@patient.demographics_ready? || @patient.registered?)
           - if current_user.username == 'mjg994'
@@ -176,9 +180,6 @@
                 None
         .actions
           %hr
-          = form_with(model: [@patient, @invitation_code_assignment], local: true, id: 'invitation-code-assignment-form') do |f|
-            = f.submit 'Assign New Invitation Code', class: 'button', data: { confirm: 'Are you sure you want to assign a new invitation code?' }
-          |
           = link_to 'Patients', patients_url(), { class: 'patients-link' }
           |
           = link_to 'Invitation Codes', invitation_codes_url(), { class: 'invitation-codes-link' }

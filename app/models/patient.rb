@@ -25,7 +25,6 @@ class Patient < ApplicationRecord
   GENDERS = [GENDER_MALE, GENDER_FEMALE, GENDER_UNKNOWN_OR_NOT_REPORTED]
 
   validates :pmi_id, uniqueness: { case_sensitive: false }, allow_blank: true
-
   after_initialize :set_defaults
 
 
@@ -207,6 +206,22 @@ class Patient < ApplicationRecord
     if health_pro.present?
       health_pro.sex
     end
+  end
+
+  def valid_demographics?
+    if self.first_name.blank?
+      self.errors.add(:first_name, "First name can't be blank.")
+    end
+
+    if self.last_name.blank?
+      self.errors.add(:last_name, "Last name can't be blank.")
+    end
+
+    if self.birth_date.blank?
+      self.errors.add(:birth_date, "Birthdate can't be blank.")
+    end
+
+    self.errors.empty?
   end
 
   private

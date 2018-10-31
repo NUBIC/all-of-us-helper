@@ -1,6 +1,9 @@
 class AllOfUsHelper.PatientShow
   constructor: () ->
   render: (link) ->
+    yearRange = "1900:#{(new Date()).getFullYear()}"
+    $('.datepicker').datepicker(changeMonth: true, changeYear: true, yearRange: yearRange)
+    $('.datepicker').datepicker("option", "dateFormat", "yy-mm-dd")
     $(':checkbox').change ->
       if $(this).data('text') == 'Unknown or Not Reported' && $(this).prop('checked') == true
           $("input[data-text!='Unknown or Not Reported']").prop('checked', false)
@@ -26,19 +29,18 @@ class AllOfUsHelper.PatientShow
             races = empi_patient.find('.race').text().trim()
             races = races.split('|')
             nmhc_mrn = empi_patient.find('.nmhc_mrn').text().trim()
+            birth_date = empi_patient.find('.birth_date').text().trim()
             $("#patient-form").find('.nmhc_mrn .value').text(nmhc_mrn)
-            $("#patient-form").find('.first_name .value').text(first_name)
-            $("#patient-form").find('.last_name .value').text(last_name)
+            $("#patient-form").find('#patient_first_name').val(first_name)
+            $("#patient-form").find('#patient_last_name').val(last_name)
             $("#patient-form").find('#patient_gender').val(gender)
             $("#patient-form").find('#patient_ethnicity').val(ethnicity)
+            $("#patient-form").find('#patient_birth_date').val(birth_date)
             i = 0
             while i < races.length
               $("input[data-text='#{races[i]}']").prop('checked', true)
               i++
-
             $("#patient_nmhc_mrn").val(nmhc_mrn)
-            $("#patient_first_name").val(first_name)
-            $("#patient_last_name").val(last_name)
 
             $modal.foundation 'close'
             return
@@ -74,6 +76,6 @@ class AllOfUsHelper.PatientShow
       return false
     return
 $(document).on 'turbolinks:load', ->
-  return unless $('.patients.show').length > 0
+  return unless $('.patients.show').length > 0 || $('.patients.update').length > 0
   ui = new AllOfUsHelper.PatientShow
   ui.render('.new-empi-link')
