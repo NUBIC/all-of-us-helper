@@ -79,7 +79,9 @@ class Patient < ApplicationRecord
   def self.create_or_update!(patient)
     p = Patient.not_deleted.where(record_id: patient['record_id']).first
     if p
-      p.attributes = patient
+      p.first_name = patient['first_name'] if p.first_name.blank?
+      p.last_name = patient['last_name'] if p.last_name.blank?
+      p.email = patient['email'] if p.email.blank?
     else
       p = Patient.new(record_id: patient['record_id'], first_name: patient['first_name'], last_name: patient['last_name'], email: patient['email'])
     end
