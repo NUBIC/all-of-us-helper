@@ -72,7 +72,7 @@ class PatientsController < ApplicationController
     begin
       Patient.transaction do
         redcap_api = initialize_redcap_api
-        redcap_patient = redcap_api.create_patient(patient.first_name, patient.last_name, patient.email, health_pro.phone, health_pro.pmi_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date)
+        redcap_patient = redcap_api.create_patient(patient.first_name, patient.last_name, patient.email, health_pro.phone, health_pro.pmi_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date, health_pro.withdrawal_status, health_pro.withdrawal_date)
         raise "Error creating a patient pmi_id #{health_pro.pmi_id}." if redcap_patient[:error].present?
         record_id = redcap_patient[:response]
         patient.record_id = record_id

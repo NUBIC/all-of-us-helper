@@ -104,20 +104,26 @@ class RedcapApi
     { response: response, error: error }
   end
 
-  def create_patient(first_name, last_name, email, phone, pmi_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d)
+  def create_patient(first_name, last_name, email, phone, pmi_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d)
     record_id = next_record_id
     record_id = record_id[:response]
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     ts = Date.today
+    if withdrawn_y == 1
+      donotcontact = 1
+    else
+      donotcontact = 0
+    end
+
     payload = {
         :token => @api_token,
         :content => 'record',
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,ts
-"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}"),
+        :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,ts,withdrawn_y,withdrawal_d,donotcontact
+"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}","#{withdrawn_y}","#{withdrawal_d}","#{donotcontact}"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
@@ -146,11 +152,16 @@ class RedcapApi
     { response: api_response[:response], error: api_response[:error] }
   end
 
-
   def match(record_id, pmi_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d)
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
+    if withdrawn_y == 1
+      donotcontact = 1
+    else
+      donotcontact = 0
+    end
+
 
     payload = {
         :token => @api_token,
@@ -158,8 +169,8 @@ class RedcapApi
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d
-"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}"),
+        :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact
+"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","#{donotcontact}"),
         :returnContent => 'count',
         :returnFormat => 'json'
     }
