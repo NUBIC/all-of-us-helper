@@ -107,10 +107,10 @@ class RedcapApi
   def update_patient(record_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d)
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
-    if withdrawn_y == 1
-      donotcontact = 1
+    if withdrawn_y == '1'
+      donotcontact = '1'
     else
-      donotcontact = 0
+      donotcontact = '0'
     end
 
     payload = {
@@ -126,7 +126,6 @@ class RedcapApi
     }
 
     api_response = redcap_api_request_wrapper(payload)
-    record_id = api_response[:response].first
 
     { response: record_id, error: api_response[:error] }
   end
@@ -183,10 +182,10 @@ class RedcapApi
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
-    if withdrawn_y == 1
-      donotcontact = 1
+    if withdrawn_y == '1'
+      donotcontact = '1'
     else
-      donotcontact = 0
+      donotcontact = '0'
     end
 
     payload = {
