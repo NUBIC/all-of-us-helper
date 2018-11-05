@@ -104,6 +104,34 @@ class RedcapApi
     { response: response, error: error }
   end
 
+  def update_patient(record_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d)
+    record_id = record_id[:response]
+    consent_d = Date.parse(consent_d) if consent_d
+    ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
+    if withdrawn_y == 1
+      donotcontact = 1
+    else
+      donotcontact = 0
+    end
+
+    payload = {
+        :token => @api_token,
+        :content => 'record',
+        :format => 'csv',
+        :type => 'flat',
+        :overwriteBehavior => 'overwrite',
+        :data => %(record_id,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact
+"#{record_id}","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","#{donotcontact}"),
+        :returnContent => 'ids',
+        :returnFormat => 'json'
+    }
+
+    api_response = redcap_api_request_wrapper(payload)
+    record_id = api_response[:response].first
+
+    { response: record_id, error: api_response[:error] }
+  end
+
   def create_patient(first_name, last_name, email, phone, pmi_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d)
     record_id = next_record_id
     record_id = record_id[:response]
@@ -161,7 +189,6 @@ class RedcapApi
     else
       donotcontact = 0
     end
-
 
     payload = {
         :token => @api_token,

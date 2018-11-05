@@ -3,7 +3,6 @@ namespace :maintenance do
   task(expire_batch_health_pros: :environment) do  |t, args|
     begin
       BatchHealthPro.by_status(BatchHealthPro::STATUS_PENDING).each do |batch_healh_pro|
-      #BatchHealthPro.by_status(BatchHealthPro:::STATUS_PENDING).where('created_at < ?' Date.today).each do |batch_healh_pro|
         batch_healh_pro.status = BatchHealthPro::STATUS_EXPIRED
         batch_healh_pro.save!
       end

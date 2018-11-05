@@ -41,6 +41,23 @@ namespace :migrate do
     end
   end
 
+  desc "Withdrawal patients update"
+  task(withdrawal_patients_update: :environment) do |t, args|
+    batch_health_pro = BatchHealthPro.last
+    health_pros = HealthPro.where("batch_health_pro_id = ? AND withdrawal_status = '1'",  batch_health_pro.id)
+
+    health_pros.each_with_index do |health_pro, i|
+      patient = Patient.where(pmi_id: health_pro.pmi_id).first
+      if patient.present? && i == 1
+        puts 'patient'
+        puts patient.record_id
+        puts patient.pmi_id
+        redcap_api = RedcapApi.initialize_redcap_api
+        redcap_patient = redcap_api.update_patient(patient.record_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date, health_pro.withdrawal_status, health_pro.withdrawal_date)
+      end
+    end
+  end
+
   desc "Patients final"
   task(patients_final: :environment) do |t, args|
     subjects = CSV.new(File.open('lib/setup/data/STU00204480_subjects.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
