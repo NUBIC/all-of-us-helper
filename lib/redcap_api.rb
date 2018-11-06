@@ -118,8 +118,6 @@ class RedcapApi
         :overwriteBehavior => 'overwrite',
         :data => %(record_id,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact
 "#{record_id}","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","1"),
-#         :data => %(record_id,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact,studystatus_dt
-# "#{record_id}","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","1","#{studystatus_dt}"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
@@ -157,7 +155,7 @@ class RedcapApi
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
         :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,ts,withdrawn_y,withdrawal_d,donotcontact
-"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}","#{withdrawn_y}","#{withdrawal_d}","#{donotcontact}"),
+"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}","#{withdrawn_y}","#{withdrawal_d}","1"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
@@ -211,7 +209,7 @@ class RedcapApi
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
         :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact
-"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","#{donotcontact}"),
+"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","1"),
         :returnContent => 'count',
         :returnFormat => 'json'
     }
