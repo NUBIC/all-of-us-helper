@@ -48,7 +48,7 @@ namespace :migrate do
 
     health_pros.each_with_index do |health_pro, i|
       patient = Patient.where(pmi_id: health_pro.pmi_id).first
-      if patient.present? && i == 1
+      if patient.present?
         puts 'patient'
         puts patient.record_id
         puts patient.pmi_id

@@ -107,12 +107,9 @@ class RedcapApi
   def update_patient(record_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d)
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
+    withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
     if withdrawn_y == '1'
-      donotcontact = '1'
-    else
-      donotcontact = '0'
-    end
-
+    studystatus_dt = DateTime.now
     payload = {
         :token => @api_token,
         :content => 'record',
@@ -120,10 +117,25 @@ class RedcapApi
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
         :data => %(record_id,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact
-"#{record_id}","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","#{donotcontact}"),
+"#{record_id}","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","1"),
+#         :data => %(record_id,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact,studystatus_dt
+# "#{record_id}","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","1","#{studystatus_dt}"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
+    else
+    payload = {
+        :token => @api_token,
+        :content => 'record',
+        :format => 'csv',
+        :type => 'flat',
+        :overwriteBehavior => 'overwrite',
+        :data => %(record_id,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d
+"#{record_id}","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}"),
+        :returnContent => 'ids',
+        :returnFormat => 'json'
+    }
+    end
 
     api_response = redcap_api_request_wrapper(payload)
 
@@ -135,13 +147,9 @@ class RedcapApi
     record_id = record_id[:response]
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
+    withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
     ts = Date.today
-    if withdrawn_y == 1
-      donotcontact = 1
-    else
-      donotcontact = 0
-    end
-
+    if withdrawn_y == '1'
     payload = {
         :token => @api_token,
         :content => 'record',
@@ -153,6 +161,19 @@ class RedcapApi
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
+    else
+    payload = {
+        :token => @api_token,
+        :content => 'record',
+        :format => 'csv',
+        :type => 'flat',
+        :overwriteBehavior => 'overwrite',
+        :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,ts,withdrawn_y,withdrawal_d
+"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}","#{withdrawn_y}","#{withdrawal_d}"),
+        :returnContent => 'ids',
+        :returnFormat => 'json'
+    }
+    end
 
     api_response = redcap_api_request_wrapper(payload)
     record_id = api_response[:response].first
@@ -183,11 +204,6 @@ class RedcapApi
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
     if withdrawn_y == '1'
-      donotcontact = '1'
-    else
-      donotcontact = '0'
-    end
-
     payload = {
         :token => @api_token,
         :content => 'record',
@@ -199,6 +215,20 @@ class RedcapApi
         :returnContent => 'count',
         :returnFormat => 'json'
     }
+
+    else
+    payload = {
+        :token => @api_token,
+        :content => 'record',
+        :format => 'csv',
+        :type => 'flat',
+        :overwriteBehavior => 'overwrite',
+        :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d
+"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}"),
+        :returnContent => 'count',
+        :returnFormat => 'json'
+    }
+    end
 
     api_response = redcap_api_request_wrapper(payload)
 
