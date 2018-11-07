@@ -31,6 +31,10 @@ case environment
     every 3.minutes do # 1.minute 1.day 1.week 1.month 1.year is also supported
       rake "redcap:synch_patients"
     end
+
+    every 10.minutes do # 1.minute 1.day 1.week 1.month 1.year is also supported
+      rake "redcap:synch_deleted_patients"
+    end
   when 'staging'
     # every 5.minutes do # 1.minute 1.day 1.week 1.month 1.year is also supported
     #   rake "redcap:assign_invitation_codes"
@@ -38,4 +42,8 @@ case environment
     every 5.minutes do # 1.minute 1.day 1.week 1.month 1.year is also supported
       rake "redcap:synch_patients"
     end
-end
+
+    every 10.minutes do # 1.minute 1.day 1.week 1.month 1.year is also supported
+      rake "redcap:synch_deleted_patients"
+    end
+en
