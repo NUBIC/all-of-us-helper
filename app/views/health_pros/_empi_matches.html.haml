@@ -30,7 +30,7 @@
         %td.last_name
           = empi_match.last_name
         %td.birth_date
-          = empi_match.birth_date.to_s(:date)
+          = empi_match.birth_date.to_s(:date) if empi_match.birth_date.present?
         %td.gender
           = empi_match.gender
         %td.race
