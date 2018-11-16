@@ -54,6 +54,7 @@ class Match <  ApplicationRecord
       patient.withdrawal_date = health_pro.withdrawal_date
       patient.biospecimens_location = health_pro.biospecimens_location
       patient.participant_status = health_pro.participant_status
+      patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
 
       if match_params[:empi_match_id].present?
         empi_match = EmpiMatch.find(match_params[:empi_match_id])

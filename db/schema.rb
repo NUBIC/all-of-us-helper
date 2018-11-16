@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181105231937) do
+ActiveRecord::Schema.define(version: 20181114223606) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -217,6 +217,14 @@ ActiveRecord::Schema.define(version: 20181105231937) do
     t.integer "empi_match_id", null: false
   end
 
+  create_table "patient_features", force: :cascade do |t|
+    t.integer "patient_id", null: false
+    t.string "feature", null: false
+    t.boolean "enabled", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "patients", force: :cascade do |t|
     t.string "record_id", null: false
     t.string "first_name", null: false
@@ -240,6 +248,7 @@ ActiveRecord::Schema.define(version: 20181105231937) do
     t.string "ethnicity"
     t.string "participant_status"
     t.datetime "deleted_at"
+    t.string "physical_measurements_completion_date"
   end
 
   create_table "patients_races", force: :cascade do |t|

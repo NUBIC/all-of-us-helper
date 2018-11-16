@@ -63,6 +63,11 @@
 #patient-show {
   @include grid-column-row();
 
+  .patient_features {
+    input, label {
+      display: inline;
+    }
+  }
   .field {
     margin-bottom: 1rem;
   }

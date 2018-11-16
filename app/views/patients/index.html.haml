@@ -43,6 +43,8 @@
                 = sortable 'email'
               %th.invitation_code
                 Invitation Code
+              %th.physical_measurements_completion_date
+                = sortable 'physical_measurements_completion_date', 'PM Completion Date'
               %th.show-patient-link
           %tbody
             - @patients.each do |patient|
@@ -61,6 +63,8 @@
                   = patient.email
                 %td.invitation_code
                   = patient.invitation_code
+                %td.invitation_code
+                  = patient.physical_measurements_completion_date
                 %td.show_patient_link
                   = link_to "Show", patient_url(patient), class: 'show-patient-link'
         = will_paginate @patients, renderer: FoundationPagination::Rails

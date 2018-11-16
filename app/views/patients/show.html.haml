@@ -74,6 +74,10 @@
             %strong
               Participant Status:
             = @patient.participant_status
+          .physical_measurements_completion_date.field
+            %strong
+              Physical Measurements Completion Date:
+            = @patient.physical_measurements_completion_date
         .columns.large-8
           = form_with(model: @patient, local: true, id: 'patient-form') do |f|
             .row.first_name
@@ -112,6 +116,11 @@
                 %span.value
                   = @patient.nmhc_mrn
                 = f.hidden_field :nmhc_mrn, value: @patient.nmhc_mrn, id: 'patient_nmhc_mrn'
+            .row.patient_features
+              %div{class: 'small-24 large-24 columns' }
+                = f.fields_for :patient_features do |f|
+                  = f.label :enabled, "#{f.object.feature}:"
+                  = f.check_box :enabled
             .row.gender
               %div{class: 'small-14 large-8 columns' }
                 %label{for: 'patient_gender' }

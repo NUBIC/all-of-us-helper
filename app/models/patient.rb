@@ -3,8 +3,10 @@ class Patient < ApplicationRecord
   has_paper_trail
   has_many :invitation_code_assignments, dependent: :destroy
   has_many :matches, dependent: :destroy
+  has_many :patient_features, dependent: :destroy
   has_and_belongs_to_many :races
   has_one :patient_empi_match, dependent: :destroy
+  accepts_nested_attributes_for :patient_features, allow_destroy: true
 
   ERROR_MESSAGE_FAILED_TO_ASSIGN_INVITATION_CODE = 'Failed to assign an invitation code.'
 
@@ -238,6 +240,9 @@ class Patient < ApplicationRecord
         end
         uuid = UUID.new
         self.uuid = uuid.generate
+        PatientFeature::FEATURES.each do |feature|
+          self.patient_features.build(feature: feature, enabled: false)
+        end
       end
     end
 end

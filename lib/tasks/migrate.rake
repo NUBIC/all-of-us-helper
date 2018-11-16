@@ -7,6 +7,30 @@ namespace :migrate do
     patient = Patient.find(args[:patient_id]).destroy
   end
 
+  desc "Backload physical measurements completion date"
+  task(backload_physical_measurements_completion_date: :environment) do |t, args|
+    batch_health_pro = BatchHealthPro.last
+    Patient.all.each do |patient|
+      health_pro = HealthPro.where("batch_health_pro_id = ? AND pmi_id = ?",  batch_health_pro.id, patient.pmi_id).first
+      if health_pro.present?
+        patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
+        patient.save!
+      end
+    end
+  end
+
+  desc "Backload patient feature"
+  task(backload_patient_features: :environment) do |t, args|
+    Patient.all.each do |patient|
+      PatientFeature::FEATURES.each do |feature|
+        if patient.patient_features.where(feature: feature).empty?
+          patient.patient_features.build(feature: feature, enabled: false)
+          patient.save!
+        end
+      end
+    end
+  end
+
   desc "Synch uuid"
   task(synch_uuid: :environment) do |t, args|
     subjects = CSV.new(File.open('lib/setup/data/STU00204480_subjects.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")

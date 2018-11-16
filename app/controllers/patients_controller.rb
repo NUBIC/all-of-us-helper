@@ -53,6 +53,7 @@ class PatientsController < ApplicationController
     patient.biospecimens_location = health_pro.biospecimens_location
     patient.birth_date = health_pro.date_of_birth
     patient.participant_status = health_pro.participant_status
+    patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
 
     if patient_params[:empi_match_id].present?
       empi_match = EmpiMatch.find(patient_params[:empi_match_id])
@@ -141,7 +142,7 @@ class PatientsController < ApplicationController
 
   private
     def patient_params
-      params.require(:patient).permit(:record_id, :first_name, :last_name, :birth_date, :email, :gender, :ethnicity, :nmhc_mrn, :empi_match_id, :health_pro_id, { race_ids:[] })
+      params.require(:patient).permit(:record_id, :first_name, :last_name, :birth_date, :email, :gender, :ethnicity, :nmhc_mrn, :empi_match_id, :health_pro_id, { race_ids:[] }, patient_features_attributes: [:id, :feature, :enabled, :_destroy])
     end
 
     def load_patient
@@ -149,7 +150,7 @@ class PatientsController < ApplicationController
     end
 
     def sort_column
-      ['record_id', 'pmi_id', 'first_name', 'email', 'last_name', 'registration_status'].include?(params[:sort]) ? params[:sort] : 'last_name'
+      ['record_id', 'pmi_id', 'first_name', 'email', 'last_name', 'registration_status', 'physical_measurements_completion_date'].include?(params[:sort]) ? params[:sort] : 'last_name'
     end
 
     def sort_direction
