@@ -28,6 +28,7 @@ class Patient < ApplicationRecord
 
   validates :pmi_id, uniqueness: { case_sensitive: false }, allow_blank: true
   after_initialize :set_defaults
+  after_create :save_default_patient_features
 
 
   scope :by_registration_status, ->(registration_status) do
@@ -244,9 +245,13 @@ class Patient < ApplicationRecord
         end
         uuid = UUID.new
         self.uuid = uuid.generate
-        PatientFeature::FEATURES.each do |feature|
-          self.patient_features.build(feature: feature, enabled: false)
-        end
       end
+    end
+
+    def save_default_patient_features
+      PatientFeature::FEATURES.each do |feature|
+        self.patient_features.build(feature: feature, enabled: false)
+      end
+      save!
     end
 end
