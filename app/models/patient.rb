@@ -46,7 +46,11 @@ class Patient < ApplicationRecord
       p = where(["lower(record_id) like ? OR lower(pmi_id) like ? OR lower(last_name) like ? OR lower(first_name) like ? OR lower(email) like ?", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%"])
     end
 
-    sort = options[:sort_column] + ' ' + options[:sort_direction] + ', patients.id ASC'
+    if options[:sort_column]  == 'physical_measurements_completion_date'
+      sort = options[:sort_column] + '::date ' + options[:sort_direction] + ', patients.id ASC'
+    else
+      sort = options[:sort_column] + ' ' + options[:sort_direction] + ', patients.id ASC'
+    end
     p = p.nil? ? order(sort) : p.order(sort)
     p = p.where("last_name IS NOT NULL AND last_name !=''")
 
