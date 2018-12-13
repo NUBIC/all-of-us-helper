@@ -98,13 +98,14 @@ class BatchHealthPro < ApplicationRecord
               matched_pmi_patient.set_registration_status
               matched_pmi_patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
               # if matched_pmi_patient.registered? && matched_pmi_patient.changed?
+              if matched_pmi_patient.registered?
                 error = nil
                 options = {}
                 options[:proxy_user] = self.created_user
                 study_tracker_api = StudyTrackerApi.new
                 registraion_results = study_tracker_api.register(options, matched_pmi_patient)
                 error = registraion_results[:error]
-              # end
+              end
               matched_pmi_patient.save!
             end
           end
