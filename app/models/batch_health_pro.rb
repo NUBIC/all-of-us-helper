@@ -62,7 +62,7 @@ class BatchHealthPro < ApplicationRecord
       health_pros_from_file = CSV.new(data, headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
 
       if errors.empty?
-        BatchHealthPro.transaction do
+        # BatchHealthPro.transaction do
           health_pros_from_file.each do |health_pro_from_file|
             row ={}
             BatchHealthPro.headers_map.each_pair do |k,v|
@@ -108,7 +108,7 @@ class BatchHealthPro < ApplicationRecord
               end
               matched_pmi_patient.save!
             end
-          end
+          # end
         end
         self.status = BatchHealthPro::STATUS_READY
         save!
