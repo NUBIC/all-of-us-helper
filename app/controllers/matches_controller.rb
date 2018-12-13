@@ -39,6 +39,8 @@ class MatchesController < ApplicationController
       patient.withdrawal_date = @health_pro.withdrawal_date
       patient.biospecimens_location = @health_pro.biospecimens_location
       patient.participant_status = @health_pro.participant_status
+      patient.paired_site = @health_pro.paired_site
+      patient.paired_organization = @health_pro.paired_organization
       patient.physical_measurements_completion_date = @health_pro.physical_measurements_completion_date
     end
 
@@ -63,7 +65,7 @@ class MatchesController < ApplicationController
         patient.set_registration_status
         patient.save!
         redcap_api = RedcapApi.initialize_redcap_api
-        redcap_match = redcap_api.match(patient.record_id, @health_pro.pmi_id, @health_pro.general_consent_status, @health_pro.general_consent_date, @health_pro.ehr_consent_status, @health_pro.ehr_consent_date, @health_pro.withdrawal_status, @health_pro.withdrawal_date)
+        redcap_match = redcap_api.match(patient.record_id, @health_pro.pmi_id, @health_pro.general_consent_status, @health_pro.general_consent_date, @health_pro.ehr_consent_status, @health_pro.ehr_consent_date, @health_pro.withdrawal_status, @health_pro.withdrawal_date, @health_pro.participant_status, @health_pro.physical_measurements_completion_date, @health_pro.paired_site, @health_pro.paired_organization)
         raise "Error assigning pmi_id #{@health_pro.pmi_id} to record_id #{patient.record_id}." if redcap_match[:error].present?
       end
       flash[:success] = 'You have successfully added a match.'

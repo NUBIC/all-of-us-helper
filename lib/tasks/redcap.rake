@@ -67,6 +67,14 @@ namespace :redcap do
       end
     end
   end
+
+  desc "Synch patients to REDCap"
+  task(synch_patients_to_redcap: :environment) do  |t, args|
+    Patient.not_deleted.where("pmi_id != record_id AND pmi_id IS NOT NULL AND pmi_id != ''").each do |patient|
+      redcap_api = RedcapApi.initialize_redcap_api
+      redcap_patient = redcap_api.update_patient(patient.record_id, patient.general_consent_status, patient.general_consent_date, patient.ehr_consent_status, patient.ehr_consent_date, patient.withdrawal_status, patient.withdrawal_date, patient.participant_status, patient.physical_measurements_completion_date, patient.paired_site, patient.paired_organization)
+    end
+  end
 end
 
 def handle_error(t, error)

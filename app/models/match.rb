@@ -54,6 +54,8 @@ class Match <  ApplicationRecord
       patient.withdrawal_date = health_pro.withdrawal_date
       patient.biospecimens_location = health_pro.biospecimens_location
       patient.participant_status = health_pro.participant_status
+      patient.paired_site = health_pro.paired_site
+      patient.paired_organization = health_pro.paired_organization
       patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
 
       if match_params[:empi_match_id].present?
@@ -71,7 +73,7 @@ class Match <  ApplicationRecord
       health_pro.status = HealthPro::STATUS_MATCHED
 
       Match.transaction do
-        redcap_match = redcap_api.match(patient.record_id, health_pro.pmi_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date, health_pro.withdrawal_status, health_pro.withdrawal_date)
+        redcap_match = redcap_api.match(patient.record_id, health_pro.pmi_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date, health_pro.withdrawal_status, health_pro.withdrawal_date, health_pro.participant_status, health_pro.physical_measurements_completion_date, health_pro.paired_site, health_pro.paired_organization)
         raise "Error assigning pmi_id #{health_pro.pmi_id} to record_id #{patient.record_id}." if redcap_match[:error].present?
         save!
         health_pro.save!
