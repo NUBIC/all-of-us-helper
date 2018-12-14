@@ -37,6 +37,8 @@ namespace :setup do
     users_from_file = YAML.load(ERB.new(File.read("lib/setup/data/users.yml")).result)
 
     users_from_file.each_pair do |username, user_from_file|
+      puts 'here is the user'
+      puts user_from_file
       user = User.where(user_from_file).first_or_create
       if user && !user.has_role?(Role::ROLE_ALL_OF_US_HELPER_USER)
         user.roles << Role.where(name: Role::ROLE_ALL_OF_US_HELPER_USER).first
