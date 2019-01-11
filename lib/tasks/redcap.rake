@@ -42,10 +42,12 @@ namespace :redcap do
             @patient = Patient.create!(patient)
           end
         else
-          @patient.first_name = patient['first_name']
-          @patient.last_name = patient['last_name']
-          @patient.email = patient['email']
-          @patient.save!
+          if @patient.nmhc_mrn.blank?
+            @patient.first_name = patient['first_name']
+            @patient.last_name = patient['last_name']
+            @patient.email = patient['email']
+            @patient.save!
+          end
         end
       end
     end
