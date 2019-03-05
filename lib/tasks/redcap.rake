@@ -15,7 +15,7 @@ namespace :redcap do
             record_id = pending_invitation_code_assignment['record_id']
             redcap_patient = redcap_api.patient(record_id)
             if redcap_patient[:error].blank? && redcap_patient[:response].present?
-              patient = Patient.create_or_update!(redcap_patient[:response].slice('record_id', 'first_name', 'last_name', 'email'))
+              patient = Patient.create_or_update!(redcap_patient[:response].slice('record_id', 'first_name', 'last_name', 'email', 'phone_1'))
               patient.assign_invitation_code(redcap_api)
               raise "Error assigning invitation code to record_id #{record_id}." if patient.errors.any?
             end
@@ -33,7 +33,7 @@ namespace :redcap do
     patients = redcap_api.patients
     if patients[:error].blank? && patients[:response].any?
       patients[:response].each do |patient|
-        patient = patient.slice('record_id', 'first_name', 'last_name', 'email')
+        patient = patient.slice('record_id', 'first_name', 'last_name', 'email', 'phone_1')
         patient['first_name'].strip!
         patient['last_name'].strip!
         @patient = Patient.where(record_id: patient['record_id']).first
@@ -46,6 +46,7 @@ namespace :redcap do
             @patient.first_name = patient['first_name']
             @patient.last_name = patient['last_name']
             @patient.email = patient['email']
+            @patient.phone_1 = patient['phone_1']
             @patient.save!
           end
         end
@@ -74,7 +75,7 @@ namespace :redcap do
   task(synch_patients_to_redcap: :environment) do  |t, args|
     Patient.not_deleted.where("pmi_id != record_id AND pmi_id IS NOT NULL AND pmi_id != ''").each do |patient|
       redcap_api = RedcapApi.initialize_redcap_api
-      redcap_patient = redcap_api.update_patient(patient.record_id, patient.general_consent_status, patient.general_consent_date, patient.ehr_consent_status, patient.ehr_consent_date, patient.withdrawal_status, patient.withdrawal_date, patient.participant_status, patient.physical_measurements_completion_date, patient.paired_site, patient.paired_organization)
+      redcap_patient = redcap_api.update_patient(patient.record_id, patient.general_consent_status, patient.general_consent_date, patient.ehr_consent_status, patient.ehr_consent_date, patient.withdrawal_status, patient.withdrawal_date, patient.participant_status, patient.physical_measurements_completion_date, patient.paired_site, patient.paired_organization, patient.health_pro_email, patient.health_pro_phone)
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181213004322) do
+ActiveRecord::Schema.define(version: 20190304225028) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -171,6 +171,19 @@ ActiveRecord::Schema.define(version: 20181213004322) do
     t.string "participant_status"
     t.string "paired_site"
     t.string "paired_organization"
+    t.string "two_ml_edta_collected"
+    t.string "two_ml_edta_collected_date"
+    t.string "urine_90_ml_collected"
+    t.string "urine_90_ml_collection_date"
+    t.string "cell_free_dna_collected"
+    t.string "cell_free_dna_collected_date"
+    t.string "paxgene_rna_collected"
+    t.string "paxgene_rna_collected_date"
+    t.string "withdrawal_reason"
+    t.string "language_of_general_consent"
+    t.string "dv_only_ehr_sharing_status"
+    t.string "dv_only_ehr_sharing_date"
+    t.string "login_phone"
     t.index ["pmi_id", "batch_health_pro_id"], name: "test"
   end
 
@@ -251,6 +264,9 @@ ActiveRecord::Schema.define(version: 20181213004322) do
     t.string "physical_measurements_completion_date"
     t.string "paired_site"
     t.string "paired_organization"
+    t.string "health_pro_email"
+    t.string "health_pro_phone"
+    t.string "phone_1"
   end
 
   create_table "patients_races", force: :cascade do |t|

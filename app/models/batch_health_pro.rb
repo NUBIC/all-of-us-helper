@@ -95,6 +95,8 @@ class BatchHealthPro < ApplicationRecord
               matched_pmi_patient.participant_status = health_pro.participant_status
               matched_pmi_patient.paired_site = health_pro.paired_site
               matched_pmi_patient.paired_organization = health_pro.paired_organization
+              matched_pmi_patient.health_pro_email = health_pro.email
+              matched_pmi_patient.health_pro_login_phone = health_pro.login_phone
               matched_pmi_patient.set_registration_status
               matched_pmi_patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
               if matched_pmi_patient.registered? && matched_pmi_patient.changed?
@@ -192,6 +194,8 @@ class BatchHealthPro < ApplicationRecord
       '8 mL PST Collection Date' => 'eight_ml_pst_collection_date',
       '4 mL Na-Hep Collected' => 'four_ml_na_hep_collected',
       '4 mL Na-Hep Collection Date' => 'four_ml_na_hep_collection_date',
+      '2 mL EDTA Collected' => 'two_ml_edta_collected',
+      '2 mL EDTA Collection Date' => 'two_ml_edta_collected_date',
       '4 mL EDTA Collected' => 'four_ml_edta_collected',
       '4 mL EDTA Collection Date' => 'four_ml_edta_collection_date',
       '1st 10 mL EDTA Collected' => 'first_10_ml_edta_collected',
@@ -200,10 +204,21 @@ class BatchHealthPro < ApplicationRecord
       '2nd 10 mL EDTA Collection Date' => 'second_10_ml_edta_collection_date',
       'Urine 10 mL Collected' => 'urine_10_ml_collected',
       'Urine 10 mL Collection Date' => 'urine_10_ml_collection_date',
+      'Urine 90 mL Collected' => 'urine_90_ml_collected',
+      'Urine 90 mL Collection Date'  => 'urine_90_ml_collection_date',
+      'Cell-Free DNA Collected' => 'cell_free_dna_collected',
+      'Cell-Free DNA Collection Date' => 'cell_free_dna_collected_date',
+      'Paxgene RNA Collected' => 'paxgene_rna_collected',
+      'Paxgene RNA Collection Date' => 'paxgene_rna_collected_date',
       'Saliva Collected' => 'saliva_collected',
       'Saliva Collection Date' => 'saliva_collection_date',
       # 'Biospecimens Location' => 'biospecimens_location'
-      'Biospecimens Site' => 'biospecimens_location'
+      'Biospecimens Site' => 'biospecimens_location',
+      'Withdrawal Reason' => 'withdrawal_reason',
+      'Language of General Consent' => 'language_of_general_consent',
+      'DV-only EHR Sharing Status' => 'dv_only_ehr_sharing_status',
+      'DV-only EHR Sharing Date' => 'dv_only_ehr_sharing_date',
+      'Login Phone' => 'login_phone'
     }
   end
 

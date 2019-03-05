@@ -7,8 +7,11 @@
     = health_pro.date_of_birth
   %td.sex
     = health_pro.sex
-  %td.email
-    = health_pro.email
+  %td.email.phone
+    - if health_pro.email.present?
+      = health_pro.email
+      %br
+    = health_pro.login_phone
   %td.address
     = health_pro.address
   %td.pmi_id
@@ -50,8 +53,8 @@
                           First
                         %th.last_name
                           Last
-                        %th.email
-                          Email
+                        %th.email.phone
+                          Email/Phone
                         %th.match-links.text-center
                           Match?
                     %tbody
@@ -62,8 +65,11 @@
                           = match.patient.first_name
                         %td.last_name
                           = match.patient.last_name
-                        %td.email
-                          = match.patient.email
+                        %td.email.phone
+                          - if match.patient.email.present?
+                            = match.patient.email
+                            %br
+                          = match.patient.phone_1
                         %td.make-match-link.text-right
                           = form_with(model: match, url: accept_match_url(match.id), local: false, class: 'match-accept-form match-form') do |f|
                             = f.hidden_field :empi_match_id, class: 'empi_match_id'
