@@ -33,23 +33,21 @@
               REDCap email:
             %span.value
               = @patient.email
-          - if @patient.health_pro_email.present?
-            .health_pro_email.field
-              %strong
-                Health Pro email:
-              %span.value
-                = @patient.health_pro_email
+          .health_pro_email.field
+            %strong
+              Health Pro email:
+            %span.value
+              = @patient.health_pro_email if @patient.health_pro_email.present?
           .phone.field
             %strong
               REDCap phone:
             %span.value
               = @patient.phone_1
-          - if @patient.health_pro_phone.present?
-            .health_pro_phone.field
-              %strong
-                Health Pro phone:
-              %span.value
-                = @patient.health_pro_phone
+          .health_pro_phone.field
+            %strong
+              Health Pro phone:
+            %span.value
+              = @patient.health_pro_login_phone if @patient.health_pro_login_phone.present?
           .paried_site.field
             %strong
               Paired Site:

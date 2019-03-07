@@ -265,7 +265,7 @@ ActiveRecord::Schema.define(version: 20190304225028) do
     t.string "paired_site"
     t.string "paired_organization"
     t.string "health_pro_email"
-    t.string "health_pro_phone"
+    t.string "health_pro_login_phone"
     t.string "phone_1"
   end
 

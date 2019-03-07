@@ -7,10 +7,9 @@
     = health_pro.date_of_birth
   %td.sex
     = health_pro.sex
-  %td.email.phone
-    - if health_pro.email.present?
-      = health_pro.email
-      %br
+  %td.phone.email
+    = health_pro.email
+    %hr
     = health_pro.login_phone
   %td.address
     = health_pro.address
@@ -54,7 +53,7 @@
                         %th.last_name
                           Last
                         %th.email.phone
-                          Email/Phone
+                          Email|Phone
                         %th.match-links.text-center
                           Match?
                     %tbody
@@ -66,9 +65,8 @@
                         %td.last_name
                           = match.patient.last_name
                         %td.email.phone
-                          - if match.patient.email.present?
-                            = match.patient.email
-                            %br
+                          = match.patient.email
+                          %hr
                           = match.patient.phone_1
                         %td.make-match-link.text-right
                           = form_with(model: match, url: accept_match_url(match.id), local: false, class: 'match-accept-form match-form') do |f|

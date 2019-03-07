@@ -79,7 +79,7 @@ class BatchHealthProsController < ApplicationController
     end
 
     def sort_column
-      ['created_at', 'status', 'pmi_id', 'first_name', 'last_name', 'sex', 'email', 'date_of_birth'].include?(params[:sort]) ? params[:sort] : 'last_name'
+      ['created_at', 'status', 'pmi_id', 'first_name', 'last_name', 'sex', 'date_of_birth'].include?(params[:sort]) ? params[:sort] : 'last_name'
     end
 
     def sort_direction
