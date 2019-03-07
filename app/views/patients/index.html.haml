@@ -40,9 +40,9 @@
               %th.first_name
                 = sortable 'first_name'
               %th.email
-                = sortable 'email'
-              %th.invitation_code
-                Invitation Code
+                Email|Health Pro Email
+              %th.phone
+                Phone|Health Pro Phone
               %th.physical_measurements_completion_date
                 = sortable 'physical_measurements_completion_date', 'PM Completion Date'
               %th.show-patient-link
@@ -61,9 +61,13 @@
                   = patient.first_name
                 %td.email
                   = patient.email
-                %td.invitation_code
-                  = patient.invitation_code
-                %td.invitation_code
+                  %hr
+                  = patient.health_pro_email
+                %td.phone
+                  = patient.phone_1
+                  %hr
+                  = patient.health_pro_login_phone
+                %td.physical_measurements_completion_date
                   = patient.physical_measurements_completion_date
                 %td.show_patient_link
                   = link_to "Show", patient_url(patient), class: 'show-patient-link'
