@@ -24,7 +24,7 @@ class MatchesController < ApplicationController
   end
 
   def create
-    @unmatched_patients = Patient.not_deleted.by_registration_status(Patient::REGISTRATION_STATUS_UNMATCHED).map { |patient| ["#{patient.full_name} (#{patient.email})", patient.id] }
+    @unmatched_patients = Patient.not_deleted.by_registration_status(Patient::REGISTRATION_STATUS_UNMATCHED).map { |patient| ["#{patient.full_name} Email: #{patient.email} Phone: (#{patient.phone_1}", patient.id] }
     @health_pro = HealthPro.find(match_params[:health_pro_id])
     @health_pro.status = HealthPro::STATUS_MATCHED
     if match_params[:patient_id].present?
@@ -65,7 +65,8 @@ class MatchesController < ApplicationController
         patient.set_registration_status
         patient.save!
         redcap_api = RedcapApi.initialize_redcap_api
-        redcap_match = redcap_api.match(patient.record_id, @health_pro.pmi_id, @health_pro.general_consent_status, @health_pro.general_consent_date, @health_pro.ehr_consent_status, @health_pro.ehr_consent_date, @health_pro.withdrawal_status, @health_pro.withdrawal_date, @health_pro.participant_status, @health_pro.physical_measurements_completion_date, @health_pro.paired_site, @health_pro.paired_organization)
+
+        redcap_match = redcap_api.match(patient.record_id, @health_pro.pmi_id, @health_pro.general_consent_status, @health_pro.general_consent_date, @health_pro.ehr_consent_status, @health_pro.ehr_consent_date, @health_pro.withdrawal_status, @health_pro.withdrawal_date, @health_pro.participant_status, @health_pro.physical_measurements_completion_date, @health_pro.paired_site, @health_pro.paired_organization, @health_pro.email, @health_pro.login_phone)
         raise "Error assigning pmi_id #{@health_pro.pmi_id} to record_id #{patient.record_id}." if redcap_match[:error].present?
       end
       flash[:success] = 'You have successfully added a match.'
