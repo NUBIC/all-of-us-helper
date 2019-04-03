@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190304225028) do
+ActiveRecord::Schema.define(version: 20190401162112) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -184,6 +184,7 @@ ActiveRecord::Schema.define(version: 20190304225028) do
     t.string "dv_only_ehr_sharing_status"
     t.string "dv_only_ehr_sharing_date"
     t.string "login_phone"
+    t.string "street_address2"
     t.index ["pmi_id", "batch_health_pro_id"], name: "test"
   end
 

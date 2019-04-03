@@ -218,7 +218,8 @@ class BatchHealthPro < ApplicationRecord
       'Language of General Consent' => 'language_of_general_consent',
       'DV-only EHR Sharing Status' => 'dv_only_ehr_sharing_status',
       'DV-only EHR Sharing Date' => 'dv_only_ehr_sharing_date',
-      'Login Phone' => 'login_phone'
+      'Login Phone' => 'login_phone',
+      'Street Address2' => 'street_address2',
     }
   end
 

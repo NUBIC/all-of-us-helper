@@ -28,6 +28,12 @@ class HealthPro < ApplicationRecord
   BIOSPECIMEN_LOCATIONS = [BIOSPECIMEN_LOCATION_NORTHWESTERN, BIOSPECIMEN_LOCATION_NORTHWESTERN_DELNOR, BIOSPECIMEN_LOCATION_NORTHWESTERN_VERNON_HILLS]
 
   PAIRED_ORGANIZATION_NORTHWESTERN = 'ILLINOIS_NORTHWESTERN'
+  PAIRED_ORGANIZATION_NEARH_NORTH = 'ILLINOIS_NEAR_NORTH'
+  PAIRED_ORGANIZATIONS = [PAIRED_ORGANIZATION_NORTHWESTERN, PAIRED_ORGANIZATION_NEARH_NORTH]
+
+  PAIRED_SITE_NEAR_NORTH_NW_FEINBERG_GALSTER = 'nearnorthnwfeinberggalter'
+  PAIRED_SITES = [PAIRED_SITE_NEAR_NORTH_NW_FEINBERG_GALSTER]
+
 
   HEALTH_PRO_CONSENT_STATUS_UNDETERMINED = 'Undetermined'
   HEALTH_PRO_CONSENT_STATUS_DECLINED = 'Declined'
@@ -52,7 +58,7 @@ class HealthPro < ApplicationRecord
     options = { sort_column: 'last_name', sort_direction: 'asc' }.merge(options)
 
     if search_token
-      p = where(["lower(pmi_id) like ? OR lower(last_name) like ? OR lower(first_name) like ? OR lower(email) like ? OR lower(street_address) like ? OR lower(city) like ? OR lower(state) like ? OR lower(zip) like ?", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%"])
+      p = where(["lower(pmi_id) like ? OR lower(last_name) like ? OR lower(first_name) like ? OR lower(email) like ? OR lower(street_address) like ? OR lower(street_address2) like ? OR lower(city) like ? OR lower(state) like ? OR lower(zip) like ?", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%"])
     end
 
     sort = options[:sort_column] + ' ' + options[:sort_direction] + ', health_pros.id ASC'
@@ -66,7 +72,7 @@ class HealthPro < ApplicationRecord
   end
 
   def determine_matches
-    if (self.paired_organization == HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN || self.paired_organization.blank?) && HealthPro.previously_declined(self.pmi_id, self.batch_health_pro_id).count == 0
+    if (self.paired_organization == HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN || self.paired_organization.blank? || (self.paired_organization == HealthPro::PAIRED_ORGANIZATION_NEARH_NORTH && (self.paired_site.blank? || self.paired_site ==  HealthPro::PAIRED_SITE_NEAR_NORTH_NW_FEINBERG_GALSTER ))) && HealthPro.previously_declined(self.pmi_id, self.batch_health_pro_id).count == 0
       matched_pmi_patients = Patient.not_deleted.where(pmi_id: self.pmi_id)
       matched_demographic_patients = Patient.not_deleted.no_previously_declined_match.by_matchable_criteria(self.first_name, self.last_name)
 
@@ -121,7 +127,7 @@ class HealthPro < ApplicationRecord
   end
 
   def address
-    [self.street_address, self.city, self.state, self.zip].compact.join(', ')
+    [self.street_address, self.street_address2, self.city, self.state, self.zip].compact.join(' ')
   end
 
   def pending_matches?
