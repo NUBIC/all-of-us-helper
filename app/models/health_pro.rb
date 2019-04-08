@@ -3,6 +3,7 @@ class HealthPro < ApplicationRecord
   belongs_to :batch_health_pro
   has_many :matches
   has_many :empi_matches
+  has_many :duplicate_matches
 
   STATUS_PENDING              = 'pending'
   STATUS_PREVIOUSLY_MATCHED   = 'previously matched'
@@ -88,6 +89,15 @@ class HealthPro < ApplicationRecord
       end
     else
       self.status = HealthPro::STATUS_UNMATCHABLE
+    end
+  end
+
+  def determine_duplicates
+    matched_demographic_patients = Patient.not_deleted.by_potential_duplicates(self.first_name, self.last_name, self.date_of_birth)
+    if matched_demographic_patients.size > 0
+      matched_demographic_patients.each do |matched_demographic_patient|
+        self.duplicate_matches.build(patient: matched_demographic_patient)
+      end
     end
   end
 

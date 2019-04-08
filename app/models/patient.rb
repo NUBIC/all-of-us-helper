@@ -69,6 +69,19 @@ class Patient < ApplicationRecord
     where('registration_status = ? AND pmi_id IS NULL AND lower(first_name) in(?) AND lower(last_name) = ?', Patient::REGISTRATION_STATUS_UNMATCHED, first_names, last_name.try(:downcase))
   end
 
+  scope :by_potential_duplicates, ->(first_name, last_name, birth_date) do
+    begin
+      birth_date = Date.parse(birth_date)
+    rescue Exception => e
+      birth_date = nil
+    end
+
+    first_names = Nickname.for(first_name.downcase).map(&:name)
+    first_names << first_name.downcase
+    first_names.uniq!
+    where('registration_status != ? AND lower(first_name) in(?) AND lower(last_name) = ? AND birth_date = ?', Patient::REGISTRATION_STATUS_UNMATCHED, first_names, last_name.try(:downcase), birth_date)
+  end
+
   def accepted_match
     matches.where(status: Match::STATUS_ACCEPTED).first
   end

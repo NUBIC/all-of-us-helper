@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190401162112) do
+ActiveRecord::Schema.define(version: 20190403164815) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,6 +79,13 @@ ActiveRecord::Schema.define(version: 20190401162112) do
     t.index ["delayed_reference_type"], name: "delayed_jobs_delayed_reference_type"
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
     t.index ["queue"], name: "delayed_jobs_queue"
+  end
+
+  create_table "duplicate_matches", force: :cascade do |t|
+    t.integer "health_pro_id", null: false
+    t.integer "patient_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "empi_matches", force: :cascade do |t|

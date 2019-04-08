@@ -77,6 +77,7 @@ class BatchHealthPro < ApplicationRecord
 
             if health_pro.matchable?
               health_pro.determine_empi_matches
+              health_pro.determine_duplicates
             end
 
             health_pro.save!

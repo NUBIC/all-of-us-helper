@@ -30,6 +30,41 @@
           %a.accordion-title{:href => "#"} Matches?
           / Accordion tab content: it would start in the open state due to using the `is-active` state class.
           .accordion-content{"data-tab-content" => ""}
+            - if health_pro.duplicate_matches.any?
+              .row.potential-duplicates
+                %h3.callout.warning
+                  Potential Duplicates
+                %table.columns.large-24
+                  %thead
+                    %tr
+                      %th.record_id
+                        Record ID
+                      %th.pmi_id
+                        PMI ID
+                      %th.first_name
+                        First
+                      %th.last_name
+                        Last
+                      %th.email.phone
+                        Email|Phone
+                      %th.show-patient-link.text-center
+                  - health_pro.duplicate_matches.each do |duplicate_match|
+                    %tbody
+                      = content_tag_for(:tr, duplicate_match) do
+                        %td.record_id
+                          = duplicate_match.patient.record_id
+                        %td.pmi_id
+                          = duplicate_match.patient.pmi_id
+                        %td.first_name
+                          = duplicate_match.patient.first_name
+                        %td.last_name
+                          = duplicate_match.patient.last_name
+                        %td.email.phone
+                          = duplicate_match.patient.email
+                          %hr
+                          = duplicate_match.patient.phone_1
+                        %td.make-match-link.text-right
+                          = link_to 'Show', patient_url(duplicate_match.patient)
             .row
               %h3
                 REDCap Participant Matches
