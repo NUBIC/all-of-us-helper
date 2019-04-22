@@ -82,6 +82,17 @@ namespace :redcap do
       handle_error(t, error)
     end
   end
+  # RAILS_ENV=production bundle exec rake redcap:switch_pmi_ids["?","?"]
+  desc "Switch pmi_id for a patient to REDCap"
+  task :switch_pmi_ids, [:record_id,:new_pmi_id] => [:environment] do |t, args|
+    patient = Patient.where(record_id:  args[:record_id]).first
+    matches = patient.matches.where(status: Match::STATUS_ACCEPTED)
+    matches.each do |match|
+      match.destroy
+    end
+    patient.registration_status = Patient::REGISTRATION_STATUS_UNMATCHED
+    patient.save!
+  end
 end
 
 def handle_error(t, error)
