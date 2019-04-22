@@ -83,8 +83,8 @@ namespace :redcap do
     end
   end
   # RAILS_ENV=production bundle exec rake redcap:switch_pmi_ids["?","?"]
-  desc "Switch pmi_id for a patient to REDCap"
-  task :switch_pmi_ids, [:record_id,:new_pmi_id] => [:environment] do |t, args|
+  desc "Rollback match for record_id"
+  task :rollback_accepted_match, [:record_id] => [:environment] do |t, args|
     patient = Patient.where(record_id:  args[:record_id]).first
     matches = patient.matches.where(status: Match::STATUS_ACCEPTED)
     matches.each do |match|
