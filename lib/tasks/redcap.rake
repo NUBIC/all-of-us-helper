@@ -86,13 +86,13 @@ namespace :redcap do
   desc "Rollback accepted match for record_id"
   task :rollback_accepted_match, [:record_id] => [:environment] do |t, args|
     puts args[:record_id]
-    # patient = Patient.where(record_id: args[:record_id]).first
-    # matches = patient.matches.where(status: Match::STATUS_ACCEPTED)
-    # matches.each do |match|
-    #   match.destroy
-    # end
-    # patient.registration_status = Patient::REGISTRATION_STATUS_UNMATCHED
-    # patient.save!
+    patient = Patient.where(record_id: args[:record_id]).first
+    matches = patient.matches.where(status: Match::STATUS_ACCEPTED)
+    matches.each do |match|
+      match.destroy
+    end
+    patient.registration_status = Patient::REGISTRATION_STATUS_UNMATCHED
+    patient.save!
   end
 end
 
