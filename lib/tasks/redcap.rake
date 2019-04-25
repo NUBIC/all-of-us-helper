@@ -82,6 +82,7 @@ namespace :redcap do
       handle_error(t, error)
     end
   end
+
   # RAILS_ENV=production bundle exec rake redcap:rollback_accepted_match["?"]
   desc "Rollback accepted match for record_id"
   task :rollback_accepted_match, [:record_id] => [:environment] do |t, args|
@@ -91,6 +92,7 @@ namespace :redcap do
     matches.each do |match|
       match.destroy
     end
+    patient.pmi_d = nil
     patient.registration_status = Patient::REGISTRATION_STATUS_UNMATCHED
     patient.save!
   end
