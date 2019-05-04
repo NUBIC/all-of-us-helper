@@ -1,4 +1,5 @@
 require 'redcap_api'
+require 'csv'
 namespace :redcap do
   desc 'Assign invitation codes'
   task(assign_invitation_codes: :environment) do  |t, args|
@@ -96,6 +97,52 @@ namespace :redcap do
     patient.registration_status = Patient::REGISTRATION_STATUS_UNMATCHED
     patient.save!
   end
+
+  # scp -r deploy@vfsmnubicapps01.fsm.northwestern.edu:/var/www/apps/all-of-us-helper/releases/20190422170923/lib/setup/mrn_review.csv ~/hold/mrn_review.csv
+  desc "Create MRN review"
+  task(create_mrn_review: :environment) do  |t, args|
+    batch_health_pro_id = BatchHealthPro.maximum(:id)
+    patients = []
+    Patient.where(registration_status:[Patient::REGISTRATION_STATUS_MATCHED, Patient::REGISTRATION_STATUS_READY]).all.each do |patient|
+      p = {}
+      p[:patient] = patient
+      puts patient.pmi_id
+      health_pro = HealthPro.where(batch_health_pro_id: batch_health_pro_id, pmi_id: patient.pmi_id).first
+      p[:health_pro] = health_pro
+      empi_patients = determine_empi_matches(patient, health_pro)
+      p[:empi_patients] = empi_patients
+      patients << p
+    end
+
+    patient_keys = Patient.first.attributes.keys - ['id', 'created_at', 'updated_at', 'registration_status', 'general_consent_status', 'general_consent_date', 'ehr_consent_status', 'ehr_consent_date', 'withdrawal_status', 'withdrawal_date', 'biospecimens_location', 'uuid', 'participant_status', 'deleted_at', 'physical_measurements_completion_date', 'paired_site', 'paired_organization']
+    empi_keys = ['first_name', 'last_name', 'birth_date', 'gender', 'ethnicity', 'races', 'address_line1', 'city', 'state', 'zip', 'nmhc_mrn', 'nmh_mrn', 'nmff_mrn', 'lfh_mrn', 'address']
+    empi_keys_namespaced = empi_keys.dup
+    empi_keys_namespaced = empi_keys_namespaced.map{ |empi_key|  "empi_#{empi_key}"}
+    health_pro_keys = ['health_pro_address']
+
+    headers = patient_keys.concat(health_pro_keys)
+    headers = patient_keys.concat(empi_keys_namespaced)
+    row_header = CSV::Row.new(headers, headers, true)
+    row_template = CSV::Row.new(headers, [], false)
+    CSV.open('lib/setup/mrn_review.csv', "wb") do |csv|
+      csv << row_header
+      patients.each do |patient|
+        patient[:empi_patients].each do |empi_patient|
+          row = row_template.dup
+          patient_keys.each do |key|
+            row[key] = patient[:patient][key]
+          end
+
+          row['health_pro_address'] = patient[:health_pro].address
+
+          empi_keys_namespaced.each do |key|
+            row[key] = empi_patient[key.gsub('empi_','')]
+          end
+          csv << row
+        end
+      end
+    end
+  end
 end
 
 def handle_error(t, error)
@@ -107,4 +154,47 @@ def handle_error(t, error)
   Rails.logger.info(error.message)
   Rails.logger.info(error.backtrace.join("\n"))
   ExceptionNotifier.notify_exception(error)
+end
+
+def determine_empi_matches(patient, health_pro)
+  empi_patients = []
+  if health_pro.present?
+    empi_params = {}
+    error = nil
+    study_tracker_api = StudyTrackerApi.new
+    empi_params[:proxy_user] = 'mjg994'
+    empi_params[:first_name] = patient.first_name
+    empi_params[:last_name] = patient.last_name
+    empi_params[:birth_date] = patient.birth_date
+    empi_params[:address] = health_pro.address
+    empi_params[:gender] = health_pro.sex_to_patient_gender
+    empi_results = study_tracker_api.empi_lookup(empi_params)
+    if empi_results[:error].present? || empi_results[:response]['error'].present?
+    else
+      empi_results[:response]['patients'].each do |empi_patient|
+        empi_race_matches = []
+        empi_patient['races'].each do |empi_race|
+          race = Race.where(name: empi_race).first
+        end
+        empi_patient['address'] = format_address(empi_patient)
+        # puts empi_patient['first_name']
+        # puts empi_patient['last_name']
+        # puts empi_patient['birth_date']
+        # puts empi_patient['gender']
+        # puts format_address(empi_patient)
+        # puts empi_patient['nmhc_mrn']
+        # puts empi_patient['ethnicity']
+        puts 'begin moomin'
+        puts empi_patient.keys
+        puts 'end moomin'
+        empi_patients << empi_patient
+      end
+    end
+  end
+  empi_patients
+end
+
+
+def format_address(empi_patient)
+  [empi_patient['address_line1'], empi_patient['city'], empi_patient['state'], empi_patient['zip']].compact.join(' ')
 end
