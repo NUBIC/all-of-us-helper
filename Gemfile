@@ -41,6 +41,7 @@ gem 'devise', '~> 4.2'
 gem 'devise_ldap_authenticatable'
 gem 'exception_notification'
 gem 'foundation-rails', '6.4.1.2'
+gem 'google-cloud'
 gem 'haml'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
@@ -53,6 +54,7 @@ gem 'uuid'
 gem 'whenever', :require => false
 gem 'will_paginate'
 gem 'will_paginate-foundation'
+gem 'yajl-ruby', require: 'yajl'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

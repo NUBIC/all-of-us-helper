@@ -65,8 +65,10 @@ namespace :ehr do
     st_subjects = CSV.new(File.open('lib/setup/data/STU00204480_subjects.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
     pmi_ids = st_subjects.map { |subject| subject.to_hash['case number']  }
 
-    batch_health_pro = BatchHealthPro.last
-    batch_health_pro.health_pros.where("pmi_id in (?)", pmi_ids).each do |health_pro|
+    # batch_health_pro = BatchHealthPro.last
+    health_pros = HealthPro.where(batch_health_pro_id: [142, 143])
+    health_pros.where("pmi_id in (?)", pmi_ids).each do |health_pro|
+    # batch_health_pro.health_pros.where("pmi_id in (?)", pmi_ids).each do |health_pro|
     # batch_health_pro.health_pros.where("pmi_id in (?) AND biospecimens_location = ? AND general_consent_status = '1' AND general_consent_date IS NOT NULL AND ehr_consent_status = '1' AND ehr_consent_date IS NOT NULL AND withdrawal_status = '0' AND withdrawal_date IS NULL", 'nwfeinberggalter').each do |health_pro|
       study_tracker_activities  = CSV.new(File.open('lib/setup/data/STU00204480_activities.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
       study_tracker_activities = study_tracker_activities.select { |study_tracker_activity| study_tracker_activity.to_hash['case number'] ==  health_pro.pmi_id }
@@ -156,7 +158,7 @@ namespace :ehr do
 
     case_numbers.each do |case_number|
       case_number_study_tracker_activities = study_tracker_activities.select { |study_tracker_activity| study_tracker_activity.to_hash['case number'] == case_number }
-      health_pro = batch_health_pro.health_pros.where(pmi_id: case_number).first
+      health_pro = health_pros.where(pmi_id: case_number).first
 
       subject = subject_template.dup
       subject[:source] = 'StudyTracker'
