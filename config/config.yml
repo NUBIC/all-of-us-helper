@@ -1,6 +1,6 @@
 ---
 application: all-of-us-helper
-repository: https://github.com/NUBIC/all-of-us-helper.git
+repository: https://github.com/NUARIG/all-of-us-helper.git
 deployer: all-of-us-helper-deployer
 development:
   server_name: 0.0.0.0:3000
