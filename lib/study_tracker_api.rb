@@ -117,6 +117,13 @@ class StudyTrackerApi
         if response[:errors].present?
           error = response[:errors]
         end
+      rescue RestClient::ExceptionWithResponse => e
+        error = e.response.present? ? e.to_s + e.response : e.to_s
+        ExceptionNotifier.notify_exception(error)
+        ApiLog.create_api_log(options[:url], options[:payload], nil, error, StudyTrackerApi::SYSTEM)
+        Rails.logger.info(error)
+        Rails.logger.info(e.class)
+        Rails.logger.info(e.backtrace.join("\n"))
       rescue Exception => e
         ExceptionNotifier.notify_exception(e)
         ApiLog.create_api_log(options[:url], options[:payload], nil, e.message, StudyTrackerApi::SYSTEM)
