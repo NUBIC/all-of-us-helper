@@ -77,6 +77,7 @@ namespace :redcap do
     begin
       Patient.not_deleted.where("pmi_id != record_id AND pmi_id IS NOT NULL AND pmi_id != ''").each do |patient|
         redcap_api = RedcapApi.initialize_redcap_api
+        sleep(1)
         redcap_patient = redcap_api.update_patient(patient.record_id, patient.general_consent_status, patient.general_consent_date, patient.ehr_consent_status, patient.ehr_consent_date, patient.withdrawal_status, patient.withdrawal_date, patient.participant_status, patient.physical_measurements_completion_date, patient.paired_site, patient.paired_organization, patient.health_pro_email, patient.health_pro_login_phone)
       end
     rescue => error
