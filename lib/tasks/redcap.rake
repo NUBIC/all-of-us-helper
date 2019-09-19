@@ -85,7 +85,7 @@ namespace :redcap do
     end
   end
 
-  # RAILS_ENV=production bundle exec rake redcap:rollback_accepted_match["?"]
+  # RAILS_ENV=production bundle exec rake redcap:rollback_accepted_match["9868"]
   desc "Rollback accepted match for record_id"
   task :rollback_accepted_match, [:record_id] => [:environment] do |t, args|
     puts args[:record_id]
@@ -94,9 +94,24 @@ namespace :redcap do
     matches.each do |match|
       match.destroy
     end
-    patient.pmi_d = nil
+    patient.pmi_id = nil
+    patient.birth_date = nil
+    patient.general_consent_status = nil
+    patient.general_consent_date = nil
+    patient.ehr_consent_status = nil
+    patient.ehr_consent_date = nil
+    patient.withdrawal_status = nil
+    patient.withdrawal_date = nil
+    patient.biospecimens_location = nil
+    patient.participant_status = nil
+    patient.paired_site = nil
+    patient.paired_organization = nil
+    patient.physical_measurements_completion_date = nil
     patient.registration_status = Patient::REGISTRATION_STATUS_UNMATCHED
     patient.save!
+
+    redcap_api = RedcapApi.initialize_redcap_api
+    redcap_patient = redcap_api.update_patient(patient.record_id, patient.general_consent_status, patient.general_consent_date, patient.ehr_consent_status, patient.ehr_consent_date, patient.withdrawal_status, patient.withdrawal_date, patient.participant_status, patient.physical_measurements_completion_date, patient.paired_site, patient.paired_organization, patient.health_pro_email, patient.health_pro_login_phone)
   end
 
   # scp -r deploy@vfsmnubicapps01.fsm.northwestern.edu:/var/www/apps/all-of-us-helper/releases/20190422170923/lib/setup/mrn_review.csv ~/hold/mrn_review.csv
@@ -194,7 +209,6 @@ def determine_empi_matches(patient, health_pro)
   end
   empi_patients
 end
-
 
 def format_address(empi_patient)
   [empi_patient['address_line1'], empi_patient['city'], empi_patient['state'], empi_patient['zip']].compact.join(' ')
