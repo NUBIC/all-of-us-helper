@@ -33,8 +33,10 @@ class HealthPro < ApplicationRecord
   PAIRED_ORGANIZATIONS = [PAIRED_ORGANIZATION_NORTHWESTERN, PAIRED_ORGANIZATION_NEARH_NORTH]
 
   PAIRED_SITE_NEAR_NORTH_NW_FEINBERG_GALTER = 'nearnorthnwfeinberggalter'
-  PAIRED_SITES = [PAIRED_SITE_NEAR_NORTH_NW_FEINBERG_GALTER]
-
+  PAIRED_SITE_FEINBERG_GALTER = 'nwfeinberggalter'
+  PAIRED_SITE_DELNOR_HOSPITAL = 'nwdelnorhospital'
+  PAIRED_SITE_VERNON_HILLS_ICC = 'nwvernonhillsicc'
+  PAIRED_SITES = [PAIRED_SITE_NEAR_NORTH_NW_FEINBERG_GALTER, PAIRED_SITE_FEINBERG_GALTER, PAIRED_SITE_DELNOR_HOSPITAL, PAIRED_SITE_VERNON_HILLS_ICC]
 
   HEALTH_PRO_CONSENT_STATUS_UNDETERMINED = 'Undetermined'
   HEALTH_PRO_CONSENT_STATUS_DECLINED = 'Declined'
@@ -73,7 +75,7 @@ class HealthPro < ApplicationRecord
   end
 
   def determine_matches
-    if (self.paired_organization == HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN || self.paired_organization.blank? || (self.paired_organization == HealthPro::PAIRED_ORGANIZATION_NEARH_NORTH && (self.paired_site.blank? || self.paired_site ==  HealthPro::PAIRED_SITE_NEAR_NORTH_NW_FEINBERG_GALTER ))) && HealthPro.previously_declined(self.pmi_id, self.batch_health_pro_id).count == 0
+    if (self.paired_organization == HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN || self.paired_organization.blank? || (self.paired_organization == HealthPro::PAIRED_ORGANIZATION_NEARH_NORTH && (self.paired_site.blank? || HealthPro::PAIRED_SITES.include?(self.paired_site)))) && HealthPro.previously_declined(self.pmi_id, self.batch_health_pro_id).count == 0
       matched_pmi_patients = Patient.not_deleted.where(pmi_id: self.pmi_id)
       matched_demographic_patients = Patient.not_deleted.no_previously_declined_match.by_matchable_criteria(self.first_name, self.last_name)
 

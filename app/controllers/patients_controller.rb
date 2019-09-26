@@ -31,7 +31,7 @@ class PatientsController < ApplicationController
     options = {}
     options[:sort_column] = sort_column
     options[:sort_direction] = sort_direction
-    @patients = Patient.not_deleted.search_across_fields(params[:search], options).by_registration_status(params[:registration_status]).paginate(per_page: 10, page: params[:page])
+    @patients = Patient.by_paired_site(params[:paired_site]).not_deleted.search_across_fields(params[:search], options).by_registration_status(params[:registration_status]).paginate(per_page: 10, page: params[:page])
   end
 
   def create
@@ -152,7 +152,7 @@ class PatientsController < ApplicationController
     end
 
     def sort_column
-      ['record_id', 'pmi_id', 'first_name', 'email', 'last_name', 'registration_status', 'physical_measurements_completion_date'].include?(params[:sort]) ? params[:sort] : 'last_name'
+      ['record_id', 'paired_site', 'pmi_id', 'first_name', 'email', 'last_name', 'registration_status', 'physical_measurements_completion_date'].include?(params[:sort]) ? params[:sort] : 'last_name'
     end
 
     def sort_direction

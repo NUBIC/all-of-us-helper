@@ -33,6 +33,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+
 gem 'american_date'
 gem 'carrierwave', '>= 1.0.0.rc', '< 2.0'
 gem 'daemons'
@@ -47,6 +48,7 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'paper_trail'
 gem 'pundit'
+gem 'rb-readline'
 gem 'record_tag_helper'
 gem 'rest-client'
 # gem 'webpacker'

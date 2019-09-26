@@ -12,6 +12,10 @@
           %label{for: 'registration_status' }
             Registration Status
           = select_tag :registration_status, options_for_select(Patient::REGISTRATION_STATUSES.map { |registration_status| [registration_status, registration_status] }, (params[:registration_status].blank? ? '' : params[:registration_status])), { include_blank: 'all' }
+        .paired_site
+          %label{for: 'paired_site' }
+            Paired Site
+          = select_tag :paired_site, options_for_select(HealthPro::PAIRED_SITES.map { |paired_site| [paired_site, paired_site] }, (params[:paired_site].blank? ? '' : params[:paired_site])), { include_blank: 'all' }
         .search-box
           %label{for: 'search' }
             Search
@@ -29,6 +33,8 @@
         %table.hack_stack.hover
           %thead
             %tr
+              %th.paired_site
+                = sortable 'paired_site'
               %th.record_id
                 = sortable 'record_id'
               %th.pmi_id
@@ -49,6 +55,8 @@
           %tbody
             - @patients.each do |patient|
               = content_tag_for(:tr, patient) do
+                %td.paired_site
+                  = patient.paired_site
                 %td.record_id
                   = patient.record_id
                 %td.pmi_id

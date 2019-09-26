@@ -5,11 +5,15 @@
 
     @include breakpoint(large) {
       h1 {
-        @include grid-column($columns: 8);
+        @include grid-column($columns: 6);
       }
 
       .registration_status {
-        @include grid-column($columns: 6);
+        @include grid-column($columns: 4);
+      }
+
+      .paired_site {
+        @include grid-column($columns: 4);
       }
 
       .search-box {
@@ -35,6 +39,15 @@
   @include grid-row();
   #patients-list {
 		@include grid-column($columns: 24);
+
+    table {
+      table-layout: fixed;
+      width: 100%;
+    }
+
+    td {
+      word-wrap:break-word;
+    }
 
     th .current {
       padding-right: 2em;

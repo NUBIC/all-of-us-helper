@@ -30,6 +30,11 @@ class Patient < ApplicationRecord
   after_initialize :set_defaults
   after_create :save_default_patient_features
 
+  scope :by_paired_site, ->(paired_site) do
+    if paired_site.present? && paired_site != 'all'
+      where(paired_site: paired_site)
+    end
+  end
 
   scope :by_registration_status, ->(registration_status) do
     if registration_status.present? && registration_status != 'all'
