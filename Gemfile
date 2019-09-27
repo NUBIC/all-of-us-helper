@@ -48,7 +48,6 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'paper_trail'
 gem 'pundit'
-gem 'rb-readline'
 gem 'record_tag_helper'
 gem 'rest-client'
 # gem 'webpacker'
@@ -75,6 +74,7 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-rvm'
   gem 'mailcatcher'
+  gem 'rb-readline'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
