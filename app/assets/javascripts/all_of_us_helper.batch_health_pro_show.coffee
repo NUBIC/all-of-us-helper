@@ -87,7 +87,7 @@ class AllOfUsHelper.BatchHealthProShow
         e.preventDefault()
         return false
 
-      $('.match-create-form .patient_id').select2(width: '100%')
+      $('.match-create-form .patient_id').select2(width: '150%')
 
     init()
     return
