@@ -10,7 +10,14 @@
   %td.phone.email
     = health_pro.email
     %hr
-    = health_pro.login_phone
+      %strong
+        Phone:
+      = health_pro.phone
+      - if health_pro.login_phone.present?
+        %br
+        %strong
+          Login Phone:
+        = health_pro.login_phone
   %td.address
     = health_pro.address
   %td.pmi_id
