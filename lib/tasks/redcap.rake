@@ -57,18 +57,19 @@ namespace :redcap do
 
   desc "Synch deleted patients."
   task(synch_deleted_patients: :environment) do  |t, args|
-    redcap_api = RedcapApi.initialize_redcap_api
-    patients = redcap_api.patients
+    begin
+      redcap_api = RedcapApi.initialize_redcap_api
+      patients = redcap_api.patients
 
-    record_ids = patients[:response].map { |patient| patient['record_id']  }
-    Patient.where('record_id != pmi_id OR pmi_id IS NULL').each do |patient|
-      puts patient.record_id
-      if !record_ids.include?(patient.record_id)
-        if patient.matched?
-          patient.pmi_id = nil
+      record_ids = patients[:response].map { |patient| patient['record_id']  }
+      Patient.where('record_id != pmi_id OR pmi_id IS NULL').each do |patient|
+        puts patient.record_id
+        if !record_ids.include?(patient.record_id)
+          patient.soft_delete!
         end
-        patient.soft_delete!
       end
+    rescue => error
+      handle_error(t, error)
     end
   end
 
