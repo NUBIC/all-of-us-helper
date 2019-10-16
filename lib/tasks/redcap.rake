@@ -46,10 +46,10 @@ namespace :redcap do
           if @patient.nmhc_mrn.blank?
             @patient.first_name = patient['first_name']
             @patient.last_name = patient['last_name']
-            @patient.email = patient['email']
-            @patient.phone_1 = patient['phone_1']
-            @patient.save!
           end
+          @patient.email = patient['email']
+          @patient.phone_1 = patient['phone_1']
+          @patient.save!
         end
       end
     end
