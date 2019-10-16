@@ -48,7 +48,26 @@ class Patient < ApplicationRecord
     end
     options = { sort_column: 'last_name', sort_direction: 'asc' }.merge(options)
 
-    if search_token
+    if search_token && search_token.split(' ').size > 1
+      where_clauses = []
+      where_clause_arguments = []
+      conditions = ['lower(last_name) like ?', 'lower(first_name) like ?']
+      conditions.each do |condition|
+        condition_clauses = []
+        search_token.split(' ').each do |st|
+          condition_clauses << condition
+          where_clause_arguments << "%#{st}%"
+        end
+        condition_clauses = condition_clauses.join(' OR ')
+        where_clauses << "(#{condition_clauses})"
+      end
+      where_clauses = where_clauses.join(' AND ')
+      where_clause_arguments << "%#{search_token}%"
+      where_clause_arguments << "%#{search_token}%"
+      where_clause_arguments << "%#{search_token}%"
+      where_clause = ["(#{where_clauses}) OR lower(record_id) like ? OR lower(pmi_id) like ? OR lower(email) like ?", where_clause_arguments].flatten
+      p = where(where_clause)
+    else
       p = where(["lower(record_id) like ? OR lower(pmi_id) like ? OR lower(last_name) like ? OR lower(first_name) like ? OR lower(email) like ?", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%", "%#{search_token}%"])
     end
 
