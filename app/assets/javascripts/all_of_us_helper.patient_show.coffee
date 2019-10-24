@@ -11,16 +11,20 @@ class AllOfUsHelper.PatientShow
           $("input[data-text='Unknown or Not Reported']").prop('checked', false)
 
     $('.set-ethnicity-link').on 'click', (e) ->
-      ethnicity = $('#mapped_health_pro_ethnicity').val()
-      $("#patient-form").find('#patient_ethnicity').val(ethnicity)
-      e.preventDefault()
+      set_ethnicity = confirm('Overwrite Ethnicity?')
+      if set_ethnicity == true
+        ethnicity = $('#mapped_health_pro_ethnicity').val()
+        $("#patient-form").find('#patient_ethnicity').val(ethnicity)
+        e.preventDefault()
       return false
 
     $('.set-race-link').on 'click', (e) ->
-      mapped_race = $('#mapped_health_pro_race').val()
-      $(".patient_race").each (index) ->
-        $(this).prop('checked', false)
-        $("input[data-text='#{mapped_race}']").prop('checked', true)
+      set_race = confirm('Overwrite Race?')
+      if set_race == true
+        mapped_race = $('#mapped_health_pro_race').val()
+        $(".patient_race").each (index) ->
+          $(this).prop('checked', false)
+          $("input[data-text='#{mapped_race}']").prop('checked', true)
       e.preventDefault()
       return false
 
