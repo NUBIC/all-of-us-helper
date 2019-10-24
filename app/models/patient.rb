@@ -270,9 +270,73 @@ class Patient < ApplicationRecord
     self.errors.empty?
   end
 
+  def allow_health_pro_race_ethnicity_override?
+    accepted_match && !registered? && !health_pro_race_ethnicity.blank?
+  end
+
+  def mapped_health_pro_race
+    map_health_pro_race_ethnicity[:race]
+  end
+
+  def mapped_health_pro_ethnicity
+    map_health_pro_race_ethnicity[:ethnicity]
+  end
+
+  def map_health_pro_race_ethnicity
+    mapped_race_ethnicity = { race: nil, racce_id: nil, ethnicity: nil }
+    case health_pro_race_ethnicity
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_WHITE
+      mapped_race_ethnicity[:race] = Race::RACE_WHITE
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_BLACK_OR_AFRICAN_AMERICAN
+      mapped_race_ethnicity[:race] = Race::RACE_BLACK_AFRICAN_AMERICAN
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_HLS_AND_MORE_THAN_ONE_OTHER_RACE
+      mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_HISPANIC_OR_LATINO
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_HISPANIC_LATINO_OR_SPANISH
+      mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_HISPANIC_OR_LATINO
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_SKIP
+      mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_ASIAN
+      mapped_race_ethnicity[:race] = Race::RACE_ASIAN
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_MIDDLE_EASTERN_OR_NORTH_AFRICAN
+      mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_HLS_AND_WHITE
+      mapped_race_ethnicity[:race] = Race::RACE_WHITE
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_HISPANIC_OR_LATINO
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_AMERICAN_INDIAN_ALASKA_NATIVE
+      mapped_race_ethnicity[:race] = Race::RACE_AMERICAN_INDIAN_ALASKA_NATIVE
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_HLS_AND_BLACK
+      mapped_race_ethnicity[:race] = Race::RACE_BLACK_AFRICAN_AMERICAN
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_HISPANIC_OR_LATINO
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_PREFER_NOT_TO_ANSWER
+      mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_HLS_AND_ONE_OTHER_RACE
+      mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_HISPANIC_OR_LATINO
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_MORE_THAN_ONE_RACE
+      mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_OTHER
+      mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
+    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_NATIVE_HAWAIIAN_OTHER_PACIFIC_ISLANDER
+      mapped_race_ethnicity[:race] = Race::RACE_NATIVE_HAWAIIAN_OTHER_PACIFIC_ISLANDER
+      mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
+    end
+    mapped_race_ethnicity
+  end
+
   private
     def last_batch_health_pro_id
-      last_batch_health_pro_id = BatchHealthPro.maximum(:id)
+      last_batch_health_pro_id = HealthPro.where(pmi_id: self.pmi_id).maximum(:batch_health_pro_id)
     end
 
     def set_defaults

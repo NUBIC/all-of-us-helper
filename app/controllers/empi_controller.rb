@@ -15,7 +15,6 @@ class EmpiController < ApplicationController
     @error = nil
     study_tracker_api = initialize_study_tracker_api
     params[:proxy_user] = current_user.username
-    # empi_params[:proxy_user] = current_user.username
     empi_results = study_tracker_api.empi_lookup(empi_params)
     if empi_results[:error].present?
       @error = empi_results[:error]

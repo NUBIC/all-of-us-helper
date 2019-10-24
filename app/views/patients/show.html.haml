@@ -63,6 +63,15 @@
             %strong
               Race/Ethnicity:
             = @patient.health_pro_race_ethnicity
+            %br
+            %label{for: 'mapped_health_pro_race'}
+              %strong
+                Mapped Race:
+            = text_field_tag :mapped_health_pro_race, @patient.mapped_health_pro_race, id: 'mapped_health_pro_race', disabled: true
+            %label{for: 'mapped_health_pro_ethnicity'}
+              %strong
+                Mapped Ethnicity:
+            = text_field_tag :mapped_health_pro_ethnicity, @patient.mapped_health_pro_ethnicity, id: 'mapped_health_pro_ethnicity', disabled: true
           .health_pro_sex.field
             %strong
               Sex:
@@ -167,20 +176,21 @@
               %div{class: 'small-24 large-24 columns' }
                 - for race in Race.all
                   %div
-                    = check_box_tag "patient[race_ids][]", race.id, @patient.races.include?(race), id: "patient_race_#{race.id}", data: { text: race.name }
+                    = check_box_tag "patient[race_ids][]", race.id, @patient.races.include?(race), class: 'patient_race', id: "patient_race_#{race.id}", data: { text: race.name }
                     %label{for: "patient_race_#{race.id}" }
                       = race.name
             = f.submit 'Update Demographics', class: 'button', data: { confirm: 'Are you sure you want update the patient?' }
 
             - if @patient.accepted_match
               = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date.present? ? @patient.birth_date.to_s(:date) : nil, gender: @patient.gender.present? ? @patient.gender : @patient.accepted_match.health_pro.sex_to_patient_gender, address: @patient.accepted_match.health_pro.address, match_id: @patient.match.id), class: 'new-empi-link button', disabled: @patient.registered?
+              = link_to 'Use Health Pro Ethnicity', '#', class: 'set-ethnicity-link button', disabled: !@patient.allow_health_pro_race_ethnicity_override?
+              = link_to 'Use Health Pro Race', '#', class: 'set-race-link button', disabled:  !@patient.allow_health_pro_race_ethnicity_override?
             -else
               = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date.present? ? @patient.birth_date.to_s(:date): nil, gender: @patient.gender, address: nil, match_id: nil), class: 'new-empi-link button', disabled: @patient.registered?
-            - if current_user.username == 'mjg994'
-              = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date.present? ? @patient.birth_date.to_s(:date) : nil, gender: @patient.gender, address: nil, match_id: nil), class: 'new-empi-link button'
           = form_with(url: register_patient_url(@patient), local: true, id: 'register-patient-form') do |f|
             = f.submit 'Register Study Tracker', class: 'button', 'data-confirm': 'Register patient?', disabled: (!@patient.ready? || !@patient.demographics_ready? || @patient.registered?)
           - if current_user.username == 'mjg994'
+            = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date.present? ? @patient.birth_date.to_s(:date) : nil, gender: @patient.gender, address: nil, match_id: nil), class: 'new-empi-link button'
             = form_with(url: register_patient_url(@patient), local: true, id: 'register-patient-form') do |f|
               = f.submit 'Register Study Tracker', class: 'button', 'data-confirm': 'Register patient?'
       .row
