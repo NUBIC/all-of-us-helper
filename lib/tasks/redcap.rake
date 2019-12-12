@@ -109,6 +109,7 @@ namespace :redcap do
     patient.paired_organization = nil
     patient.physical_measurements_completion_date = nil
     patient.registration_status = Patient::REGISTRATION_STATUS_UNMATCHED
+    patient.nmhc_mrn = nil
     patient.save!
 
     redcap_api = RedcapApi.initialize_redcap_api
