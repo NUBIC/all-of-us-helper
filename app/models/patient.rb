@@ -342,7 +342,7 @@ class Patient < ApplicationRecord
     site_preference = {}
     case self.paired_site
     when HealthPro::PAIRED_SITE_NEAR_NORTH_NW_FEINBERG_GALTER
-]     site_preference['site_preference___1'] = '1'
+      site_preference['site_preference___1'] = '1'
       site_preference['site_preference___2'] = '0'
       site_preference['site_preference___3'] = '0'
       site_preference['site_preference___4'] = '0'
