@@ -143,7 +143,7 @@ class RedcapApi
     { response: record_id, error: api_response[:error] }
   end
 
-  def create_patient(first_name, last_name, email, phone, pmi_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone)
+  def create_patient(first_name, last_name, email, phone, pmi_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, site_preference___1, site_preference___2, site_preference___3, site_preference___4)
     record_id = next_record_id
     record_id = record_id[:response]
     consent_d = Date.parse(consent_d) if consent_d
@@ -158,8 +158,8 @@ class RedcapApi
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,ts,withdrawn_y,withdrawal_d,donotcontact,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone
-"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}","#{withdrawn_y}","#{withdrawal_d}","1",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone}),
+        :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,ts,withdrawn_y,withdrawal_d,donotcontact,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,site_preference___1,site_preference___2,site_preference___3,site_preference___4,how_to_join_complete
+"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}","#{withdrawn_y}","#{withdrawal_d}","1",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone},"#{site_preference___1}","#{site_preference___2}","#{site_preference___3}","#{site_preference___4}","2"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
@@ -170,9 +170,8 @@ class RedcapApi
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-
         :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,ts,withdrawn_y,withdrawal_d,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,referralsource,site_preference___1,site_preference___2,site_preference___3,site_preference___4,how_to_join_complete
-"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}","#{withdrawn_y}","#{withdrawal_d}",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone},"17","1","0","0","0","2"),
+"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}","#{withdrawn_y}","#{withdrawal_d}",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone},"17","#{site_preference___1}","#{site_preference___2}","#{site_preference___3}","#{site_preference___4}","2"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }

@@ -334,6 +334,32 @@ class Patient < ApplicationRecord
     mapped_race_ethnicity
   end
 
+  # 1= Northwestern Memorial Hospital Galter Pavilion, 201 E Huron St, Chicago, IL (Downtown) |
+  # 2= Northwestern Medicine Delnor Hospital, 302 Randall Rd, Geneva, IL (West Region) |
+  # 3= Northwestern Medicine Primary Care, 870 N. Milwaukee Rd, Vernon Hills, IL (North Region) |
+  # 4= No preference
+  def map_paired_site
+    site_preference = {}
+    case self.paired_site
+    when HealthPro::PAIRED_SITE_NEAR_NORTH_NW_FEINBERG_GALTER
+]     site_preference['site_preference___1'] = '1'
+      site_preference['site_preference___2'] = '0'
+      site_preference['site_preference___3'] = '0'
+      site_preference['site_preference___4'] = '0'
+    when HealthPro::PAIRED_SITE_DELNOR_HOSPITAL
+      site_preference['site_preference___1'] = '0'
+      site_preference['site_preference___2'] = '1'
+      site_preference['site_preference___3'] = '0'
+      site_preference['site_preference___4'] = '0'
+    else
+      site_preference['site_preference___1'] = '0'
+      site_preference['site_preference___2'] = '0'
+      site_preference['site_preference___3'] = '0'
+      site_preference['site_preference___4'] = '1'
+    end
+    site_preference
+  end
+
   private
     def last_batch_health_pro_id
       last_batch_health_pro_id = HealthPro.where(pmi_id: self.pmi_id).maximum(:batch_health_pro_id)
