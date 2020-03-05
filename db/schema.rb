@@ -192,7 +192,6 @@ ActiveRecord::Schema.define(version: 20190403164815) do
     t.string "dv_only_ehr_sharing_date"
     t.string "login_phone"
     t.string "street_address2"
-    t.index ["pmi_id", "batch_health_pro_id"], name: "test"
   end
 
   create_table "invitation_code_assignments", force: :cascade do |t|
@@ -236,6 +235,8 @@ ActiveRecord::Schema.define(version: 20190403164815) do
   create_table "patient_empi_matches", force: :cascade do |t|
     t.integer "patient_id", null: false
     t.integer "empi_match_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "patient_features", force: :cascade do |t|

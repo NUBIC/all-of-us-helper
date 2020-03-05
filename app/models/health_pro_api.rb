@@ -1,0 +1,2 @@
+class HealthProApi
+end

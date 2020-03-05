@@ -86,7 +86,7 @@ namespace :redcap do
     end
   end
 
-  # RAILS_ENV=production bundle exec rake redcap:rollback_accepted_match["9868"]
+  # RAILS_ENV=production bundle exec rake redcap:rollback_accepted_match["5088"]
   desc "Rollback accepted match for record_id"
   task :rollback_accepted_match, [:record_id] => [:environment] do |t, args|
     puts args[:record_id]
