@@ -13,6 +13,7 @@ class StudyTrackerApi
   def initialize
     @user = Rails.application.config.all_of_us_helper_api_users['study_tracker']['api_user']
     @password = Rails.application.config.all_of_us_helper_api_users['study_tracker']['password']
+    @auth_token = nil
 
     if Rails.env.development? || Rails.env.test?
       @verify_ssl = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['verify_ssl'] || true
@@ -73,6 +74,90 @@ class StudyTrackerApi
       Rails.logger.info(e.backtrace.join("\n"))
       { response: nil, error: error }
     end
+  end
+
+  def generate_token
+    url = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['generate_token']
+    response = nil
+    error =  nil
+    begin
+      response = RestClient::Request.execute(
+        method: :get,
+        url: url,
+        user: @user,
+        password: @password,
+        accept: 'json',
+        verify_ssl: @verify_ssl,
+        headers: {
+          content_type: 'application/json; charset=utf-8'
+        }
+      )
+      ApiLog.create_api_log(url, nil, response, nil, StudyTrackerApi::SYSTEM)
+      response =  JSON.parse(response)
+      if response[:errors].present?
+        error = response[:errors]
+      else
+        @auth_token = response['auth_token']
+      end
+    rescue RestClient::ExceptionWithResponse => e
+      error = e.response.present? ? e.to_s + e.response : e.to_s
+      ExceptionNotifier.notify_exception(error)
+      ApiLog.create_api_log(url, nil, nil, error, StudyTrackerApi::SYSTEM)
+      Rails.logger.info(error)
+      Rails.logger.info(e.class)
+      Rails.logger.info(e.backtrace.join("\n"))
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e)
+      ApiLog.create_api_log(url, nil, nil, e.message, StudyTrackerApi::SYSTEM)
+      error = e
+      Rails.logger.info(e.class)
+      Rails.logger.info(e.message)
+      Rails.logger.info(e.backtrace.join("\n"))
+    end
+
+    { response: response, error: error }
+  end
+
+  def cohorts(options)
+    options = { 'irb_number' => StudyTrackerApi::IRB_NUMBER, 'proxy_user' => 'mjg994', 'current_status_after' => Date.parse('1/1/2020'), 'fields' => 'status_history' }.merge(options)
+    url = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['cohorts'] + '?' + URI.encode_www_form(options)
+    response = nil
+    error =  nil
+    headers = { "content-type": 'application/json', 'Authorization': "Bearer #{@auth_token}" }
+    begin
+      response = RestClient::Request.execute(
+        method: :get,
+        url: url,
+        accept: 'json',
+        verify_ssl: @verify_ssl,
+        headers: headers
+      )
+      ApiLog.create_api_log(url, nil, response, nil, StudyTrackerApi::SYSTEM)
+
+      response =  JSON.parse(response)
+
+      if response[:errors].present?
+        error = response[:errors]
+      else
+        @auth_token = response['auth_token']
+      end
+    rescue RestClient::ExceptionWithResponse => e
+      error = e.response.present? ? e.to_s + e.response : e.to_s
+      ExceptionNotifier.notify_exception(error)
+      ApiLog.create_api_log(url, nil, nil, error, StudyTrackerApi::SYSTEM)
+      Rails.logger.info(error)
+      Rails.logger.info(e.class)
+      Rails.logger.info(e.backtrace.join("\n"))
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e)
+      ApiLog.create_api_log(url, nil, nil, e.message, StudyTrackerApi::SYSTEM)
+      error = e
+      Rails.logger.info(e.class)
+      Rails.logger.info(e.message)
+      Rails.logger.info(e.backtrace.join("\n"))
+    end
+
+    { response: response, error: error }
   end
 
   private
