@@ -1,16 +1,7 @@
-# export GOOGLE_APPLICATION_CREDENTIALS="/Users/mjg994/ops-data-service/gcloud_key_prod.json"
-# export GOOGLE_APPLICATION_CREDENTIALS="/Users/mjg994/ops-data-service/gcloud_key.json"
-# require 'health_pro_api'
-# health_pro_api = HealthProApi.new
-# options = {}
-# health_pro_api.participant_summary(options)
-# health_pro_api.create_service_account_key
-# health_pro_api.private_key_id
-# health_pro_api.delete_project_service_account_key
-
 require 'googleauth'
 require 'google/apis/iam_v1'
 require 'base64'
+require "fileutils"
 class HealthProApi
   SYSTEM = 'health pro'
   def initialize
@@ -22,11 +13,14 @@ class HealthProApi
   end
 
   def participant_summary(options)
-    options = { sort: 'lastModified', count: 25 }.merge(options)
+    options = { sort: 'lastModified', count: 1000 }.merge(options)
     awardee = Rails.configuration.custom.app_config['health_pro'][Rails.env]['awardee']
     project = Rails.configuration.custom.app_config['health_pro'][Rails.env]['project']
     url = Rails.configuration.custom.app_config['health_pro'][Rails.env]['participant_summary_url'].gsub('#{project}', project)
     url = url + '?' + "_sort=#{options[:sort]}" + '&' + "_count=#{options[:count]}" + '&' + "awardee=#{awardee}"
+    if options[:_token]
+      url = url + '&_token=' + options[:_token]
+    end
     api_response = health_pro_api_request_wrapper(url: url, method: :get, parse_response: true)
     { response: api_response[:response], error: api_response[:error] }
   end
@@ -49,18 +43,33 @@ class HealthProApi
     end
   end
 
+  def rotate_service_account_key(options={})
+    json_key_io_path = Rails.configuration.custom.app_config['health_pro'][Rails.env]['json_key_io_path']
+    options = {service_account_key: "#{json_key_io_path}gcloud_key.json", new_service_account_key: "#{json_key_io_path}gcloud_key_new.json"}.merge(options)
+    File.rename(options[:service_account_key], "#{json_key_io_path}gcloud_key_old.json")
+    File.rename(options[:new_service_account_key], "#{json_key_io_path}gcloud_key.json")
+  end
+
   def delete_project_service_account_key
     service = Google::Apis::IamV1::IamService.new
     service.authorization = Google::Auth.get_application_default(['https://www.googleapis.com/auth/cloud-platform'])
     project_id = Rails.configuration.custom.app_config['health_pro'][Rails.env]['project_id']
     service_account = Rails.configuration.custom.app_config['health_pro'][Rails.env]['service_account']
-    name = "projects/#{project_id}/serviceAccounts/#{service_account}/keys/#{private_key_id}"
+    json_key_io_path = Rails.configuration.custom.app_config['health_pro'][Rails.env]['json_key_io_path']
+    json_key_io = "#{json_key_io_path}gcloud_key_old.json"
+    name = "projects/#{project_id}/serviceAccounts/#{service_account}/keys/#{private_key_id(json_key_io)}"
     service.delete_project_service_account_key(name)
   end
 
+  def archive_service_account_key
+    json_key_io_path = Rails.configuration.custom.app_config['health_pro'][Rails.env]['json_key_io_path']
+    json_key_io = "#{json_key_io_path}gcloud_key_old.json"
+    FileUtils.move json_key_io, "#{json_key_io_path}/archive/gcloud_key#{Time.now.strftime('%Y-%m-%d_%H-%M-%S')}.json"
+  end
+
   private
-    def private_key_id
-      json_key_io = File.open(Rails.configuration.custom.app_config['health_pro'][Rails.env]['json_key_io'])
+    def private_key_id(json_key_io)
+      json_key_io = File.open(json_key_io)
       json_key_io = JSON.parse(json_key_io.read)
       json_key_io['private_key_id']
     end

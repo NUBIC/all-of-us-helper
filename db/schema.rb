@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190403164815) do
+ActiveRecord::Schema.define(version: 20200331183106) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "api_errors", force: :cascade do |t|
+    t.string "system", null: false
+    t.string "api_operation", null: false
+    t.text "error", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "api_logs", force: :cascade do |t|
     t.string "system", null: false
@@ -25,6 +33,14 @@ ActiveRecord::Schema.define(version: 20190403164815) do
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_api_logs_on_created_at"
     t.index ["system"], name: "index_api_logs_on_system"
+  end
+
+  create_table "api_metadata", force: :cascade do |t|
+    t.string "system", null: false
+    t.string "api_operation", null: false
+    t.datetime "last_called_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "api_tokens", force: :cascade do |t|
@@ -53,6 +69,7 @@ ActiveRecord::Schema.define(version: 20190403164815) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "created_user"
+    t.string "batch_type"
   end
 
   create_table "batch_invitation_codes", force: :cascade do |t|
@@ -192,6 +209,13 @@ ActiveRecord::Schema.define(version: 20190403164815) do
     t.string "dv_only_ehr_sharing_date"
     t.string "login_phone"
     t.string "street_address2"
+    t.string "middle_name"
+    t.string "age_range"
+    t.string "patient_status"
+    t.string "core_participant_date"
+    t.string "participant_origination"
+    t.string "deactivation_status"
+    t.string "deactivation_date"
   end
 
   create_table "invitation_code_assignments", force: :cascade do |t|
