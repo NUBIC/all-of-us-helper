@@ -1,5 +1,6 @@
 require 'csv'
 require 'study_tracker_api'
+require 'health_pro_api'
 class BatchHealthPro < ApplicationRecord
   has_paper_trail
   STATUS_PENDING = 'pending'
@@ -11,11 +12,14 @@ class BatchHealthPro < ApplicationRecord
   MATCH_STATUS_OPEN = 'open'
   MATCH_STATUS_CLOSED = 'closed'
   MATCH_STATUSES = [MATCH_STATUS_OPEN, MATCH_STATUS_CLOSED]
+  BATCH_TYPE_FILE_UPLOAD = 'File Upload'
+  BATCH_TYPE_HEALTH_PRO_API = 'Health Pro API'
+  BATCH_TYPES = [BATCH_TYPE_FILE_UPLOAD, BATCH_TYPE_HEALTH_PRO_API]
 
   mount_uploader :health_pro_file, HealthProFileUploader
 
   has_many :health_pros
-  validates_presence_of :health_pro_file
+  validates_presence_of :health_pro_file, if: :file_upload?
   validates_size_of :health_pro_file, maximum: 10.megabytes, message: 'must be less than 10MB'
 
   after_destroy :remove_health_pro_file!
@@ -48,6 +52,113 @@ class BatchHealthPro < ApplicationRecord
 
   def ready?
     status == BatchHealthPro::STATUS_READY
+  end
+
+  def import_api
+    begin
+      health_pro_api = HealthProApi.new
+      options = {}
+      response = health_pro_api.participant_summary(options)
+
+      link = response[:response]['link']
+      if link.first['relation'] == 'next'
+        url =  link.first['url']
+        token = url.partition('token=').last
+      end
+
+      more = true
+      batch_size = response[:response]['entry'].size
+      while more do
+        response[:response]['entry'].each do |health_pro_from_api|
+          health_pro_from_api = health_pro_from_api['resource']
+          row ={}
+          BatchHealthPro.api_headers_map.each_pair do |k,v|
+            row[v.to_sym] = health_pro_from_api.to_hash[k.to_s]
+          end
+
+          health_pros.build(row)
+        end
+
+        if token && batch_size == 1000
+          options = { _token: token }
+          response = health_pro_api.participant_summary(options)
+          if response
+            link = response[:response]['link']
+            batch_size = response[:response]['entry'].size
+            if link.present?
+              url =  link.first['url']
+              tokenNew = url.partition('token=').last
+
+              if token != tokenNew
+                token = tokenNew
+              else
+                more = false
+              end
+            else
+              more = false
+            end
+          else
+            more = false
+          end
+        else
+          more = false
+        end
+        # batch_size = response[:response]['entry'].size
+      end
+
+      save!
+
+      # puts 'hello booch I love you here!'
+      # health_pros.where("((paired_organization = 'UNSET' OR paired_organization IN (?)) OR (paired_organization IN (?) AND (paired_site = 'UNSET' OR paired_site IN(?))))", [HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN], [HealthPro::PAIRED_ORGANIZATION_NEAR_NORTH, HealthPro::PAIRED_ORGANIZATION_ILLINOIS_ERIE], HealthPro::PAIRED_SITES).each do |health_pro|
+      #   puts 'hello booch I love you there!'
+      #   health_pro.determine_matches
+      #
+      #   if health_pro.matchable?
+      #     health_pro.determine_empi_matches
+      #     health_pro.determine_duplicates
+      #   end
+      #
+      #   health_pro.save!
+      #
+      #   if health_pro.status == HealthPro::STATUS_PREVIOUSLY_MATCHED
+      #     matched_pmi_patient = Patient.not_deleted.where(pmi_id: health_pro.pmi_id).first
+      #     matched_pmi_patient.birth_date = Date.parse(health_pro.date_of_birth) if matched_pmi_patient.birth_date.blank?
+      #     matched_pmi_patient.gender = health_pro.sex if matched_pmi_patient.gender.blank? && health_pro.sex.present?
+      #     matched_pmi_patient.general_consent_status = health_pro.general_consent_status
+      #     matched_pmi_patient.general_consent_date = health_pro.general_consent_date
+      #     matched_pmi_patient.ehr_consent_status = health_pro.ehr_consent_status
+      #     matched_pmi_patient.ehr_consent_date = health_pro.ehr_consent_date
+      #     matched_pmi_patient.withdrawal_status = health_pro.withdrawal_status
+      #     matched_pmi_patient.withdrawal_date = health_pro.withdrawal_date
+      #     matched_pmi_patient.biospecimens_location = health_pro.biospecimens_location
+      #     matched_pmi_patient.participant_status = health_pro.participant_status
+      #     matched_pmi_patient.paired_site = health_pro.paired_site
+      #     matched_pmi_patient.paired_organization = health_pro.paired_organization
+      #     matched_pmi_patient.health_pro_email = health_pro.email
+      #     matched_pmi_patient.health_pro_login_phone = health_pro.login_phone
+      #     matched_pmi_patient.set_registration_status
+      #     matched_pmi_patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
+      #     if matched_pmi_patient.registered? && matched_pmi_patient.changed?
+      #       error = nil
+      #       options = {}
+      #       options[:proxy_user] = self.created_user
+      #       # study_tracker_api = StudyTrackerApi.new
+      #       # registraion_results = study_tracker_api.register(options, matched_pmi_patient)
+      #       # error = registraion_results[:error]
+      #     end
+      #     matched_pmi_patient.save!
+      #   end
+      # end
+      self.status = BatchHealthPro::STATUS_READY
+      save!
+    rescue Exception => e
+      ExceptionNotifier.notify_exception(e)
+      set_status_to_error
+      Rails.logger.info(e.class)
+      Rails.logger.info(e.message)
+      Rails.logger.info(e.backtrace.join("\n"))
+      false
+    end
   end
 
   def import
@@ -133,6 +244,102 @@ class BatchHealthPro < ApplicationRecord
       save!
     rescue Exception => e
     end
+  end
+
+  def self.api_headers_map
+    {
+      'participantId' => 'pmi_id',
+      'biobankId' => 'biobank_id',
+      'lastName' => 'last_name',
+      'firstName' => 'first_name',
+      'dateOfBirth' => 'date_of_birth',
+      'language' => 'language',
+      'enrollmentStatus' => 'participant_status',
+      # Participant Status
+      'consentForStudyEnrollment' => 'general_consent_status',
+      'consentForStudyEnrollmentAuthored' => 'general_consent_date',
+      'consentForElectronicHealthRecords' => 'ehr_consent_status',
+      'consentForElectronicHealthRecordsAuthored' => 'ehr_consent_date',
+      'consentForCABoR' => 'cabor_consent_status',
+      'consentForCABoRTimeAuthored' => 'cabor_consent_date',
+      'withdrawalStatus' => 'withdrawal_status',
+      'withdrawalAuthored' => 'withdrawal_date',
+      'withdrawalReason' => 'withdrawal_reason',
+      'streetAddress' => 'street_address',
+      'streetAddress2' => 'street_address2',
+      'city' => 'city',
+      'state' => 'state',
+      'zipCode' => 'zip',
+      'email' => 'email',
+      'phoneNumber' => 'phone',
+      'sex' => 'sex',
+      'genderIdentity' => 'gender_identity',
+      'race' => 'race_ethnicity',
+      'education' => 'education',
+      'numCompletedBaselinePPIModules' => 'required_ppi_surveys_complete',
+      'numCompletedPPIModules' => 'completed_surveys',
+      'questionnaireOnTheBasics' => 'basics_ppi_survey_complete',
+      'questionnaireOnTheBasicsAuthored' => 'basics_ppi_survey_completion_date',
+      'questionnaireOnOverallHealth' => 'health_ppi_survey_complete',
+      'questionnaireOnOverallHealthAuthored' => 'health_ppi_survey_completion_date',
+      'questionnaireOnlifestyle' => 'lifestyle_ppi_survey_complete',
+      'questionnaireOnlifestyleAuthored' => 'lifestyle_ppi_survey_completion_date',
+      'questionnaireOnMedicalHistory' => 'hist_ppi_survey_complete',
+      'questionnaireOnMedicalHistoryAuthored' => 'hist_ppi_survey_completion_date',
+      'questionnaireOnMedications' => 'meds_ppi_survey_complete',
+      'questionnaireOnMedicationsAuthored' => 'meds_ppi_survey_completion_date',
+      'questionnaireOnFamilyHealth' => 'family_ppi_survey_complete',
+      'questionnaireOnFamilyHealthAuthored' => 'family_ppi_survey_completion_date',
+      'questionnaireOnHealthcareAccess' => 'access_ppi_survey_complete',
+      'questionnaireOnHealthcareAccessAuthored' => 'access_ppi_survey_completion_date',
+      'physicalMeasurementsStatus' => 'physical_measurements_status',
+      'physicalMeasurementsFinalizedTime' => 'physical_measurements_completion_date',
+      'site' => 'paired_site',
+      'organization' => 'paired_organization',
+      #Paired Site
+      #Paired Organization
+      #'Physical Measurements Location' => 'physical_measurements_location',
+      'physicalMeasurementsFinalizedSite' => 'physical_measurements_location',
+      'samplesToIsolateDNA' => 'samples_for_dna_received',
+      'numBaselineSamplesArrived' => 'biospecimens',
+      'sampleStatus1SST8' => 'eight_ml_sst_collected',
+      'sampleStatus1SST8Time' => 'eight_ml_sst_collection_date',
+      'sampleStatus1PST8' => 'eight_ml_pst_collected',
+      'sampleStatus1PST8Time' => 'eight_ml_pst_collection_date',
+      'sampleStatus1HEP4' => 'four_ml_na_hep_collected',
+      'sampleStatus1HEP4Time' => 'four_ml_na_hep_collection_date',
+      'sampleStatus1ED02' => 'two_ml_edta_collected',
+      'sampleStatus1ED02Time' => 'two_ml_edta_collected_date',
+      'sampleStatus1ED04' => 'four_ml_edta_collected',
+      'sampleStatus1ED04Time' => 'four_ml_edta_collection_date',
+      'sampleStatus1ED10' => 'first_10_ml_edta_collected',
+      'sampleStatus1ED10Time' => 'first_10_ml_edta_collection_date',
+      'sampleStatus2ED10' => 'second_10_ml_edta_collected',
+      'sampleStatus2ED10Time' => 'second_10_ml_edta_collection_date',
+      'sampleStatus1CFD9' => 'cell_free_dna_collected',
+      'sampleStatus1CFD9Time' => 'cell_free_dna_collected_date',
+      'sampleStatus1PXR2' => 'paxgene_rna_collected',
+      'sampleStatus1PXR2Time' => 'paxgene_rna_collected_date',
+      'sampleStatus1UR10' => 'urine_10_ml_collected',
+      'sampleStatus1UR10Time' => 'urine_10_ml_collection_date',
+      'sampleStatus1UR90' => 'urine_90_ml_collected',
+      'sampleStatus1UR90Time'  => 'urine_90_ml_collection_date',
+      'sampleStatus1SAL' => 'saliva_collected',
+      'sampleStatus1SALTime' => 'saliva_collection_date',
+      # 'Biospecimens Location' => 'biospecimens_location'
+      'biospecimenSourceSite' => 'biospecimens_location',
+      'primaryLanguage' => 'language_of_general_consent',
+      'consentForDvElectronicHealthRecordsSharing' => 'dv_only_ehr_sharing_status',
+      # 'DV-only EHR Sharing Date' => 'dv_only_ehr_sharing_date',
+      'loginPhoneNumber' => 'login_phone',
+      #new
+      'patientStatus' => 'patient_status',
+      'enrollmentStatusCoreStoredSampleTime' => 'core_participant_date',
+      'participantOrigin' => 'participant_origination',
+      'suspensionStatus' => 'deactivation_status',
+      'suspensionTime' => 'deactivation_date',
+      'ageRange' => 'age_range'
+    }
   end
 
   def self.headers_map
@@ -224,10 +431,15 @@ class BatchHealthPro < ApplicationRecord
     }
   end
 
+  def file_upload?
+    self.batch_type == BatchHealthPro::BATCH_TYPE_FILE_UPLOAD
+  end
+
   private
     def set_defaults
       if self.new_record?
         self.status = BatchHealthPro::STATUS_PENDING
+        self.batch_type = BatchHealthPro::BATCH_TYPE_FILE_UPLOAD
       end
     end
 end
