@@ -69,6 +69,7 @@ class BatchHealthPro < ApplicationRecord
       more = true
       batch_size = response[:response]['entry'].size
       while more do
+        puts 'Hello Booch!'
         response[:response]['entry'].each do |health_pro_from_api|
           health_pro_from_api = health_pro_from_api['resource']
           row ={}
@@ -92,66 +93,65 @@ class BatchHealthPro < ApplicationRecord
               if token != tokenNew
                 token = tokenNew
               else
-                more = false
+                token = nil
               end
-            else
-              more = false
             end
-          else
-            more = false
           end
         else
           more = false
         end
-        # batch_size = response[:response]['entry'].size
       end
 
       save!
 
-      # puts 'hello booch I love you here!'
-      # health_pros.where("((paired_organization = 'UNSET' OR paired_organization IN (?)) OR (paired_organization IN (?) AND (paired_site = 'UNSET' OR paired_site IN(?))))", [HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN], [HealthPro::PAIRED_ORGANIZATION_NEAR_NORTH, HealthPro::PAIRED_ORGANIZATION_ILLINOIS_ERIE], HealthPro::PAIRED_SITES).each do |health_pro|
-      #   puts 'hello booch I love you there!'
-      #   health_pro.determine_matches
-      #
-      #   if health_pro.matchable?
-      #     health_pro.determine_empi_matches
-      #     health_pro.determine_duplicates
-      #   end
-      #
-      #   health_pro.save!
-      #
-      #   if health_pro.status == HealthPro::STATUS_PREVIOUSLY_MATCHED
-      #     matched_pmi_patient = Patient.not_deleted.where(pmi_id: health_pro.pmi_id).first
-      #     matched_pmi_patient.birth_date = Date.parse(health_pro.date_of_birth) if matched_pmi_patient.birth_date.blank?
-      #     matched_pmi_patient.gender = health_pro.sex if matched_pmi_patient.gender.blank? && health_pro.sex.present?
-      #     matched_pmi_patient.general_consent_status = health_pro.general_consent_status
-      #     matched_pmi_patient.general_consent_date = health_pro.general_consent_date
-      #     matched_pmi_patient.ehr_consent_status = health_pro.ehr_consent_status
-      #     matched_pmi_patient.ehr_consent_date = health_pro.ehr_consent_date
-      #     matched_pmi_patient.withdrawal_status = health_pro.withdrawal_status
-      #     matched_pmi_patient.withdrawal_date = health_pro.withdrawal_date
-      #     matched_pmi_patient.biospecimens_location = health_pro.biospecimens_location
-      #     matched_pmi_patient.participant_status = health_pro.participant_status
-      #     matched_pmi_patient.paired_site = health_pro.paired_site
-      #     matched_pmi_patient.paired_organization = health_pro.paired_organization
-      #     matched_pmi_patient.health_pro_email = health_pro.email
-      #     matched_pmi_patient.health_pro_login_phone = health_pro.login_phone
-      #     matched_pmi_patient.set_registration_status
-      #     matched_pmi_patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
-      #     if matched_pmi_patient.registered? && matched_pmi_patient.changed?
-      #       error = nil
-      #       options = {}
-      #       options[:proxy_user] = self.created_user
-      #       # study_tracker_api = StudyTrackerApi.new
-      #       # registraion_results = study_tracker_api.register(options, matched_pmi_patient)
-      #       # error = registraion_results[:error]
-      #     end
-      #     matched_pmi_patient.save!
-      #   end
-      # end
+      health_pros.where("((paired_organization = 'UNSET' OR paired_organization IN (?)) OR (paired_organization IN (?) AND (paired_site = 'UNSET' OR paired_site IN(?))))", [HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN], [HealthPro::PAIRED_ORGANIZATION_NEAR_NORTH, HealthPro::PAIRED_ORGANIZATION_ILLINOIS_ERIE], HealthPro::PAIRED_SITES).each do |health_pro|
+        health_pro.determine_matches
+
+        if health_pro.matchable?
+          health_pro.determine_empi_matches
+          health_pro.determine_duplicates
+        end
+
+        health_pro.save!
+
+        if health_pro.status == HealthPro::STATUS_PREVIOUSLY_MATCHED
+          matched_pmi_patient = Patient.not_deleted.where(pmi_id: health_pro.pmi_id).first
+          matched_pmi_patient.birth_date = Date.parse(health_pro.date_of_birth) if matched_pmi_patient.birth_date.blank?
+          # matched_pmi_patient.gender = health_pro.sex if matched_pmi_patient.gender.blank? && health_pro.sex.present?
+          matched_pmi_patient.gender = health_pro.sex_to_patient_gender
+          matched_pmi_patient.general_consent_status = health_pro.general_consent_status
+          matched_pmi_patient.general_consent_date = health_pro.general_consent_date
+          matched_pmi_patient.ehr_consent_status = health_pro.ehr_consent_status
+          matched_pmi_patient.ehr_consent_date = health_pro.ehr_consent_date
+          matched_pmi_patient.withdrawal_status = health_pro.withdrawal_status
+          matched_pmi_patient.withdrawal_date = health_pro.withdrawal_date
+          matched_pmi_patient.biospecimens_location = health_pro.biospecimens_location
+          matched_pmi_patient.participant_status = health_pro.participant_status
+          matched_pmi_patient.paired_site = health_pro.paired_site
+          matched_pmi_patient.paired_organization = health_pro.paired_organization
+          matched_pmi_patient.health_pro_email = health_pro.email
+          matched_pmi_patient.health_pro_phone = health_pro.phone
+          matched_pmi_patient.health_pro_login_phone = health_pro.login_phone
+          matched_pmi_patient.set_registration_status
+          matched_pmi_patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
+          matched_pmi_patient.genomic_consent_status = health_pro.consent_for_genomics_ror
+          matched_pmi_patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
+
+          if matched_pmi_patient.registered? && matched_pmi_patient.changed?
+            error = nil
+            options = {}
+            options[:proxy_user] = self.created_user
+            # study_tracker_api = StudyTrackerApi.new
+            # registraion_results = study_tracker_api.register(options, matched_pmi_patient)
+            # error = registraion_results[:error]
+          end
+          matched_pmi_patient.save!
+        end
+      end
       self.status = BatchHealthPro::STATUS_READY
       save!
     rescue Exception => e
+      puts 'Booch we have a problem!'
       ExceptionNotifier.notify_exception(e)
       set_status_to_error
       Rails.logger.info(e.class)
@@ -338,7 +338,9 @@ class BatchHealthPro < ApplicationRecord
       'participantOrigin' => 'participant_origination',
       'suspensionStatus' => 'deactivation_status',
       'suspensionTime' => 'deactivation_date',
-      'ageRange' => 'age_range'
+      'ageRange' => 'age_range',
+      'consentForGenomicsROR' => 'consent_for_genomics_ror',
+      'consentForGenomicsRORAuthored' => 'consent_for_genomics_ror_date'
     }
   end
 

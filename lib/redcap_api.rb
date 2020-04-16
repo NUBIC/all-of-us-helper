@@ -106,21 +106,22 @@ class RedcapApi
     { response: response, error: error }
   end
 
-  def update_patient(record_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone)
+  def update_patient(record_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, genomic_consent, genomic_consent_d)
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
     pm_date = Date.parse(pm_date) if pm_date
-    if withdrawn_y == '1'
-    studystatus_dt = DateTime.now
+    genomic_consent_d = Date.parse(genomic_consent_d) if genomic_consent_d
+
+    if withdrawn_y == HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NO_USE
     payload = {
         :token => @api_token,
         :content => 'record',
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone
-"#{record_id}","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","1",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone}),
+        :data => %(record_id,consent,consent_d,ehr_consent,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,genomic_consent,genomic_consent_d
+"#{record_id}","#{consent}","#{consent_d}","#{ehr_consent}","#{ehr_consent_d}","#{map_withdrawn_y(withdrawn_y)}","#{withdrawal_d}","1","#{wq_participant_status}","#{pm_date}","#{wq_paired_site}","#{wq_paired_org}","#{health_pro_email}","#{health_pro_phone}","#{genomic_consent}","#{genomic_consent_d}"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
@@ -131,8 +132,8 @@ class RedcapApi
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone
-"#{record_id}","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone}),
+        :data => %(record_id,consent,consent_d,ehr_consent,ehr_consent_d,withdrawn_y,withdrawal_d,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,genomic_consent,genomic_consent_d
+"#{record_id}","#{consent}","#{consent_d}","#{ehr_consent}","#{ehr_consent_d}","#{map_withdrawn_y(withdrawn_y)}","#{withdrawal_d}","#{wq_participant_status}","#{pm_date}","#{wq_paired_site}","#{wq_paired_org}","#{health_pro_email}","#{health_pro_phone}","#{genomic_consent}","#{genomic_consent_d}"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
@@ -298,5 +299,14 @@ class RedcapApi
         Rails.logger.info(e.backtrace.join("\n"))
       end
       { response: response, error: error }
+    end
+
+    def map_withdrawn_y(withdrawn_y)
+      withdrawn = case withdrawn_y
+      when HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NOT_WITHDRAWN
+        '0'
+      when HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NO_USE
+        '1'
+      end
     end
 end
