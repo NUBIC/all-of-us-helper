@@ -169,7 +169,7 @@ class Patient < ApplicationRecord
   end
 
   def ready?
-    self.accepted_match && self.general_consent_status_ready? && self.ehr_consent_status_ready? && self.withdrawal_status_display.blank? && HealthPro::BIOSPECIMEN_LOCATIONS.include?(self.biospecimens_location) && self.participant_status == HealthPro::HEALTH_PRO_PARTICIPANT_STATUS_CORE_PARTICIPANT
+    self.accepted_match && self.general_consent_status_ready? && self.ehr_consent_status_ready? && self.withdrawal_status_display.blank? && HealthPro::BIOSPECIMEN_LOCATIONS.include?(self.biospecimens_location) && self.participant_status == HealthPro::HEALTH_PRO_API_PARTICIPANT_STATUS_CORE_PARTICIPANT
   end
 
   def set_registration_status
@@ -213,29 +213,29 @@ class Patient < ApplicationRecord
   end
 
   def general_consent_status_display
-    if self.general_consent_status.blank? || (self.general_consent_status == '0' && self.general_consent_date.blank?)
+    if self.general_consent_status.blank? || (self.general_consent_status == HealthPro::HEALTH_PRO_API_GENERAL_CONSENT_STATUS_UNSET && self.general_consent_date.blank?)
       HealthPro::HEALTH_PRO_CONSENT_STATUS_UNDETERMINED
-    elsif self.general_consent_status == '0' && self.general_consent_date.present?
-      HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
-    elsif self.general_consent_status == '1' && self.general_consent_date.present?
+    elsif HealthPro::HEALTH_PRO_API_GENERAL_CONSENT_STATUSES_DECLINED.include?(self.general_consent_status) && self.general_consent_date.present?
+      HealthPro::HEALTH_PRO_CONSENT_STAxdTUS_DECLINED
+    elsif self.general_consent_status == HealthPro::HEALTH_PRO_API_GENERAL_CONSENT_STATUS_SUBMITTED && self.general_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED
     end
   end
 
   def ehr_consent_status_display
-    if self.ehr_consent_status.blank? || (self.ehr_consent_status == '0' && self.ehr_consent_date.blank?)
+    if self.ehr_consent_status.blank? || (HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUSES_NON_SUBMITTED.include?(self.general_consent_status) && self.ehr_consent_date.blank?)
       HealthPro::HEALTH_PRO_CONSENT_STATUS_UNDETERMINED
-    elsif self.ehr_consent_status == '0' && self.ehr_consent_date.present?
+    elsif HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUSES_NON_SUBMITTED.include?(self.general_consent_status) && self.ehr_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
-    elsif self.ehr_consent_status == '1' && self.ehr_consent_date.present?
+    elsif self.ehr_consent_status == HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUS_SUBMITTED && self.ehr_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED
     end
   end
 
   def withdrawal_status_display
-    if self.withdrawal_status == '0' && self.withdrawal_date.blank?
+    if self.withdrawal_status == HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NOT_WITHDRAWN && self.withdrawal_date.blank?
       nil
-    elsif self.withdrawal_status == '1' && self.withdrawal_date.present?
+    elsif self.withdrawal_status == HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_HEALTH_PRO_API_WITHDRAWAL_STATUS_NO_USE  && self.withdrawal_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_WITHDRAWN
     end
   end
@@ -285,49 +285,49 @@ class Patient < ApplicationRecord
   def map_health_pro_race_ethnicity
     mapped_race_ethnicity = { race: nil, racce_id: nil, ethnicity: nil }
     case health_pro_race_ethnicity
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_WHITE
+    when HealthPro::HEALTH_PRO_API_RACE_WHITE
       mapped_race_ethnicity[:race] = Race::RACE_WHITE
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_BLACK_OR_AFRICAN_AMERICAN
+    when HealthPro::HEALTH_PRO_API_RACE_BLACK_OR_AFRICAN_AMERICAN
       mapped_race_ethnicity[:race] = Race::RACE_BLACK_AFRICAN_AMERICAN
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_HLS_AND_MORE_THAN_ONE_OTHER_RACE
+    when HealthPro::HEALTH_PRO_API_RACE_HLS_AND_MORE_THAN_ONE_OTHER_RACE
       mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_HISPANIC_OR_LATINO
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_HISPANIC_LATINO_OR_SPANISH
+    when HealthPro::HEALTH_PRO_API_RACE_HISPANIC_LATINO_OR_SPANISH
       mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_HISPANIC_OR_LATINO
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_SKIP
+    when HealthPro::HEALTH_PRO_API_RACE_UNMAPPED, HealthPro::HEALTH_PRO_API_RACE_UNSET
       mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_ASIAN
+    when HealthPro::HEALTH_PRO_API_RACE_ASIAN
       mapped_race_ethnicity[:race] = Race::RACE_ASIAN
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_MIDDLE_EASTERN_OR_NORTH_AFRICAN
+    when HealthPro::HEALTH_PRO_API_RACE_MIDDLE_EASTERN_OR_NORTH_AFRICAN
       mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_HLS_AND_WHITE
+    when HealthPro::HEALTH_PRO_API_RACE_HLS_AND_WHITE
       mapped_race_ethnicity[:race] = Race::RACE_WHITE
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_HISPANIC_OR_LATINO
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_AMERICAN_INDIAN_ALASKA_NATIVE
+    when HealthPro::HEALTH_PRO_API_RACE_AMERICAN_INDIAN_OR_ALASKA_NATIVE
       mapped_race_ethnicity[:race] = Race::RACE_AMERICAN_INDIAN_ALASKA_NATIVE
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_HLS_AND_BLACK
+    when HealthPro::HEALTH_PRO_API_RACE_HLS_AND_BLACK
       mapped_race_ethnicity[:race] = Race::RACE_BLACK_AFRICAN_AMERICAN
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_HISPANIC_OR_LATINO
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_PREFER_NOT_TO_ANSWER
+    when HealthPro::HEALTH_PRO_API_RACE_PREFER_NOT_TO_SAY
       mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_HLS_AND_ONE_OTHER_RACE
+    when HealthPro::HEALTH_PRO_API_RACE_HLS_AND_ONE_OTHER_RACE
       mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_HISPANIC_OR_LATINO
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_MORE_THAN_ONE_RACE
+    when HealthPro::HEALTH_PRO_API_RACE_MORE_THAN_ONE_RACE
       mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_OTHER
+    when HealthPro::HEALTH_PRO_API_RACE_OTHER_RACE
       mapped_race_ethnicity[:race] = Race::RACE_UNKNOWN_OR_NOT_REPORTED
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
-    when HealthPro::HEALTH_PRO_RACE_ETHNICITY_NATIVE_HAWAIIAN_OTHER_PACIFIC_ISLANDER
+    when HealthPro::HEALTH_PRO_API_RACE_NATIVE_HAWAIIAN_OR_OTHER_PACIFIC_ISLANDER
       mapped_race_ethnicity[:race] = Race::RACE_NATIVE_HAWAIIAN_OTHER_PACIFIC_ISLANDER
       mapped_race_ethnicity[:ethnicity] = Patient::ETHNICITY_UNKNOWN_OR_NOT_REPORTED
     end
@@ -336,8 +336,9 @@ class Patient < ApplicationRecord
 
   # 1= Northwestern Memorial Hospital Galter Pavilion, 201 E Huron St, Chicago, IL (Downtown) |
   # 2= Northwestern Medicine Delnor Hospital, 302 Randall Rd, Geneva, IL (West Region) |
-  # 3= Northwestern Medicine Primary Care, 870 N. Milwaukee Rd, Vernon Hills, IL (North Region) |
+  # 3= Northwestern Medicine Primary Care, 870 N. Milwaukee Rd, Vernon Hills, IL (North Region)|
   # 4= No preference
+
   def map_paired_site
     site_preference = {}
     case self.paired_site

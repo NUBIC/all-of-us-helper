@@ -9,8 +9,8 @@
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended that you check this file into your version control system.
+ActiveRecord::Schema.define(version: 20200416164846) do
 
-ActiveRecord::Schema.define(version: 20200331183106) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -215,6 +215,8 @@ ActiveRecord::Schema.define(version: 20200331183106) do
     t.string "participant_origination"
     t.string "deactivation_status"
     t.string "deactivation_date"
+    t.string "consent_for_genomics_ror"
+    t.string "consent_for_genomics_ror_date"
   end
 
   create_table "invitation_code_assignments", force: :cascade do |t|
@@ -270,6 +272,38 @@ ActiveRecord::Schema.define(version: 20200331183106) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "patient_health_pro_api_migrations", force: :cascade do |t|
+    t.string "record_id", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "email"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "pmi_id"
+    t.string "gender"
+    t.string "nmhc_mrn"
+    t.string "registration_status"
+    t.string "general_consent_status"
+    t.string "general_consent_date"
+    t.string "ehr_consent_status"
+    t.string "ehr_consent_date"
+    t.string "withdrawal_status"
+    t.string "withdrawal_date"
+    t.string "biospecimens_location"
+    t.string "uuid"
+    t.date "birth_date"
+    t.string "ethnicity"
+    t.string "participant_status"
+    t.datetime "deleted_at"
+    t.string "physical_measurements_completion_date"
+    t.string "paired_site"
+    t.string "paired_organization"
+    t.string "health_pro_email"
+    t.string "health_pro_login_phone"
+    t.string "phone_1"
+    t.boolean "health_pro_api_migrated"
+  end
+
   create_table "patients", force: :cascade do |t|
     t.string "record_id", null: false
     t.string "first_name", null: false
@@ -299,6 +333,10 @@ ActiveRecord::Schema.define(version: 20200331183106) do
     t.string "health_pro_email"
     t.string "health_pro_login_phone"
     t.string "phone_1"
+    t.boolean "health_pro_api_migrated"
+    t.string "genomic_consent_status"
+    t.string "genomic_consent_status_date"
+    t.string "health_pro_phone"
   end
 
   create_table "patients_races", force: :cascade do |t|

@@ -1,0 +1,2 @@
+class PatientHealthProApiMigration < ApplicationRecord
+end
