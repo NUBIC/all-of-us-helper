@@ -136,6 +136,15 @@
 #show-batch-health-pro {
   @include grid-column-row();
 
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  td, th {
+    word-wrap: break-word;
+  }
+
   th .current {
     padding-right: 2em;
     background-repeat: no-repeat;

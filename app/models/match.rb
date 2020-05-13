@@ -58,7 +58,29 @@ class Match <  ApplicationRecord
       patient.paired_organization = health_pro.paired_organization
       patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
       patient.health_pro_email = health_pro.email
+      patient.health_pro_phone = health_pro.phone
       patient.health_pro_login_phone = health_pro.login_phone
+      patient.genomic_consent_status = health_pro.consent_for_genomics_ror
+      patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
+      patient.core_participant_date = health_pro.core_participant_date
+      patient.deactivation_status = health_pro.deactivation_status
+      patient.deactivation_date = health_pro.deactivation_date
+      patient.required_ppi_surveys_complete = health_pro.required_ppi_surveys_complete
+      patient.completed_surveys = health_pro.completed_surveys
+      patient.basics_ppi_survey_complete = health_pro.basics_ppi_survey_complete
+      patient.basics_ppi_survey_completion_date = health_pro.basics_ppi_survey_completion_date
+      patient.health_ppi_survey_complete = health_pro.health_ppi_survey_complete
+      patient.health_ppi_survey_completion_date = health_pro.health_ppi_survey_completion_date
+      patient.lifestyle_ppi_survey_complete = health_pro.lifestyle_ppi_survey_complete
+      patient.lifestyle_ppi_survey_completion_date = health_pro.lifestyle_ppi_survey_completion_date
+      patient.hist_ppi_survey_complete = health_pro.hist_ppi_survey_complete
+      patient.hist_ppi_survey_completion_date = health_pro.hist_ppi_survey_completion_date
+      patient.meds_ppi_survey_complete = health_pro.meds_ppi_survey_complete
+      patient.meds_ppi_survey_completion_date = health_pro.meds_ppi_survey_completion_date
+      patient.family_ppi_survey_complete = health_pro.family_ppi_survey_complete
+      patient.family_ppi_survey_completion_date = health_pro.family_ppi_survey_completion_date
+      patient.access_ppi_survey_complete = health_pro.access_ppi_survey_complete
+      patient.access_ppi_survey_completion_date = health_pro.access_ppi_survey_completion_date
 
       if match_params[:empi_match_id].present?
         empi_match = EmpiMatch.find(match_params[:empi_match_id])
@@ -75,7 +97,7 @@ class Match <  ApplicationRecord
       health_pro.status = HealthPro::STATUS_MATCHED
 
       Match.transaction do
-        redcap_match = redcap_api.match(patient.record_id, health_pro.pmi_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date, health_pro.withdrawal_status, health_pro.withdrawal_date, health_pro.participant_status, health_pro.physical_measurements_completion_date, health_pro.paired_site, health_pro.paired_organization, health_pro.email, health_pro.login_phone)
+        redcap_match = redcap_api.match(patient.record_id, health_pro.pmi_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date, health_pro.withdrawal_status, health_pro.withdrawal_date, health_pro.participant_status, health_pro.physical_measurements_completion_date, health_pro.paired_site, health_pro.paired_organization, health_pro.email, health_pro.phone, health_pro.login_phone, patient.genomic_consent_status, patient.genomic_consent_status_date, patient.core_participant_date,patient.deactivation_status, patient.deactivation_date, patient.required_ppi_surveys_complete, patient.completed_surveys, patient.basics_ppi_survey_complete, patient.basics_ppi_survey_completion_date, patient.health_ppi_survey_complete, patient.health_ppi_survey_completion_date, patient.lifestyle_ppi_survey_complete, patient.lifestyle_ppi_survey_completion_date, patient.hist_ppi_survey_complete, patient.hist_ppi_survey_completion_date, patient.meds_ppi_survey_complete, patient.meds_ppi_survey_completion_date, patient.family_ppi_survey_complete, patient.family_ppi_survey_completion_date, patient.access_ppi_survey_complete, patient.access_ppi_survey_completion_date)
         raise "Error assigning pmi_id #{health_pro.pmi_id} to record_id #{patient.record_id}." if redcap_match[:error].present?
         save!
         health_pro.save!

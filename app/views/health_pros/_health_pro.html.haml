@@ -22,7 +22,7 @@
     = health_pro.address
   %td.pmi_id
     = health_pro.pmi_id
-  %td.paried
+  %td.pairing
     = health_pro.paired_organization
     %hr
     = health_pro.paired_site
@@ -30,7 +30,7 @@
     = health_pro.status
 - if health_pro.matchable? && @batch_health_pro.ready?
   = content_tag_for(:tr, health_pro) do
-    %td{ colspan: 12 }
+    %td{ colspan: 9 }
       %ul.accordion{"data-accordion" => "", "data-allow-all-closed" => "true"}
         %li.accordion-item{"data-accordion-item" => ""}
           / Accordion tab title

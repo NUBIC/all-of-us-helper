@@ -54,14 +54,14 @@ class BatchHealthPro < ApplicationRecord
     status == BatchHealthPro::STATUS_READY
   end
 
-  def import_api
+  def import_api(options={})
+    options = { update_previously_matched: true }.merge(options)
     begin
       health_pro_api = HealthProApi.new
-      options = {}
       response = health_pro_api.participant_summary(options)
 
       link = response[:response]['link']
-      if link.first['relation'] == 'next'
+      if link && link.first['relation'] == 'next'
         url =  link.first['url']
         token = url.partition('token=').last
       end
@@ -113,41 +113,11 @@ class BatchHealthPro < ApplicationRecord
         end
 
         health_pro.save!
-
-        if health_pro.status == HealthPro::STATUS_PREVIOUSLY_MATCHED
-          matched_pmi_patient = Patient.not_deleted.where(pmi_id: health_pro.pmi_id).first
-          matched_pmi_patient.birth_date = Date.parse(health_pro.date_of_birth) if matched_pmi_patient.birth_date.blank?
-          # matched_pmi_patient.gender = health_pro.sex if matched_pmi_patient.gender.blank? && health_pro.sex.present?
-          matched_pmi_patient.gender = health_pro.sex_to_patient_gender
-          matched_pmi_patient.general_consent_status = health_pro.general_consent_status
-          matched_pmi_patient.general_consent_date = health_pro.general_consent_date
-          matched_pmi_patient.ehr_consent_status = health_pro.ehr_consent_status
-          matched_pmi_patient.ehr_consent_date = health_pro.ehr_consent_date
-          matched_pmi_patient.withdrawal_status = health_pro.withdrawal_status
-          matched_pmi_patient.withdrawal_date = health_pro.withdrawal_date
-          matched_pmi_patient.biospecimens_location = health_pro.biospecimens_location
-          matched_pmi_patient.participant_status = health_pro.participant_status
-          matched_pmi_patient.paired_site = health_pro.paired_site
-          matched_pmi_patient.paired_organization = health_pro.paired_organization
-          matched_pmi_patient.health_pro_email = health_pro.email
-          matched_pmi_patient.health_pro_phone = health_pro.phone
-          matched_pmi_patient.health_pro_login_phone = health_pro.login_phone
-          matched_pmi_patient.set_registration_status
-          matched_pmi_patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
-          matched_pmi_patient.genomic_consent_status = health_pro.consent_for_genomics_ror
-          matched_pmi_patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
-
-          if matched_pmi_patient.registered? && matched_pmi_patient.changed?
-            error = nil
-            options = {}
-            options[:proxy_user] = self.created_user
-            # study_tracker_api = StudyTrackerApi.new
-            # registraion_results = study_tracker_api.register(options, matched_pmi_patient)
-            # error = registraion_results[:error]
-          end
-          matched_pmi_patient.save!
+        if options[:update_previously_matched]
+          update_previously_matched_patient(health_pro, options)
         end
       end
+
       self.status = BatchHealthPro::STATUS_READY
       save!
     rescue Exception => e
@@ -158,6 +128,61 @@ class BatchHealthPro < ApplicationRecord
       Rails.logger.info(e.message)
       Rails.logger.info(e.backtrace.join("\n"))
       false
+    end
+  end
+
+  def update_previously_matched_patient(health_pro, options)
+    if health_pro.status == HealthPro::STATUS_PREVIOUSLY_MATCHED
+      matched_pmi_patient = Patient.not_deleted.where(pmi_id: health_pro.pmi_id).first
+      matched_pmi_patient.birth_date = Date.parse(health_pro.date_of_birth) if matched_pmi_patient.birth_date.blank?
+      matched_pmi_patient.set_registration_status
+      # matched_pmi_patient.gender = health_pro.sex if matched_pmi_patient.gender.blank? && health_pro.sex.present?
+      matched_pmi_patient.gender = health_pro.sex_to_patient_gender
+      matched_pmi_patient.general_consent_status = health_pro.general_consent_status
+      matched_pmi_patient.general_consent_date = health_pro.general_consent_date
+      matched_pmi_patient.ehr_consent_status = health_pro.ehr_consent_status
+      matched_pmi_patient.ehr_consent_date = health_pro.ehr_consent_date
+      matched_pmi_patient.withdrawal_status = health_pro.withdrawal_status
+      matched_pmi_patient.withdrawal_date = health_pro.withdrawal_date
+      matched_pmi_patient.biospecimens_location = health_pro.biospecimens_location
+      matched_pmi_patient.participant_status = health_pro.participant_status
+      matched_pmi_patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
+      matched_pmi_patient.paired_site = health_pro.paired_site
+      matched_pmi_patient.paired_organization = health_pro.paired_organization
+      matched_pmi_patient.health_pro_email = health_pro.email
+      matched_pmi_patient.health_pro_phone = health_pro.phone
+      matched_pmi_patient.health_pro_login_phone = health_pro.login_phone
+      matched_pmi_patient.genomic_consent_status = health_pro.consent_for_genomics_ror
+      matched_pmi_patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
+      matched_pmi_patient.core_participant_date = health_pro.core_participant_date
+      matched_pmi_patient.deactivation_status = health_pro.deactivation_status
+      matched_pmi_patient.deactivation_date = health_pro.deactivation_date
+      matched_pmi_patient.required_ppi_surveys_complete = health_pro.required_ppi_surveys_complete
+      matched_pmi_patient.completed_surveys = health_pro.completed_surveys
+      matched_pmi_patient.basics_ppi_survey_complete = health_pro.basics_ppi_survey_complete
+      matched_pmi_patient.basics_ppi_survey_completion_date = health_pro.basics_ppi_survey_completion_date
+      matched_pmi_patient.health_ppi_survey_complete = health_pro.health_ppi_survey_complete
+      matched_pmi_patient.health_ppi_survey_completion_date = health_pro.health_ppi_survey_completion_date
+      matched_pmi_patient.lifestyle_ppi_survey_complete = health_pro.lifestyle_ppi_survey_complete
+      matched_pmi_patient.lifestyle_ppi_survey_completion_date = health_pro.lifestyle_ppi_survey_completion_date
+      matched_pmi_patient.hist_ppi_survey_complete = health_pro.hist_ppi_survey_complete
+      matched_pmi_patient.hist_ppi_survey_completion_date = health_pro.hist_ppi_survey_completion_date
+      matched_pmi_patient.meds_ppi_survey_complete = health_pro.meds_ppi_survey_complete
+      matched_pmi_patient.meds_ppi_survey_completion_date = health_pro.meds_ppi_survey_completion_date
+      matched_pmi_patient.family_ppi_survey_complete = health_pro.family_ppi_survey_complete
+      matched_pmi_patient.family_ppi_survey_completion_date = health_pro.family_ppi_survey_completion_date
+      matched_pmi_patient.access_ppi_survey_complete = health_pro.access_ppi_survey_complete
+      matched_pmi_patient.access_ppi_survey_completion_date = health_pro.access_ppi_survey_completion_date
+
+      if matched_pmi_patient.registered? && matched_pmi_patient.changed?
+        error = nil
+        options = {}
+        options[:proxy_user] = self.created_user
+        # study_tracker_api = StudyTrackerApi.new
+        # registraion_results = study_tracker_api.register(options, matched_pmi_patient)
+        # error = registraion_results[:error]
+      end
+      matched_pmi_patient.save!
     end
   end
 
@@ -211,6 +236,31 @@ class BatchHealthPro < ApplicationRecord
               matched_pmi_patient.health_pro_login_phone = health_pro.login_phone
               matched_pmi_patient.set_registration_status
               matched_pmi_patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
+              #new stuff
+              matched_pmi_patient.genomic_consent_status = health_pro.consent_for_genomics_ror
+              matched_pmi_patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
+              matched_pmi_patient.genomic_consent_status = health_pro.consent_for_genomics_ror
+              matched_pmi_patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
+              matched_pmi_patient.core_participant_date = health_pro.core_participant_date
+              matched_pmi_patient.deactivation_status = health_pro.deactivation_status
+              matched_pmi_patient.deactivation_date = health_pro.deactivation_date
+              matched_pmi_patient.required_ppi_surveys_complete = health_pro.required_ppi_surveys_complete
+              matched_pmi_patient.completed_surveys = health_pro.completed_surveys
+              matched_pmi_patient.basics_ppi_survey_complete = health_pro.basics_ppi_survey_complete
+              matched_pmi_patient.basics_ppi_survey_completion_date = health_pro.basics_ppi_survey_completion_date
+              matched_pmi_patient.health_ppi_survey_complete = health_pro.health_ppi_survey_complete
+              matched_pmi_patient.health_ppi_survey_completion_date = health_pro.health_ppi_survey_completion_date
+              matched_pmi_patient.lifestyle_ppi_survey_complete = health_pro.lifestyle_ppi_survey_complete
+              matched_pmi_patient.lifestyle_ppi_survey_completion_date = health_pro.lifestyle_ppi_survey_completion_date
+              matched_pmi_patient.hist_ppi_survey_complete = health_pro.hist_ppi_survey_complete
+              matched_pmi_patient.hist_ppi_survey_completion_date = health_pro.hist_ppi_survey_completion_date
+              matched_pmi_patient.meds_ppi_survey_complete = health_pro.meds_ppi_survey_complete
+              matched_pmi_patient.meds_ppi_survey_completion_date = health_pro.meds_ppi_survey_completion_date
+              matched_pmi_patient.family_ppi_survey_complete = health_pro.family_ppi_survey_complete
+              matched_pmi_patient.family_ppi_survey_completion_date = health_pro.family_ppi_survey_completion_date
+              matched_pmi_patient.access_ppi_survey_complete = health_pro.access_ppi_survey_complete
+              matched_pmi_patient.access_ppi_survey_completion_date = health_pro.access_ppi_survey_completion_date
+
               if matched_pmi_patient.registered? && matched_pmi_patient.changed?
                 error = nil
                 options = {}
@@ -282,8 +332,8 @@ class BatchHealthPro < ApplicationRecord
       'questionnaireOnTheBasicsAuthored' => 'basics_ppi_survey_completion_date',
       'questionnaireOnOverallHealth' => 'health_ppi_survey_complete',
       'questionnaireOnOverallHealthAuthored' => 'health_ppi_survey_completion_date',
-      'questionnaireOnlifestyle' => 'lifestyle_ppi_survey_complete',
-      'questionnaireOnlifestyleAuthored' => 'lifestyle_ppi_survey_completion_date',
+      'questionnaireOnLifestyle' => 'lifestyle_ppi_survey_complete',
+      'questionnaireOnLifestyleAuthored' => 'lifestyle_ppi_survey_completion_date',
       'questionnaireOnMedicalHistory' => 'hist_ppi_survey_complete',
       'questionnaireOnMedicalHistoryAuthored' => 'hist_ppi_survey_completion_date',
       'questionnaireOnMedications' => 'meds_ppi_survey_complete',

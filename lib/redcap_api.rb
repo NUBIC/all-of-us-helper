@@ -106,12 +106,21 @@ class RedcapApi
     { response: response, error: error }
   end
 
-  def update_patient(record_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, genomic_consent, genomic_consent_d)
+  def update_patient(record_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, health_pro_login_phone, genomic_consent, genomic_consent_d, core_participant_d, deactivation_status, deactivation_date, required_ppi_complete_y, completed_surveys, basics_ppi_complete_y, basics_ppi_complete_d, health_ppi_complete_y, health_ppi_complete_d, lifestyle_ppi_complete_y, lifestyle_ppi_complete_d, history_ppi_complete_y, history_ppi_complete_d, meds_ppi_complete_y, meds_ppi_complete_d, family_ppi_complete_y, family_ppi_complete_d, access_ppi_complete_y, access_ppi_complete_d)
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
     pm_date = Date.parse(pm_date) if pm_date
     genomic_consent_d = Date.parse(genomic_consent_d) if genomic_consent_d
+    core_participant_d = Date.parse(core_participant_d) if core_participant_d
+    deactivation_date = Date.parse(deactivation_date) if deactivation_date
+    basics_ppi_complete_d = Date.parse(basics_ppi_complete_d) if basics_ppi_complete_d
+    health_ppi_complete_d = Date.parse(health_ppi_complete_d) if health_ppi_complete_d
+    lifestyle_ppi_complete_d = Date.parse(lifestyle_ppi_complete_d) if lifestyle_ppi_complete_d
+    history_ppi_complete_d = Date.parse(history_ppi_complete_d) if history_ppi_complete_d
+    meds_ppi_complete_d = Date.parse(meds_ppi_complete_d) if meds_ppi_complete_d
+    family_ppi_complete_d = Date.parse(family_ppi_complete_d) if family_ppi_complete_d
+    access_ppi_complete_d = Date.parse(access_ppi_complete_d) if access_ppi_complete_d
 
     if withdrawn_y == HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NO_USE
     payload = {
@@ -120,8 +129,8 @@ class RedcapApi
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,consent,consent_d,ehr_consent,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,genomic_consent,genomic_consent_d
-"#{record_id}","#{consent}","#{consent_d}","#{ehr_consent}","#{ehr_consent_d}","#{map_withdrawn_y(withdrawn_y)}","#{withdrawal_d}","1","#{wq_participant_status}","#{pm_date}","#{wq_paired_site}","#{wq_paired_org}","#{health_pro_email}","#{health_pro_phone}","#{genomic_consent}","#{genomic_consent_d}"),
+        :data => %(record_id,consent,consent_d,ehr_consent,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,health_pro_login_phone,genomic_consent,genomic_consent_d,core_participant_d,deactivation_status,deactivation_date,required_ppi_complete_y,completed_surveys,basics_ppi_complete_y,basics_ppi_complete_d,health_ppi_complete_y,health_ppi_complete_d,lifestyle_ppi_complete_y,lifestyle_ppi_complete_d,history_ppi_complete_y,history_ppi_complete_d,meds_ppi_complete_y,meds_ppi_complete_d,family_ppi_complete_y,family_ppi_complete_d,access_ppi_complete_y,access_ppi_complete_d
+"#{record_id}","#{consent}","#{consent_d}","#{ehr_consent}","#{ehr_consent_d}","#{map_withdrawn_y(withdrawn_y)}","#{withdrawal_d}","1","#{wq_participant_status}","#{pm_date}","#{wq_paired_site}","#{wq_paired_org}","#{health_pro_email}","#{health_pro_phone}","#{health_pro_login_phone}","#{genomic_consent}","#{genomic_consent_d}","#{core_participant_d}","#{map_deactivation_status(deactivation_status)}","#{deactivation_date}","#{map_required_ppi_complete_y(required_ppi_complete_y)}","#{completed_surveys}","#{map_y_column(basics_ppi_complete_y)}","#{ basics_ppi_complete_d}","#{map_y_column(health_ppi_complete_y)}","#{health_ppi_complete_d}","#{map_y_column(lifestyle_ppi_complete_y)}","#{lifestyle_ppi_complete_d}","#{map_y_column(history_ppi_complete_y)}","#{history_ppi_complete_d}","#{map_y_column(meds_ppi_complete_y)}","#{meds_ppi_complete_d}","#{map_y_column(family_ppi_complete_y)}","#{family_ppi_complete_d}","#{map_y_column(access_ppi_complete_y)}","#{access_ppi_complete_d}"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
@@ -132,8 +141,8 @@ class RedcapApi
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,consent,consent_d,ehr_consent,ehr_consent_d,withdrawn_y,withdrawal_d,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,genomic_consent,genomic_consent_d
-"#{record_id}","#{consent}","#{consent_d}","#{ehr_consent}","#{ehr_consent_d}","#{map_withdrawn_y(withdrawn_y)}","#{withdrawal_d}","#{wq_participant_status}","#{pm_date}","#{wq_paired_site}","#{wq_paired_org}","#{health_pro_email}","#{health_pro_phone}","#{genomic_consent}","#{genomic_consent_d}"),
+        :data => %(record_id,consent,consent_d,ehr_consent,ehr_consent_d,withdrawn_y,withdrawal_d,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,health_pro_login_phone,genomic_consent,genomic_consent_d,core_participant_d,deactivation_status,deactivation_date,required_ppi_complete_y,completed_surveys,basics_ppi_complete_y,basics_ppi_complete_d,health_ppi_complete_y,health_ppi_complete_d,lifestyle_ppi_complete_y,lifestyle_ppi_complete_d,history_ppi_complete_y,history_ppi_complete_d,meds_ppi_complete_y,meds_ppi_complete_d,family_ppi_complete_y,family_ppi_complete_d,access_ppi_complete_y,access_ppi_complete_d
+"#{record_id}","#{consent}","#{consent_d}","#{ehr_consent}","#{ehr_consent_d}","#{map_withdrawn_y(withdrawn_y)}","#{withdrawal_d}","#{wq_participant_status}","#{pm_date}","#{wq_paired_site}","#{wq_paired_org}","#{health_pro_email}","#{health_pro_phone}","#{health_pro_login_phone}","#{genomic_consent}","#{genomic_consent_d}","#{core_participant_d}","#{map_deactivation_status(deactivation_status)}","#{deactivation_date}","#{map_required_ppi_complete_y(required_ppi_complete_y)}","#{completed_surveys}","#{map_y_column(basics_ppi_complete_y)}","#{basics_ppi_complete_d}","#{map_y_column(health_ppi_complete_y)}","#{health_ppi_complete_d}","#{map_y_column(lifestyle_ppi_complete_y)}","#{lifestyle_ppi_complete_d}","#{map_y_column(history_ppi_complete_y)}","#{history_ppi_complete_d}","#{map_y_column(meds_ppi_complete_y)}","#{meds_ppi_complete_d}","#{map_y_column(family_ppi_complete_y)}","#{family_ppi_complete_d}","#{map_y_column(access_ppi_complete_y)}","#{access_ppi_complete_d}"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
@@ -144,23 +153,34 @@ class RedcapApi
     { response: record_id, error: api_response[:error] }
   end
 
-  def create_patient(first_name, last_name, email, phone, pmi_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, site_preference___1, site_preference___2, site_preference___3, site_preference___4)
+  def create_patient(first_name, last_name, email, phone_1, pmi_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, health_pro_login_phone, genomic_consent, genomic_consent_d, core_participant_d, deactivation_status, deactivation_date, required_ppi_complete_y, completed_surveys, basics_ppi_complete_y, basics_ppi_complete_d, health_ppi_complete_y, health_ppi_complete_d, lifestyle_ppi_complete_y, lifestyle_ppi_complete_d, history_ppi_complete_y, history_ppi_complete_d, meds_ppi_complete_y, meds_ppi_complete_d, family_ppi_complete_y, family_ppi_complete_d, access_ppi_complete_y, access_ppi_complete_d, site_preference___1, site_preference___2, site_preference___3, site_preference___4)
     record_id = next_record_id
     record_id = record_id[:response]
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
     pm_date = Date.parse(pm_date) if pm_date
+    genomic_consent_d = Date.parse(genomic_consent_d) if genomic_consent_d
+    core_participant_d = Date.parse(core_participant_d) if core_participant_d
+    deactivation_date = Date.parse(deactivation_date) if deactivation_date
+    basics_ppi_complete_d = Date.parse(basics_ppi_complete_d) if basics_ppi_complete_d
+    health_ppi_complete_d = Date.parse(health_ppi_complete_d) if health_ppi_complete_d
+    lifestyle_ppi_complete_d = Date.parse(lifestyle_ppi_complete_d) if lifestyle_ppi_complete_d
+    history_ppi_complete_d = Date.parse(history_ppi_complete_d) if history_ppi_complete_d
+    meds_ppi_complete_d = Date.parse(meds_ppi_complete_d) if meds_ppi_complete_d
+    family_ppi_complete_d = Date.parse(family_ppi_complete_d) if family_ppi_complete_d
+    access_ppi_complete_d = Date.parse(access_ppi_complete_d) if access_ppi_complete_d
+
     ts = Date.today
-    if withdrawn_y == '1'
+    if withdrawn_y == HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NO_USE
     payload = {
         :token => @api_token,
         :content => 'record',
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,ts,withdrawn_y,withdrawal_d,donotcontact,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,site_preference___1,site_preference___2,site_preference___3,site_preference___4,how_to_join_complete
-"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}","#{withdrawn_y}","#{withdrawal_d}","1",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone},"#{site_preference___1}","#{site_preference___2}","#{site_preference___3}","#{site_preference___4}","2"),
+        :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent,consent_d,ehr_consent,ehr_consent_d,ts,withdrawn_y,withdrawal_d,donotcontact,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,health_pro_login_phone,genomic_consent,genomic_consent_d,core_participant_d,deactivation_status,deactivation_date,required_ppi_complete_y,completed_surveys,basics_ppi_complete_y,basics_ppi_complete_d,health_ppi_complete_y,health_ppi_complete_d,lifestyle_ppi_complete_y,lifestyle_ppi_complete_d,history_ppi_complete_y,history_ppi_complete_d,meds_ppi_complete_y,meds_ppi_complete_d,family_ppi_complete_y,family_ppi_complete_d,access_ppi_complete_y,access_ppi_complete_d,site_preference___1,site_preference___2,site_preference___3,site_preference___4,how_to_join_complete
+"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone_1}","4","#{pmi_id}","1","2","#{consent}","#{consent_d}","#{ehr_consent}","#{ehr_consent_d}","#{ts}","#{map_withdrawn_y(withdrawn_y)}","#{withdrawal_d}","1",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone},#{health_pro_login_phone},"#{genomic_consent}","#{genomic_consent_d}","#{core_participant_d}","#{map_deactivation_status(deactivation_status)}","#{deactivation_date}","#{map_required_ppi_complete_y(required_ppi_complete_y)}","#{completed_surveys}","#{map_y_column(basics_ppi_complete_y)}","#{basics_ppi_complete_d}","#{map_y_column(health_ppi_complete_y)}","#{health_ppi_complete_d}","#{map_y_column(lifestyle_ppi_complete_y)}","#{lifestyle_ppi_complete_d}","#{map_y_column(history_ppi_complete_y)}","#{history_ppi_complete_d}","#{map_y_column(meds_ppi_complete_y)}","#{meds_ppi_complete_d}","#{map_y_column(family_ppi_complete_y)}","#{family_ppi_complete_d}","#{map_y_column(access_ppi_complete_y)}","#{access_ppi_complete_d}","#{site_preference___1}","#{site_preference___2}","#{site_preference___3}","#{site_preference___4}","2"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
@@ -171,8 +191,8 @@ class RedcapApi
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,ts,withdrawn_y,withdrawal_d,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,referralsource,site_preference___1,site_preference___2,site_preference___3,site_preference___4,how_to_join_complete
-"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone}","4","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{ts}","#{withdrawn_y}","#{withdrawal_d}",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone},"17","#{site_preference___1}","#{site_preference___2}","#{site_preference___3}","#{site_preference___4}","2"),
+        :data => %(record_id,first_name,last_name,email,phone_1,phone1_type,pmi_id,healthpro_y,healthpro_status_complete,consent,consent_d,ehr_consent,ehr_consent_d,ts,withdrawn_y,withdrawal_d,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,health_pro_login_phone,referralsource,genomic_consent,genomic_consent_d,core_participant_d,deactivation_status,deactivation_date,required_ppi_complete_y,completed_surveys,basics_ppi_complete_y,basics_ppi_complete_d,health_ppi_complete_y,health_ppi_complete_d,lifestyle_ppi_complete_y,lifestyle_ppi_complete_d,history_ppi_complete_y,history_ppi_complete_d,meds_ppi_complete_y,meds_ppi_complete_d,family_ppi_complete_y,family_ppi_complete_d,access_ppi_complete_y,access_ppi_complete_d,site_preference___1,site_preference___2,site_preference___3,site_preference___4,how_to_join_complete
+"#{record_id}","#{first_name}","#{last_name}","#{email}","#{phone_1}","4","#{pmi_id}","1","2","#{consent}","#{consent_d}","#{ehr_consent}","#{ehr_consent_d}","#{ts}","#{map_withdrawn_y(withdrawn_y)}","#{withdrawal_d}",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone},#{health_pro_login_phone},"17","#{genomic_consent}","#{genomic_consent_d}","#{core_participant_d}","#{map_deactivation_status(deactivation_status)}","#{deactivation_date}","#{map_required_ppi_complete_y(required_ppi_complete_y)}","#{completed_surveys}","#{map_y_column(basics_ppi_complete_y)}","#{basics_ppi_complete_d}","#{map_y_column(health_ppi_complete_y)}","#{health_ppi_complete_d}","#{map_y_column(lifestyle_ppi_complete_y)}","#{lifestyle_ppi_complete_d}","#{map_y_column(history_ppi_complete_y)}","#{history_ppi_complete_d}","#{map_y_column(meds_ppi_complete_y)}","#{meds_ppi_complete_d}","#{map_y_column(family_ppi_complete_y)}","#{family_ppi_complete_d}","#{map_y_column(access_ppi_complete_y)}","#{access_ppi_complete_d}","#{site_preference___1}","#{site_preference___2}","#{site_preference___3}","#{site_preference___4}","2"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
@@ -202,20 +222,31 @@ class RedcapApi
     { response: api_response[:response], error: api_response[:error] }
   end
 
-  def match(record_id, pmi_id, consent_y, consent_d, ehr_consent_y, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone)
+  def match(record_id, pmi_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, health_pro_login_phone, genomic_consent, genomic_consent_d, core_participant_d, deactivation_status, deactivation_date, required_ppi_complete_y, completed_surveys, basics_ppi_complete_y, basics_ppi_complete_d, health_ppi_complete_y, health_ppi_complete_d, lifestyle_ppi_complete_y, lifestyle_ppi_complete_d, history_ppi_complete_y, history_ppi_complete_d, meds_ppi_complete_y, meds_ppi_complete_d, family_ppi_complete_y, family_ppi_complete_d, access_ppi_complete_y, access_ppi_complete_d)
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
     pm_date = Date.parse(pm_date) if pm_date
-    if withdrawn_y == '1'
+    genomic_consent_d = Date.parse(genomic_consent_d) if genomic_consent_d
+    core_participant_d = Date.parse(core_participant_d) if core_participant_d
+    deactivation_date = Date.parse(deactivation_date) if deactivation_date
+    basics_ppi_complete_d = Date.parse(basics_ppi_complete_d) if basics_ppi_complete_d
+    health_ppi_complete_d = Date.parse(health_ppi_complete_d) if health_ppi_complete_d
+    lifestyle_ppi_complete_d = Date.parse(lifestyle_ppi_complete_d) if lifestyle_ppi_complete_d
+    history_ppi_complete_d = Date.parse(history_ppi_complete_d) if history_ppi_complete_d
+    meds_ppi_complete_d = Date.parse(meds_ppi_complete_d) if meds_ppi_complete_d
+    family_ppi_complete_d = Date.parse(family_ppi_complete_d) if family_ppi_complete_d
+    access_ppi_complete_d = Date.parse(access_ppi_complete_d) if access_ppi_complete_d
+
+    if withdrawn_y == HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NO_USE
     payload = {
         :token => @api_token,
         :content => 'record',
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone
-"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}","1",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone}),
+        :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent,consent_d,ehr_consent,ehr_consent_d,withdrawn_y,withdrawal_d,donotcontact,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,health_pro_login_phone,genomic_consent,genomic_consent_d,core_participant_d,deactivation_status,deactivation_date,required_ppi_complete_y,completed_surveys,basics_ppi_complete_y,basics_ppi_complete_d,health_ppi_complete_y,health_ppi_complete_d,lifestyle_ppi_complete_y,lifestyle_ppi_complete_d,history_ppi_complete_y,history_ppi_complete_d,meds_ppi_complete_y,meds_ppi_complete_d,family_ppi_complete_y,family_ppi_complete_d,access_ppi_complete_y,access_ppi_complete_d
+"#{record_id}","#{pmi_id}","1","2","#{consent}","#{consent_d}","#{ehr_consent}","#{ehr_consent_d}","#{map_withdrawn_y(withdrawn_y)}","#{withdrawal_d}","1","#{wq_participant_status}","#{pm_date}","#{wq_paired_site}","#{wq_paired_org}","#{health_pro_email}","#{health_pro_phone}","#{health_pro_login_phone}","#{genomic_consent}","#{genomic_consent_d}","#{core_participant_d}","#{map_deactivation_status(deactivation_status)}","#{deactivation_date}","#{map_required_ppi_complete_y(required_ppi_complete_y)}","#{completed_surveys}","#{map_y_column(basics_ppi_complete_y)}","#{basics_ppi_complete_d}","#{map_y_column(health_ppi_complete_y)}","#{health_ppi_complete_d}","#{map_y_column(lifestyle_ppi_complete_y)}","#{lifestyle_ppi_complete_d}","#{map_y_column(history_ppi_complete_y)}","#{history_ppi_complete_d}","#{map_y_column(meds_ppi_complete_y)}","#{meds_ppi_complete_d}","#{map_y_column(family_ppi_complete_y)}","#{family_ppi_complete_d}","#{map_y_column(access_ppi_complete_y)}","#{access_ppi_complete_d}"),
         :returnContent => 'count',
         :returnFormat => 'json'
     }
@@ -227,8 +258,8 @@ class RedcapApi
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent_y,consent_d,ehr_consent_y,ehr_consent_d,withdrawn_y,withdrawal_d,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone
-"#{record_id}","#{pmi_id}","1","2","#{consent_y}","#{consent_d}","#{ehr_consent_y}","#{ehr_consent_d}","#{withdrawn_y}","#{withdrawal_d}",#{wq_participant_status},#{pm_date},#{wq_paired_site},#{wq_paired_org},#{health_pro_email},#{health_pro_phone}),
+        :data => %(record_id,pmi_id,healthpro_y,healthpro_status_complete,consent,consent_d,ehr_consent,ehr_consent_d,withdrawn_y,withdrawal_d,wq_participant_status,pm_date,wq_paired_site,wq_paired_org,health_pro_email,health_pro_phone,health_pro_login_phone,genomic_consent,genomic_consent_d,core_participant_d,deactivation_status,deactivation_date,required_ppi_complete_y,completed_surveys,basics_ppi_complete_y,basics_ppi_complete_d,health_ppi_complete_y,health_ppi_complete_d,lifestyle_ppi_complete_y,lifestyle_ppi_complete_d,history_ppi_complete_y,history_ppi_complete_d,meds_ppi_complete_y,meds_ppi_complete_d,family_ppi_complete_y,family_ppi_complete_d,access_ppi_complete_y,access_ppi_complete_d
+"#{record_id}","#{pmi_id}","1","2","#{consent}","#{consent_d}","#{ehr_consent}","#{ehr_consent_d}","#{map_withdrawn_y(withdrawn_y)}","#{withdrawal_d}","#{wq_participant_status}","#{pm_date}","#{wq_paired_site}","#{wq_paired_org}","#{health_pro_email}","#{health_pro_phone}","#{health_pro_login_phone}","#{genomic_consent}","#{genomic_consent_d}","#{core_participant_d}","#{map_deactivation_status(deactivation_status)}","#{deactivation_date}","#{map_required_ppi_complete_y(required_ppi_complete_y)}","#{completed_surveys}","#{map_y_column(basics_ppi_complete_y)}","#{basics_ppi_complete_d}","#{map_y_column(health_ppi_complete_y)}","#{health_ppi_complete_d}","#{map_y_column(lifestyle_ppi_complete_y)}","#{lifestyle_ppi_complete_d}","#{map_y_column(history_ppi_complete_y)}","#{history_ppi_complete_d}","#{map_y_column(meds_ppi_complete_y)}","#{meds_ppi_complete_d}","#{map_y_column(family_ppi_complete_y)}","#{family_ppi_complete_d}","#{map_y_column(access_ppi_complete_y)}","#{access_ppi_complete_d}"),
         :returnContent => 'count',
         :returnFormat => 'json'
     }
@@ -302,10 +333,37 @@ class RedcapApi
     end
 
     def map_withdrawn_y(withdrawn_y)
-      withdrawn = case withdrawn_y
+      mapped_withdrawn = case withdrawn_y
       when HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NOT_WITHDRAWN
         '0'
       when HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NO_USE
+        '1'
+      end
+    end
+
+    def map_deactivation_status(deactivation_status)
+      mapped_deactivation_status = case deactivation_status
+      when HealthPro::HEALTH_PRO_API_DEACTIVATION_STATUS_NOT_SUSPENDED
+        '0'
+      when HealthPro::HEALTH_PRO_API_DEACTIVATION_STATUS_NO_CONTACT
+        '1'
+      end
+    end
+
+    def map_required_ppi_complete_y(required_ppi_complete_y)
+      mapped_required_ppi_complete_y = case required_ppi_complete_y
+      when '0', '1', '2'
+        '0'
+      when '3'
+        '1'
+      end
+    end
+
+    def map_y_column(y_column)
+      mapped_y_column = case y_column
+      when 'UNSET', 'SUBMITTED_NO_CONSENT', 'SUBMITTED_NOT_SURE','SUBMITTED_INVALID'
+        '0'
+      when 'SUBMITTED'
         '1'
       end
     end

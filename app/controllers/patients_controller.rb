@@ -56,6 +56,31 @@ class PatientsController < ApplicationController
     patient.paired_site = health_pro.paired_site
     patient.paired_organization = health_pro.paired_organization
     patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
+    patient.phone_1 = health_pro.phone
+    patient.health_pro_email = health_pro.email
+    patient.health_pro_phone = health_pro.phone
+    patient.health_pro_login_phone = health_pro.login_phone
+    patient.genomic_consent_status = health_pro.consent_for_genomics_ror
+    patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
+    patient.core_participant_date = health_pro.core_participant_date
+    patient.deactivation_status = health_pro.deactivation_status
+    patient.deactivation_date = health_pro.deactivation_date
+    patient.required_ppi_surveys_complete = health_pro.required_ppi_surveys_complete
+    patient.completed_surveys = health_pro.completed_surveys
+    patient.basics_ppi_survey_complete = health_pro.basics_ppi_survey_complete
+    patient.basics_ppi_survey_completion_date = health_pro.basics_ppi_survey_completion_date
+    patient.health_ppi_survey_complete = health_pro.health_ppi_survey_complete
+    patient.health_ppi_survey_completion_date = health_pro.health_ppi_survey_completion_date
+    patient.lifestyle_ppi_survey_complete = health_pro.lifestyle_ppi_survey_complete
+    patient.lifestyle_ppi_survey_completion_date = health_pro.lifestyle_ppi_survey_completion_date
+    patient.hist_ppi_survey_complete = health_pro.hist_ppi_survey_complete
+    patient.hist_ppi_survey_completion_date = health_pro.hist_ppi_survey_completion_date
+    patient.meds_ppi_survey_complete = health_pro.meds_ppi_survey_complete
+    patient.meds_ppi_survey_completion_date = health_pro.meds_ppi_survey_completion_date
+    patient.family_ppi_survey_complete = health_pro.family_ppi_survey_complete
+    patient.family_ppi_survey_completion_date = health_pro.family_ppi_survey_completion_date
+    patient.access_ppi_survey_complete = health_pro.access_ppi_survey_complete
+    patient.access_ppi_survey_completion_date = health_pro.access_ppi_survey_completion_date
 
     if patient_params[:empi_match_id].present?
       empi_match = EmpiMatch.find(patient_params[:empi_match_id])
@@ -75,7 +100,7 @@ class PatientsController < ApplicationController
     begin
       Patient.transaction do
         redcap_api = initialize_redcap_api
-        redcap_patient = redcap_api.create_patient(patient.first_name, patient.last_name, patient.email, health_pro.phone, health_pro.pmi_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date, health_pro.withdrawal_status, health_pro.withdrawal_date, health_pro.participant_status, health_pro.physical_measurements_completion_date, health_pro.paired_site, health_pro.paired_organization, health_pro.email, health_pro.login_phone, site_preference['site_preference___1'], site_preference['site_preference___2'], site_preference['site_preference___3'], site_preference['site_preference___4'])
+        redcap_patient = redcap_api.create_patient(patient.first_name, patient.last_name, patient.email, patient.phone_1, health_pro.pmi_id, health_pro.general_consent_status, health_pro.general_consent_date, health_pro.ehr_consent_status, health_pro.ehr_consent_date, health_pro.withdrawal_status, health_pro.withdrawal_date, health_pro.participant_status, health_pro.physical_measurements_completion_date, health_pro.paired_site, health_pro.paired_organization, health_pro.email, health_pro.phone, health_pro.login_phone, patient.genomic_consent_status, patient.genomic_consent_status_date, patient.core_participant_date,patient.deactivation_status, patient.deactivation_date, patient.required_ppi_surveys_complete, patient.completed_surveys, patient.basics_ppi_survey_complete, patient.basics_ppi_survey_completion_date, patient.health_ppi_survey_complete, patient.health_ppi_survey_completion_date, patient.lifestyle_ppi_survey_complete, patient.lifestyle_ppi_survey_completion_date, patient.hist_ppi_survey_complete, patient.hist_ppi_survey_completion_date, patient.meds_ppi_survey_complete, patient.meds_ppi_survey_completion_date, patient.family_ppi_survey_complete, patient.family_ppi_survey_completion_date, patient.access_ppi_survey_complete, patient.access_ppi_survey_completion_date, site_preference['site_preference___1'], site_preference['site_preference___2'], site_preference['site_preference___3'], site_preference['site_preference___4'])
         raise "Error creating a patient pmi_id #{health_pro.pmi_id}." if redcap_patient[:error].present?
         record_id = redcap_patient[:response]
         patient.record_id = record_id
@@ -86,7 +111,7 @@ class PatientsController < ApplicationController
         patient.set_registration_status
         patient.save!
       end
-      flash[:success] = 'You have successfully added a match.'
+      flash[:success] = 'You have successfully added a patient to REDCap.'
     rescue Exception => e
       Rails.logger.info(e.class)
       Rails.logger.info(e.message)
