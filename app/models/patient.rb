@@ -216,16 +216,16 @@ class Patient < ApplicationRecord
     if self.general_consent_status.blank? || (self.general_consent_status == HealthPro::HEALTH_PRO_API_GENERAL_CONSENT_STATUS_UNSET && self.general_consent_date.blank?)
       HealthPro::HEALTH_PRO_CONSENT_STATUS_UNDETERMINED
     elsif HealthPro::HEALTH_PRO_API_GENERAL_CONSENT_STATUSES_DECLINED.include?(self.general_consent_status) && self.general_consent_date.present?
-      HealthPro::HEALTH_PRO_CONSENT_STAxdTUS_DECLINED
+      HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
     elsif self.general_consent_status == HealthPro::HEALTH_PRO_API_GENERAL_CONSENT_STATUS_SUBMITTED && self.general_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED
     end
   end
 
   def ehr_consent_status_display
-    if self.ehr_consent_status.blank? || (HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUSES_NON_SUBMITTED.include?(self.general_consent_status) && self.ehr_consent_date.blank?)
+    if self.ehr_consent_status.blank? || (self.ehr_consent_status == HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUS_UNSET && self.ehr_consent_date.blank?)
       HealthPro::HEALTH_PRO_CONSENT_STATUS_UNDETERMINED
-    elsif HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUSES_NON_SUBMITTED.include?(self.general_consent_status) && self.ehr_consent_date.present?
+    elsif HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUSES_DECLINED.include?(self.general_consent_status) && self.ehr_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
     elsif self.ehr_consent_status == HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUS_SUBMITTED && self.ehr_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED

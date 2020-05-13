@@ -13,10 +13,12 @@ class HealthProApi
   end
 
   def participant_summary(options)
+    # options = { sort: 'lastModified', count: 1000, participantId: '' }.merge(options)
     options = { sort: 'lastModified', count: 1000 }.merge(options)
     awardee = Rails.configuration.custom.app_config['health_pro'][Rails.env]['awardee']
     project = Rails.configuration.custom.app_config['health_pro'][Rails.env]['project']
     url = Rails.configuration.custom.app_config['health_pro'][Rails.env]['participant_summary_url'].gsub('#{project}', project)
+    # url = url + '?' + "_sort=#{options[:sort]}" + '&' + "_count=#{options[:count]}" + '&' + "awardee=#{awardee}"+ '&' + "participantId=#{options[:participantId]}"
     url = url + '?' + "_sort=#{options[:sort]}" + '&' + "_count=#{options[:count]}" + '&' + "awardee=#{awardee}"
     if options[:_token]
       url = url + '&_token=' + options[:_token]

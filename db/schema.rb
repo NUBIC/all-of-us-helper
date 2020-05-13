@@ -9,7 +9,7 @@
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended that you check this file into your version control system.
-ActiveRecord::Schema.define(version: 20200416164846) do
+ActiveRecord::Schema.define(version: 20200417123601) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -337,6 +337,25 @@ ActiveRecord::Schema.define(version: 20200416164846) do
     t.string "genomic_consent_status"
     t.string "genomic_consent_status_date"
     t.string "health_pro_phone"
+    t.string "core_participant_date"
+    t.string "deactivation_status"
+    t.string "deactivation_date"
+    t.string "required_ppi_surveys_complete"
+    t.string "completed_surveys"
+    t.string "basics_ppi_survey_complete"
+    t.string "basics_ppi_survey_completion_date"
+    t.string "health_ppi_survey_complete"
+    t.string "health_ppi_survey_completion_date"
+    t.string "lifestyle_ppi_survey_complete"
+    t.string "lifestyle_ppi_survey_completion_date"
+    t.string "hist_ppi_survey_complete"
+    t.string "hist_ppi_survey_completion_date"
+    t.string "meds_ppi_survey_complete"
+    t.string "meds_ppi_survey_completion_date"
+    t.string "family_ppi_survey_complete"
+    t.string "family_ppi_survey_completion_date"
+    t.string "access_ppi_survey_complete"
+    t.string "access_ppi_survey_completion_date"
   end
 
   create_table "patients_races", force: :cascade do |t|
