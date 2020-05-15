@@ -178,9 +178,9 @@ class BatchHealthPro < ApplicationRecord
         error = nil
         options = {}
         options[:proxy_user] = self.created_user
-        # study_tracker_api = StudyTrackerApi.new
-        # registraion_results = study_tracker_api.register(options, matched_pmi_patient)
-        # error = registraion_results[:error]
+        study_tracker_api = StudyTrackerApi.new
+        registraion_results = study_tracker_api.register(options, matched_pmi_patient)
+        error = registraion_results[:error]
       end
       matched_pmi_patient.save!
     end
