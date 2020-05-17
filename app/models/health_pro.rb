@@ -195,7 +195,9 @@ class HealthPro < ApplicationRecord
             empi_race_matches << EmpiRaceMatch.new(race_id: race.id)
           end
         end
-        self.empi_matches.build(first_name: empi_patient['first_name'], last_name: empi_patient['last_name'], birth_date: empi_patient['birth_date'], gender: empi_patient['gender'], address: format_address(empi_patient), nmhc_mrn: empi_patient['nmhc_mrn'], ethnicity: empi_patient['ethnicity'], empi_race_matches: empi_race_matches)
+        if empi_patient['nmhc_mrn'].present?
+          self.empi_matches.build(first_name: empi_patient['first_name'], last_name: empi_patient['last_name'], birth_date: empi_patient['birth_date'], gender: empi_patient['gender'], address: format_address(empi_patient), nmhc_mrn: empi_patient['nmhc_mrn'], ethnicity: empi_patient['ethnicity'], empi_race_matches: empi_race_matches)
+        end
       end
     end
   end
