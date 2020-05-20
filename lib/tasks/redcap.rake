@@ -161,6 +161,38 @@ namespace :redcap do
       end
     end
   end
+
+  desc "Migrate First Generation REDCap"
+  task(migrate_first_generation: :environment) do  |t, args|
+    patients_from_file = CSV.new(File.open('lib/setup/data/Import_5.20.20.csv'), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
+    redcap_api = RedcapApi.initialize_redcap_api
+    patients_from_file.each do |patient_from_file|
+      puts patient_from_file['record_id']
+      puts patient_from_file['FIRSTGEN_record_id']
+      puts patient_from_file['first_name']
+      puts patient_from_file['last_name']
+      puts patient_from_file['referralsource']
+      puts patient_from_file['site_preference___1']
+      puts patient_from_file['PMI_ID']
+      patient = Patient.where(pmi_id: patient_from_file['PMI_ID']).first
+      if !patient_from_file['record_id'].present?
+        if patient.present? && patient.pmi_id == patient.record_id
+          puts 'We found a match.'
+          puts patient.record_id
+          puts patient.pmi_id
+          redcap_patient = redcap_api.create_patient_minnimum(patient_from_file['first_name'], patient_from_file['last_name'], patient_from_file['PMI_ID'], patient_from_file['referralsource'], patient_from_file['site_preference___1'])
+          record_id = redcap_patient[:response]
+          patient.record_id = record_id
+        elsif patient.present? && patient.pmi_id != patient.record_id
+          puts 'No match but with a record_id!'
+          puts patient_from_file['PMI_ID']
+        else
+          puts 'No match!'
+          puts patient_from_file['PMI_ID']
+        end
+      end
+    end
+  end
 end
 
 def handle_error(t, error)
