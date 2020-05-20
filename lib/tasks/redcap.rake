@@ -180,9 +180,10 @@ namespace :redcap do
           puts 'We found a match.'
           puts patient.record_id
           puts patient.pmi_id
-          redcap_patient = redcap_api.create_patient_minnimum(patient_from_file['first_name'], patient_from_file['last_name'], patient_from_file['PMI_ID'], patient_from_file['referralsource'], patient_from_file['site_preference___1'])
+          redcap_patient = redcap_api.create_patient_minnimum(patient_from_file['first_name'], patient_from_file['last_name'], patient_from_file['PMI_ID'], patient_from_file['referralsource'], patient_from_file['site_preference___1'], patient_from_file['FIRSTGEN_record_id'])
           record_id = redcap_patient[:response]
           patient.record_id = record_id
+          patient.save!
         elsif patient.present? && patient.pmi_id != patient.record_id
           puts 'No match but with a record_id!'
           puts patient_from_file['PMI_ID']

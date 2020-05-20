@@ -223,7 +223,7 @@ class RedcapApi
     { response: record_id, error: api_response[:error] }
   end
 
-  def create_patient_minnimum(first_name, last_name, pmi_id, referralsource, site_preference___1)
+  def create_patient_minnimum(first_name, last_name, pmi_id, referralsource, site_preference___1, firstgen_record_id)
     record_id = next_record_id
     record_id = record_id[:response]
     ts = Date.today
@@ -233,8 +233,8 @@ class RedcapApi
         :format => 'csv',
         :type => 'flat',
         :overwriteBehavior => 'overwrite',
-        :data => %(record_id,first_name,last_name,pmi_id,referralsource,site_preference___1,ts,how_to_join_complete,healthpro_y,healthpro_status_complete
-"#{record_id}","#{first_name}","#{last_name}","#{pmi_id}","#{referralsource}","#{site_preference___1}","#{ts}","2","1","2"),
+        :data => %(record_id,first_name,last_name,pmi_id,referralsource,site_preference___1,ts,how_to_join_complete,healthpro_y,healthpro_status_complete,firstgen_record_id
+"#{record_id}","#{first_name}","#{last_name}","#{pmi_id}","#{referralsource}","#{site_preference___1}","#{ts}","2","1","2","#{firstgen_record_id}"),
         :returnContent => 'ids',
         :returnFormat => 'json'
     }
