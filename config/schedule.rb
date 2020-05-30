@@ -24,21 +24,21 @@ set :output, {:error => 'log/whenever_error.log', :standard => 'log/whenever.log
 
 case environment
   when 'production'
-    every 1.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
-      rake "recruitment:load_cohorts"
-    end
-
-    every 1.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
-      rake "redcap:synch_patients"
-    end
-
-    every :day, at: '2:00am' do # Use any day of the week or :weekend, :weekday
-      rake "redcap:synch_deleted_patients"
-    end
-
-    every 6.hours do # 1.minute 1.day 1.week 1.month 1.year is also supported
-      rake "redcap:synch_patients_to_redcap"
-    end
+    # every 1.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
+    #   rake "recruitment:load_cohorts"
+    # end
+    #
+    # every 1.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
+    #   rake "redcap:synch_patients"
+    # end
+    #
+    # every :day, at: '2:00am' do # Use any day of the week or :weekend, :weekday
+    #   rake "redcap:synch_deleted_patients"
+    # end
+    #
+    # every 6.hours do # 1.minute 1.day 1.week 1.month 1.year is also supported
+    #   rake "redcap:synch_patients_to_redcap"
+    # end
   when 'staging'
     # every 10.minutes do # 1.minute 1.day 1.week 1.month 1.year is also supported
     #   rake "redcap:synch_patients"
