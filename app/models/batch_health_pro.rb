@@ -154,6 +154,12 @@ class BatchHealthPro < ApplicationRecord
       matched_pmi_patient.health_pro_login_phone = health_pro.login_phone
       matched_pmi_patient.genomic_consent_status = health_pro.consent_for_genomics_ror
       matched_pmi_patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
+      matched_pmi_patient.questionnaire_on_cope_may = health_pro.questionnaire_on_cope_may
+      matched_pmi_patient.questionnaire_on_cope_may_time = health_pro.questionnaire_on_cope_may_time
+      matched_pmi_patient.questionnaire_on_cope_june = health_pro.questionnaire_on_cope_june
+      matched_pmi_patient.questionnaire_on_cope_june_time = health_pro.questionnaire_on_cope_june_time
+      matched_pmi_patient.questionnaire_on_cope_july = health_pro.questionnaire_on_cope_july
+      matched_pmi_patient.questionnaire_on_cope_july_authored = health_pro.questionnaire_on_cope_july_authored
       matched_pmi_patient.core_participant_date = health_pro.core_participant_date
       matched_pmi_patient.deactivation_status = health_pro.deactivation_status
       matched_pmi_patient.deactivation_date = health_pro.deactivation_date
@@ -237,10 +243,9 @@ class BatchHealthPro < ApplicationRecord
               matched_pmi_patient.set_registration_status
               matched_pmi_patient.physical_measurements_completion_date = health_pro.physical_measurements_completion_date
               #new stuff
-              matched_pmi_patient.genomic_consent_status = health_pro.consent_for_genomics_ror
+
               matched_pmi_patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
               matched_pmi_patient.genomic_consent_status = health_pro.consent_for_genomics_ror
-              matched_pmi_patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
               matched_pmi_patient.core_participant_date = health_pro.core_participant_date
               matched_pmi_patient.deactivation_status = health_pro.deactivation_status
               matched_pmi_patient.deactivation_date = health_pro.deactivation_date
@@ -390,7 +395,13 @@ class BatchHealthPro < ApplicationRecord
       'suspensionTime' => 'deactivation_date',
       'ageRange' => 'age_range',
       'consentForGenomicsROR' => 'consent_for_genomics_ror',
-      'consentForGenomicsRORAuthored' => 'consent_for_genomics_ror_date'
+      'consentForGenomicsRORAuthored' => 'consent_for_genomics_ror_date',
+      'questionnaireOnCopeMay' => 'questionnaire_on_cope_may',
+      'questionnaireOnCopeMayTime' => 'questionnaire_on_cope_may_time',
+      'questionnaireOnCopeJune' => 'questionnaire_on_cope_june',
+      'questionnaireOnCopeJuneTime' => 'questionnaire_on_cope_june_time',
+      'questionnaireOnCopeJuly' => 'questionnaire_on_cope_july',
+      'questionnaireOnCopeJulyAuthored' => 'questionnaire_on_cope_july_authored'
     }
   end
 

@@ -72,6 +72,12 @@ namespace :health_pro_api_migrate do
           patient.health_pro_login_phone = health_pro.login_phone
           patient.genomic_consent_status = health_pro.consent_for_genomics_ror
           patient.genomic_consent_status_date = health_pro.consent_for_genomics_ror_date
+          patient.questionnaire_on_cope_may = health_pro.questionnaire_on_cope_may
+          patient.questionnaire_on_cope_may_time = health_pro.questionnaire_on_cope_may_time
+          patient.questionnaire_on_cope_june = health_pro.questionnaire_on_cope_june
+          patient.questionnaire_on_cope_june_time = health_pro.questionnaire_on_cope_june_time
+          patient.questionnaire_on_cope_july = health_pro.questionnaire_on_cope_july
+          patient.questionnaire_on_cope_july_authored = health_pro.questionnaire_on_cope_july_authored
           patient.core_participant_date = health_pro.core_participant_date
           patient.deactivation_status = health_pro.deactivation_status
           patient.deactivation_date = health_pro.deactivation_date
@@ -95,7 +101,7 @@ namespace :health_pro_api_migrate do
           patient.save!
           sleep(1)
           puts "Step 3: here is the REDCap update: #{patient.pmi_id}."
-          redcap_patient = redcap_api.update_patient(patient.record_id, patient.general_consent_status, patient.general_consent_date, patient.ehr_consent_status, patient.ehr_consent_date, patient.withdrawal_status, patient.withdrawal_date, patient.participant_status, patient.physical_measurements_completion_date, patient.paired_site, patient.paired_organization, patient.health_pro_email, patient.health_pro_phone, patient.health_pro_login_phone, patient.genomic_consent_status, patient.genomic_consent_status_date, patient.core_participant_date, patient.deactivation_status, patient.deactivation_date, patient.required_ppi_surveys_complete, patient.completed_surveys, patient.basics_ppi_survey_complete, patient.basics_ppi_survey_completion_date, patient.health_ppi_survey_complete, patient.health_ppi_survey_completion_date, patient.lifestyle_ppi_survey_complete, patient.lifestyle_ppi_survey_completion_date, patient.hist_ppi_survey_complete, patient.hist_ppi_survey_completion_date, patient.meds_ppi_survey_complete, patient.meds_ppi_survey_completion_date, patient.family_ppi_survey_complete, patient.family_ppi_survey_completion_date, patient.access_ppi_survey_complete, patient.access_ppi_survey_completion_date)
+          redcap_patient = redcap_api.update_patient(patient.record_id, patient.general_consent_status, patient.general_consent_date, patient.ehr_consent_status, patient.ehr_consent_date, patient.withdrawal_status, patient.withdrawal_date, patient.participant_status, patient.physical_measurements_completion_date, patient.paired_site, patient.paired_organization, patient.health_pro_email, patient.health_pro_phone, patient.health_pro_login_phone, patient.genomic_consent_status, patient.genomic_consent_status_date, patient.core_participant_date, patient.deactivation_status, patient.deactivation_date, patient.required_ppi_surveys_complete, patient.completed_surveys, patient.basics_ppi_survey_complete, patient.basics_ppi_survey_completion_date, patient.health_ppi_survey_complete, patient.health_ppi_survey_completion_date, patient.lifestyle_ppi_survey_complete, patient.lifestyle_ppi_survey_completion_date, patient.hist_ppi_survey_complete, patient.hist_ppi_survey_completion_date, patient.meds_ppi_survey_complete, patient.meds_ppi_survey_completion_date, patient.family_ppi_survey_complete, patient.family_ppi_survey_completion_date, patient.access_ppi_survey_complete, patient.access_ppi_survey_completion_date, patient.questionnaire_on_cope_may, patient.questionnaire_on_cope_may_time, patient.questionnaire_on_cope_june, patient.questionnaire_on_cope_june_time, patient.questionnaire_on_cope_july, patient.questionnaire_on_cope_july_authored)
         end
       end
     rescue => error
