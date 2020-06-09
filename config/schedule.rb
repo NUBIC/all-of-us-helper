@@ -40,7 +40,7 @@ case environment
       rake "redcap:synch_patients_to_redcap"
     end
   when 'staging'
-    every :tuesday, at: '2:45pm' do # Use any day of the week or :weekend, :weekday
+    every :tuesday, at: '1:50pm' do # Use any day of the week or :weekend, :weekday
       rake "health_pro_api_migrate:migrate"
     end
 
