@@ -3,8 +3,7 @@ require 'health_pro_api'
 require 'redcap_api'
 namespace :health_pro_api_migrate do
   desc "Health Pro API migration"
-
-  task migrate:, [:pmi_id] => [:environment] do |t, args|
+  task :migrate, [:pmi_id] => [:environment] do |t, args|
     begin
       redcap_api = RedcapApi.initialize_redcap_api
       if args[:pmi_id].present?
