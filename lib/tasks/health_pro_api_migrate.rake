@@ -6,7 +6,7 @@ namespace :health_pro_api_migrate do
   task :migrate, [:pmi_id] => [:environment] do |t, args|
     begin
       redcap_api = RedcapApi.initialize_redcap_api
-      if args[:pmi_id].present?
+      if !args[:pmi_id].present?
         batch_health_pro = BatchHealthPro.new
         batch_health_pro.batch_type = BatchHealthPro::BATCH_TYPE_HEALTH_PRO_API
         batch_health_pro.health_pro_file = nil
