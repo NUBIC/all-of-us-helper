@@ -20,7 +20,7 @@ namespace :health_pro_api_migrate do
         patients = Patient.where(pmi_id: args[:pmi_id]).all
       end
 
-      patients.all.each do |patient|
+      patients.each do |patient|
         puts "Step 1: here is the copying of the patient: #{patient.pmi_id}."
         patient_health_pro_api_migration = PatientHealthProApiMigration.new
         patient_health_pro_api_migration.record_id = patient.record_id
