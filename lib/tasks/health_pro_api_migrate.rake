@@ -3,20 +3,25 @@ require 'health_pro_api'
 require 'redcap_api'
 namespace :health_pro_api_migrate do
   desc "Health Pro API migration"
-  task(migrate: :environment) do |t, args|
+
+  task migrate:, [:pmi_id] => [:environment] do |t, args|
     begin
       redcap_api = RedcapApi.initialize_redcap_api
-      batch_health_pro = BatchHealthPro.new
-      batch_health_pro.batch_type = BatchHealthPro::BATCH_TYPE_HEALTH_PRO_API
-      batch_health_pro.health_pro_file = nil
-      batch_health_pro.created_user = 'mjg994'
-      batch_health_pro.save!
-      batch_health_pro.import_api(update_previously_matched: false)
+      if args[:pmi_id].present?
+        batch_health_pro = BatchHealthPro.new
+        batch_health_pro.batch_type = BatchHealthPro::BATCH_TYPE_HEALTH_PRO_API
+        batch_health_pro.health_pro_file = nil
+        batch_health_pro.created_user = 'mjg994'
+        batch_health_pro.save!
+        batch_health_pro.import_api(update_previously_matched: false)
+        patients = Patient.all
+      else
+        batch_health_pro = BatchHealthPro.last
+        PatientHealthProApiMigration.delete_all
+        patients = Patient.where(pmi_id: args[:pmi_id]).all
+      end
 
-      # batch_health_pro = BatchHealthPro.last
-      # PatientHealthProApiMigration.delete_all
-      # Patient.where(pmi_id: '').all.each do |patient|
-      Patient.all.each do |patient|
+      patients.all.each do |patient|
         puts "Step 1: here is the copying of the patient: #{patient.pmi_id}."
         patient_health_pro_api_migration = PatientHealthProApiMigration.new
         patient_health_pro_api_migration.record_id = patient.record_id
@@ -49,7 +54,6 @@ namespace :health_pro_api_migrate do
         patient_health_pro_api_migration.save!
 
         puts "Step 2: here is the start of the patient update: #{patient.pmi_id}."
-        # health_pro = HealthPro.where("batch_health_pro_id = ? AND pmi_id = ? AND pmi_id = ?",  batch_health_pro.id, patient.pmi_id, '').first
         health_pro = HealthPro.where("batch_health_pro_id = ? AND pmi_id = ?",  batch_health_pro.id, patient.pmi_id).first
         if health_pro.present?
           patient.first_name = health_pro.first_name
