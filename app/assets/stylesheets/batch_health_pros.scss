@@ -159,6 +159,10 @@
     background-image: image_url("drop27.png");
   }
 
+  table {
+    @include grid-column($columns: 24);
+  }
+
   th.health_pro {
     text-align: center;
   }
