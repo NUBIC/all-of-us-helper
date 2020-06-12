@@ -30,17 +30,11 @@
 #batch-health-pros {
   @include grid-column-row();
   #pending-batch-health-pros-list, #expired-batch-health-pros-list {
-		@include grid-column($columns: 24);
+    @include grid-column($columns: 24);
 
-    @include breakpoint(large) {
-      .pagination-top {
-        @include grid-column($columns: 16);
-
-      }
-
-      .new-batch-health-pro-link {
-        @include grid-column($columns: 8);
-      }
+    table {
+      table-layout: fixed;
+      width: 100%;
     }
 
     th .current {
@@ -62,7 +56,6 @@
     }
   }
 }
-
 
 #new-batch-health-pro-header {
   @include grid-column-row();
