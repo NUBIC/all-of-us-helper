@@ -134,52 +134,57 @@
 }
 
 #show-batch-health-pro {
-  @include grid-column($columns: 24);
+  margin-top: 1rem;
+  @include grid-row();
 
-  table {
-    table-layout: fixed;
-    width: 100%;
-  }
-
-  td, th {
-    word-wrap: break-word;
-  }
-
-  th .current {
-    padding-right: 2em;
-    background-repeat: no-repeat;
-    background-position: right center;
-  }
-
-  th .asc {
-    background-image: image_url("drop25.png");
-  }
-
-  th .desc {
-    background-image: image_url("drop27.png");
-  }
-
-  table {
+  #show-batch-health-pro-list {
     @include grid-column($columns: 24);
-  }
 
-  th.health_pro {
-    text-align: center;
-  }
+    table {
+      table-layout: fixed;
+      width: 100%;
+    }
 
-  .match-accept-form {
-    display: inline;
-  }
+    td, th {
+      word-wrap: break-word;
+    }
 
-  .match-decline-form {
-    display: inline;
-  }
+    th .current {
+      padding-right: 2em;
+      background-repeat: no-repeat;
+      background-position: right center;
+    }
 
-  .select2 {
-    margin-bottom: 1rem;
-  }
+    th .asc {
+      background-image: image_url("drop25.png");
+    }
 
-  .potential-duplicates h3 {
-    padding: 1rem;
+    th .desc {
+      background-image: image_url("drop27.png");
+    }
+
+    table {
+      @include grid-column($columns: 24);
+    }
+
+    th.health_pro {
+      text-align: center;
+    }
+
+    .match-accept-form {
+      display: inline;
+    }
+
+    .match-decline-form {
+      display: inline;
+    }
+
+    .select2 {
+      margin-bottom: 1rem;
+    }
+
+    .potential-duplicates h3 {
+      padding: 1rem;
+    }
   }
 }
