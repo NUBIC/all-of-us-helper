@@ -134,7 +134,7 @@
 }
 
 #show-batch-health-pro {
-  @include grid-column-row();
+  @include grid-column($columns: 24);
 
   table {
     table-layout: fixed;
