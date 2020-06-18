@@ -18,8 +18,11 @@ class HealthProApi
     awardee = Rails.configuration.custom.app_config['health_pro'][Rails.env]['awardee']
     project = Rails.configuration.custom.app_config['health_pro'][Rails.env]['project']
     url = Rails.configuration.custom.app_config['health_pro'][Rails.env]['participant_summary_url'].gsub('#{project}', project)
-    # url = url + '?' + "_sort=#{options[:sort]}" + '&' + "_count=#{options[:count]}" + '&' + "awardee=#{awardee}"+ '&' + "participantId=#{options[:participantId]}"
-    url = url + '?' + "_sort=#{options[:sort]}" + '&' + "_count=#{options[:count]}" + '&' + "awardee=#{awardee}"
+    if options[:participantId]
+      url = url + '?' + "_sort=#{options[:sort]}" + '&' + "_count=#{options[:count]}" + '&' + "awardee=#{awardee}"+ '&' + "participantId=#{options[:participantId]}"
+    else
+      url = url + '?' + "_sort=#{options[:sort]}" + '&' + "_count=#{options[:count]}" + '&' + "awardee=#{awardee}"
+    end
     if options[:_token]
       url = url + '&_token=' + options[:_token]
     end
