@@ -60,10 +60,13 @@ class BatchHealthPro < ApplicationRecord
       health_pro_api = HealthProApi.new
       response = health_pro_api.participant_summary(options)
 
-      link = response[:response]['link']
-      if link && link.first['relation'] == 'next'
-        url =  link.first['url']
-        token = url.partition('token=').last
+      puts response[:response]
+      if response[:response]['link'].present?
+        link = response[:response]['link']
+        if link && link.first['relation'] == 'next'
+          url =  link.first['url']
+          token = url.partition('token=').last
+        end
       end
 
       more = true
