@@ -25,7 +25,7 @@ namespace :health_pro_api_migrate do
         batch_health_pro.save!
         pmi_id = args[:pmi_id]
         pmi_id.gsub!('P','')
-        pmi_id = pmi_id.to_id
+        pmi_id = pmi_id.to_i
         batch_health_pro.import_api(update_previously_matched: false, participantId: pmi_id)
         patients = Patient.all
       end
