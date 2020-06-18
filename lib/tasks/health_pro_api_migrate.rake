@@ -27,7 +27,7 @@ namespace :health_pro_api_migrate do
         pmi_id.gsub!('P','')
         pmi_id = pmi_id.to_i
         batch_health_pro.import_api(update_previously_matched: false, participantId: pmi_id)
-        patients = Patient.all
+        patients = Patient.where(pmi_id: args[:pmi_id]).all
       end
 
       patients.each do |patient|
