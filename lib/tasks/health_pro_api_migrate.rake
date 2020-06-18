@@ -3,6 +3,7 @@ require 'health_pro_api'
 require 'redcap_api'
 namespace :health_pro_api_migrate do
   desc "Health Pro API migration"
+  # RAILS_ENV=staging bundle exec rake health_pro_api_migrate:migrate["?"]
   task :migrate, [:pmi_id] => [:environment] do |t, args|
     begin
       redcap_api = RedcapApi.initialize_redcap_api
@@ -15,9 +16,18 @@ namespace :health_pro_api_migrate do
         batch_health_pro.import_api(update_previously_matched: false)
         patients = Patient.all
       else
-        batch_health_pro = BatchHealthPro.last
-        PatientHealthProApiMigration.delete_all
-        patients = Patient.where(pmi_id: args[:pmi_id]).all
+        # batch_health_pro = BatchHealthPro.last
+        # patients = Patient.where(pmi_id: args[:pmi_id]).all
+        batch_health_pro = BatchHealthPro.new
+        batch_health_pro.batch_type = BatchHealthPro::BATCH_TYPE_HEALTH_PRO_API
+        batch_health_pro.health_pro_file = nil
+        batch_health_pro.created_user = 'mjg994'
+        batch_health_pro.save!
+        pmi_id = args[:pmi_id]
+        pmi_id.gsub!('P','')
+        pmi_id = pmi_id.to_id
+        batch_health_pro.import_api(update_previously_matched: false, participantId: pmi_id)
+        patients = Patient.all
       end
 
       patients.each do |patient|
