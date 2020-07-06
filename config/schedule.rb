@@ -26,7 +26,6 @@ case environment
   when 'production'
     every 1.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
       rake "recruitment:load_cohorts"
-    end
 
     every 1.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
       rake "redcap:synch_patients"
