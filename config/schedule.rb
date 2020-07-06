@@ -24,7 +24,7 @@ set :output, {:error => 'log/whenever_error.log', :standard => 'log/whenever.log
 
 case environment
   when 'production'
-    every :monday, at: '6:67pm' do # Use any day of the week or :weekend, :weekday
+    every :monday, at: '7:05pm' do # Use any day of the week or :weekend, :weekday
       rake "health_pro_api_migrate:migrate"
     end
 
