@@ -16,9 +16,8 @@
       .all-of-us-helper-branding
         = link_to image_tag('allofus-logo@2x.png', alt: 'all of us helper', class: 'all-of-us-helper-logo-large'), root_url
       .all-of-us-helper-main-navigation
-        .row
-          %strong.environment
-            STAGING            
+        %strong.environment
+          = Rails.env.capitalize
         .row
           = render 'shared/navigation'
           
