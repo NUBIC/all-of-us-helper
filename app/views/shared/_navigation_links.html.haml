@@ -2,7 +2,7 @@
   = link_to 'Home', root_url, class: 'align-center'
 %li.patients.menu-text{ class: active?('active', controller: '/patients', action: 'index') }
   = link_to 'Patients', patients_url
-%li.batch_health_pros.menu-text{ class: active?('active', controller: '/uploads', action: 'index') }
+%li.batch_health_pros.menu-text{ class: active?('active', controller: '/batch_health_pros', action: 'index') }
   = link_to 'Health Pros', batch_health_pros_url()
 %li.settings.menu-text{ class: active?('active', controller: '/settings', action: 'edit' ) }
   = link_to 'Settings', edit_settings_url()
