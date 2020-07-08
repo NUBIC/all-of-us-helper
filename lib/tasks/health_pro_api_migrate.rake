@@ -1,6 +1,5 @@
 require 'redcap_api'
 require 'health_pro_api'
-require 'redcap_api'
 namespace :health_pro_api_migrate do
   desc "Health Pro API migration"
   # RAILS_ENV=staging bundle exec rake health_pro_api_migrate:migrate["?"]
