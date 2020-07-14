@@ -1,16 +1,19 @@
 require 'rest_client'
 class RedcapApi
   ERROR_MESSAGE_DUPLICATE_PATIENT = 'More than one patient with record_id.'
-  attr_accessor :api_token, :api_url
-  SYSTEM = 'redcap'
+  attr_accessor :api_token, :api_url, :system
+  SYSTEM_REDCAP = 'redcap'
+  SYSTEM_REDCAP_RECRUITMENT = 'redcap recruitment'
 
-  def self.initialize_redcap_api
-    api_token = ApiToken.where(api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP).first
-    redcap_api = RedcapApi.new(api_token.token)
+  def self.initialize_redcap_api(options={})
+    options = { system: SYSTEM_REDCAP, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP }.merge(options)
+    api_token = ApiToken.where(api_token_type: options[:api_token_type]).first
+    redcap_api = RedcapApi.new(api_token.token, options[:system])
   end
 
-  def initialize(api_token)
+  def initialize(api_token, system)
     @api_token = api_token
+    @system = system
 
     @api_url = Rails.configuration.custom.app_config['redcap'][Rails.env]['host_url']
     if Rails.env.development? || Rails.env.test?
@@ -18,6 +21,25 @@ class RedcapApi
     else
       @verify_ssl = true
     end
+  end
+
+  def recruitment_patients
+    payload = {
+        :token => @api_token,
+        :content => 'record',
+        :format => 'json',
+        :type => 'flat',
+        'fields[0]' => 'record_id',
+        'fields[1]' => 'mrn',
+        'fields[2]' => 'st_event',
+        'fields[3]' => 'st_event_d',
+        'fields[4]' => 'st_import_d',
+        :returnFormat => 'json'
+    }
+
+    api_response = redcap_api_request_wrapper(payload)
+
+    { response: api_response[:response], error: api_response[:error] }
   end
 
   def patients
