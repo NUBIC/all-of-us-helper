@@ -351,11 +351,11 @@ class RedcapApi
           accept: 'json',
           verify_ssl: @verify_ssl
         )
-        ApiLog.create_api_log(@api_url, payload, response, nil, RedcapApi::SYSTEM)
+        ApiLog.create_api_log(@api_url, payload, response, nil, @system)
         response = JSON.parse(response) if parse_response
       rescue Exception => e
         ExceptionNotifier.notify_exception(e)
-        ApiLog.create_api_log(@api_url, payload, nil, e.message, RedcapApi::SYSTEM)
+        ApiLog.create_api_log(@api_url, payload, nil, e.message, @system)
         error = e
         Rails.logger.info(e.class)
         Rails.logger.info(e.message)
