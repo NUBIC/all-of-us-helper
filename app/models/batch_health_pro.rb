@@ -108,6 +108,7 @@ class BatchHealthPro < ApplicationRecord
       save!
 
       health_pros.where("((paired_organization = 'UNSET' OR paired_organization IN (?)) OR (paired_organization IN (?) AND (paired_site = 'UNSET' OR paired_site IN(?))))", [HealthPro::PAIRED_ORGANIZATION_NORTHWESTERN], [HealthPro::PAIRED_ORGANIZATION_NEAR_NORTH, HealthPro::PAIRED_ORGANIZATION_ILLINOIS_ERIE], HealthPro::PAIRED_SITES).each do |health_pro|
+        puts 'made it here'
         health_pro.determine_matches
 
         if health_pro.matchable?
@@ -116,7 +117,10 @@ class BatchHealthPro < ApplicationRecord
         end
 
         health_pro.save!
+        puts 'what you got'
+        puts options[:update_previously_matched]
         if options[:update_previously_matched]
+          puts 'update_previously_matched_patient'
           update_previously_matched_patient(health_pro, options)
         end
       end
@@ -186,7 +190,7 @@ class BatchHealthPro < ApplicationRecord
       if matched_pmi_patient.registered? #&& matched_pmi_patient.changed?
         error = nil
         options = {}
-        options[:proxy_user] = self.created_user
+        options[:proxy_user] = 'mjg994'
         study_tracker_api = StudyTrackerApi.new
         registraion_results = study_tracker_api.register(options, matched_pmi_patient)
         error = registraion_results[:error]
