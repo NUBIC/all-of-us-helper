@@ -183,7 +183,7 @@ class BatchHealthPro < ApplicationRecord
       matched_pmi_patient.access_ppi_survey_complete = health_pro.access_ppi_survey_complete
       matched_pmi_patient.access_ppi_survey_completion_date = health_pro.access_ppi_survey_completion_date
 
-      if matched_pmi_patient.registered? && matched_pmi_patient.changed?
+      if matched_pmi_patient.registered? #&& matched_pmi_patient.changed?
         error = nil
         options = {}
         options[:proxy_user] = self.created_user
