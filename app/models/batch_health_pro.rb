@@ -84,8 +84,8 @@ class BatchHealthPro < ApplicationRecord
         end
 
         if token && batch_size == 1000
-          options = { _token: token }
-          response = health_pro_api.participant_summary(options)
+          participant_summary_options = { _token: token }
+          response = health_pro_api.participant_summary(participant_summary_options)
           if response
             link = response[:response]['link']
             batch_size = response[:response]['entry'].size
