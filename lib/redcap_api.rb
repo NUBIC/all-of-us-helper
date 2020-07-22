@@ -43,22 +43,22 @@ class RedcapApi
   end
 
   def update_recruitment_patient(record_id, st_event, st_event_d, st_import_d)
-    payload = {
-        :token => @api_token,
-        :content => 'record',
-        :format => 'csv',
-        :type => 'flat',
-        :overwriteBehavior => 'overwrite',
-        :data => %(record_id,st_event,st_event_d,st_import_d
-"#{record_id}","#{st_event}","#{st_event_d}","#{st_import_d}"),
-        :returnContent => 'ids',
-        :returnFormat => 'json'
-    }
+     payload = {
+         :token => @api_token,
+         :content => 'record',
+         :format => 'csv',
+         :type => 'flat',
+         :overwriteBehavior => 'overwrite',
+         :data => %(record_id,st_event,st_event_d,st_import_d
+ "#{record_id}","#{st_event}","#{st_event_d}","#{st_import_d}"),
+         :returnContent => 'ids',
+         :returnFormat => 'json'
+     }
 
-    api_response = redcap_api_request_wrapper(payload)
+     api_response = redcap_api_request_wrapper(payload)
 
-    { response: record_id, error: api_response[:error] }
-  end
+     { response: record_id, error: api_response[:error] }
+   end
 
   def patients
     payload = {
