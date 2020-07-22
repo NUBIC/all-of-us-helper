@@ -188,6 +188,8 @@ class BatchHealthPro < ApplicationRecord
       matched_pmi_patient.access_ppi_survey_completion_date = health_pro.access_ppi_survey_completion_date
 
       if matched_pmi_patient.registered? #&& matched_pmi_patient.changed?
+        puts 'here is the pmi_id to update'
+        puts health_pro.pmi_id
         error = nil
         options = {}
         options[:proxy_user] = 'mjg994'
