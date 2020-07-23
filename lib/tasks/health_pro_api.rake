@@ -14,7 +14,6 @@ namespace :health_pro_api do
   end
 
   # RAILS_ENV=production bundle exec rake health_pro_api:import_api["?"]
-RAILS_ENV=production bundle exec rake health_pro_api:import_api["P499776250"]
   desc "Import API"
   task :import_api, [:pmi_id] => [:environment] do |t, args|
     batch_health_pro = BatchHealthPro.new
