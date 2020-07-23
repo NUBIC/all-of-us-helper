@@ -79,7 +79,7 @@ class BatchHealthPro < ApplicationRecord
           BatchHealthPro.api_headers_map.each_pair do |k,v|
             row[v.to_sym] = health_pro_from_api.to_hash[k.to_s]
           end
-
+          convert_dates(row)
           health_pros.build(row)
         end
 
@@ -512,6 +512,18 @@ class BatchHealthPro < ApplicationRecord
       if self.new_record?
         self.status = BatchHealthPro::STATUS_PENDING
         self.batch_type = BatchHealthPro::BATCH_TYPE_FILE_UPLOAD
+      end
+    end
+
+    def convert_dates(row)
+      ['general_consent_date', 'ehr_consent_date', 'withdrawal_date', 'physical_measurements_completion_date', 'genomic_consent_status_date', 'core_participant_date', 'deactivation_date', 'basics_ppi_survey_completion_date', 'health_ppi_survey_completion_date', 'lifestyle_ppi_survey_completion_date', 'hist_ppi_survey_completion_date', 'meds_ppi_survey_completion_date',  'family_ppi_survey_completion_date', 'access_ppi_survey_completion_date', 'questionnaire_on_cope_may_time', 'questionnaire_on_cope_june_time', 'questionnaire_on_cope_july_authored'].each do |column|
+        convert_date(row, column)
+      end
+    end
+
+    def convert_date(row, column)
+      if row[column].present?
+        row[column] = Time.parse("#{row[column]} UTC").in_time_zone('Central Time (US & Canada)').iso8601
       end
     end
 end

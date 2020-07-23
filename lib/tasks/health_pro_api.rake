@@ -13,8 +13,9 @@ namespace :health_pro_api do
     end
   end
 
+  # RAILS_ENV=production bundle exec rake health_pro_api:import_api["?"]
   desc "Import API"
-  task(import_api: :environment) do |t, args|
+  task :import_api, [:pmi_id] => [:environment] do |t, args|
     batch_health_pro = BatchHealthPro.new
     batch_health_pro.batch_type = BatchHealthPro::BATCH_TYPE_HEALTH_PRO_API
     batch_health_pro.health_pro_file = nil
@@ -22,6 +23,12 @@ namespace :health_pro_api do
     batch_health_pro.save!
     options = {}
     options[:update_previously_matched] = true
+    if !args[:pmi_id].present?
+      pmi_id = args[:pmi_id]
+      pmi_id.gsub!('P','')
+      pmi_id = pmi_id.to_i
+      options[:participantId] = pmi_id
+    end
     batch_health_pro.import_api(options)
   end
 end
