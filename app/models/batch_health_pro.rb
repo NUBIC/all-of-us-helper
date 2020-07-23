@@ -523,7 +523,7 @@ class BatchHealthPro < ApplicationRecord
 
     def convert_date(row, column)
       if row[column].present?
-        row[column.to_s] = Time.parse("#{row[column.to_s]} UTC").in_time_zone('Central Time (US & Canada)').iso8601
+        row[column.to_sym] = Time.parse("#{row[column.to_sym]} UTC").in_time_zone('Central Time (US & Canada)').iso8601
       end
     end
 end
