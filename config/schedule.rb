@@ -36,7 +36,7 @@ case environment
       rake "health_pro_api:rotate_service_account_key"
     end
 
-    every :day, at: '12:10pm' do # Use any day of the week or :weekend, :weekday
+    every :day, at: '4:05am' do # Use any day of the week or :weekend, :weekday
       rake "health_pro_api:import_api"
     end
 
