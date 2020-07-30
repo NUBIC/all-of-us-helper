@@ -39,9 +39,9 @@ case environment
     #   rake "health_pro_api:import_api"
     # end
 
-    every :day, at: '5:50am' do # Use any day of the week or :weekend, :weekday
-      rake "health_pro_api:import_api"
-    end
+    # every :day, at: '5:50am' do # Use any day of the week or :weekend, :weekday
+    #   rake "health_pro_api:import_api"
+    # end
 
     every :day, at: '3:55am' do # Use any day of the week or :weekend, :weekday
       rake "maintenance:expire_batch_health_pros"
