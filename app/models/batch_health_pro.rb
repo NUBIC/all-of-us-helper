@@ -144,7 +144,7 @@ class BatchHealthPro < ApplicationRecord
       matched_pmi_patient.birth_date = Date.parse(health_pro.date_of_birth) if matched_pmi_patient.birth_date.blank?
       matched_pmi_patient.set_registration_status
       # matched_pmi_patient.gender = health_pro.sex if matched_pmi_patient.gender.blank? && health_pro.sex.present?
-      matched_pmi_patient.gender = health_pro.sex_to_patient_gender
+      matched_pmi_patient.gender = health_pro.sex_to_patient_gender if matched_pmi_patient.gender.blank?
       matched_pmi_patient.general_consent_status = health_pro.general_consent_status
       matched_pmi_patient.general_consent_date = health_pro.general_consent_date
       matched_pmi_patient.ehr_consent_status = health_pro.ehr_consent_status
