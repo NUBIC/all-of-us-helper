@@ -24,13 +24,18 @@ set :output, {:error => 'log/whenever_error.log', :standard => 'log/whenever.log
 
 case environment
   when 'production'
-    every 1.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
-      rake "recruitment:load_cohorts"
+    # every :monday, at: '7:05pm' do # Use any day of the week or :weekend, :weekday
+    #   rake "health_pro_api_migrate:migrate"
+    # end
 
     # every :day, at: '6:12am' do # Use any day of the week or :weekend, :weekday
     #   rake "health_pro_api:import_api"
     # end
 
+    every 1.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
+      rake "recruitment:load_cohorts"
+    end
+    
     every :day, at: '4:00am' do # Use any day of the week or :weekend, :weekday
       rake "health_pro_api:rotate_service_account_key"
     end
@@ -38,10 +43,6 @@ case environment
     every :day, at: '5:30am' do # Use any day of the week or :weekend, :weekday
       rake "health_pro_api:import_api"
     end
-
-    # every :day, at: '5:50am' do # Use any day of the week or :weekend, :weekday
-    #   rake "health_pro_api:import_api"
-    # end
 
     every :day, at: '3:55am' do # Use any day of the week or :weekend, :weekday
       rake "maintenance:expire_batch_health_pros"
