@@ -24,6 +24,10 @@ set :output, {:error => 'log/whenever_error.log', :standard => 'log/whenever.log
 
 case environment
   when 'production'
+    every 2.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
+      rake "recruitment:load_cohorts"
+    end
+
     # every :monday, at: '7:05pm' do # Use any day of the week or :weekend, :weekday
     #   rake "health_pro_api_migrate:migrate"
     # end
