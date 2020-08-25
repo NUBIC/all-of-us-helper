@@ -23,6 +23,36 @@ class RedcapApi
     end
   end
 
+  def create_recruitment_patient(mrn, patient_name, race, gender, dob, ethnicity, patient_address_1, patient_address_2, patient_city, patient_state_province, patient_email_address, patient_postal_code, patient_home_phone, patient_work_phone, patient_mobile_phone, department_name, department_external_name, appointment_datetime)
+    record_id = next_record_id
+    record_id = record_id[:response]
+    dob = Date.parse(dob) if dob
+    appointment_datetime = Date.parse(appointment_datetime) if appointment_datetime
+
+    puts 'here is ther record_id'
+    puts record_id
+
+    data = %(record_id,mrn,patient_name,race,gender,dob,ethnicity,patient_address_1,patient_address_2,patient_city,patient_state_province,patient_email_address,patient_postal_code,patient_home_phone,patient_work_phone,patient_mobile_phone,department_name,department_external_name,appointment_datetime,export_complete
+"#{record_id}","#{mrn}","#{patient_name}","#{race}","#{gender}","#{dob}","#{ethnicity}","#{patient_address_1}","#{patient_address_2}","#{patient_city}","#{patient_state_province}","#{patient_email_address}","#{patient_postal_code}","#{patient_home_phone}","#{patient_work_phone}","#{patient_mobile_phone}","#{department_name}","#{department_external_name}","#{appointment_datetime}","2")
+
+    puts 'lazy bum'
+    puts data
+    payload = {
+        :token => @api_token,
+        :content => 'record',
+        :format => 'csv',
+        :type => 'flat',
+        :overwriteBehavior => 'overwrite',
+        :data => data,
+        :returnContent => 'count',
+        :returnFormat => 'json'
+    }
+
+    api_response = redcap_api_request_wrapper(payload)
+
+    { response: api_response[:response], error: api_response[:error] }
+  end
+
   def recruitment_patients
     payload = {
         :token => @api_token,
