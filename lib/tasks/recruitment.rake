@@ -2,7 +2,7 @@ require 'redcap_api'
 require 'study_tracker_api'
 require 'csv'
 namespace :recruitment do
-  desc "Task description"
+  desc "Load export"
   task(load_export: :environment) do  |t, args|
     begin
       options = { system: RedcapApi::SYSTEM_REDCAP_RECRUITMENT, api_token_type: ApiToken::API_TOKEN_TYPE_REDCAP_RECRUITMENT }
@@ -13,12 +13,12 @@ namespace :recruitment do
       file = "AoU_Recruitment_Report_#{Date.today.to_s.gsub('-','')}.csv"
 
       if Rails.env.development?
-        clinical_data = "#{Rails.root}/lib/setup/data/#{file}"
+        file = "#{Rails.root}/lib/setup/data/#{file}"
       else
-        clinical_data = "#{Rails.root}/mnt/fsmresfiles/STU00204480/#{file}"
+        file = "#{Rails.root}/mnt/fsmresfiles/STU00204480/#{file}"
       end
 
-      edw_patients = CSV.new(File.open(), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
+      edw_patients = CSV.new(File.open(file), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
       edw_patients.each do |edw_patient|
         recruitment_patient = recruitment_patients.detect{ |recruitment_patient| recruitment_patient['mrn'] ==  edw_patient['mrn'] }
         if recruitment_patient.blank?
