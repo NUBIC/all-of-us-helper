@@ -254,6 +254,55 @@ class Patient < ApplicationRecord
     end
   end
 
+  def health_pro_address1
+    health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
+    if health_pro.present?
+      health_pro.health_pro_address1
+    end
+  end
+
+  def health_pro_address2
+    health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
+    if health_pro.present?
+      health_pro.health_pro_address2
+    end
+  end
+
+  def health_pro_city
+    health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
+    if health_pro.present?
+      health_pro.health_pro_city
+    end
+  end
+
+  def health_pro_state
+    health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
+    if health_pro.present?
+      health_pro.health_pro_state
+    end
+  end
+
+  def health_pro_zip
+    health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
+    if health_pro.present?
+      health_pro.health_pro_zip
+    end
+  end
+
+  def wq_program_update_status
+    health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
+    if health_pro.present?
+      health_pro.wq_program_update_status
+    end
+  end
+
+  def wq_program_update_date
+    health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
+    if health_pro.present?
+      health_pro.wq_program_update_date
+    end
+  end
+
   def valid_demographics?
     if self.first_name.blank?
       self.errors.add(:first_name, "First name can't be blank.")

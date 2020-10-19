@@ -7,6 +7,7 @@ class StudyTrackerApi
   ORG_NMHC = 'nmhc'
   EVENT_TYPE_NAME_CONSENTED = 'Consented'
   EVENT_TYPE_NAME_EHR_CONSENT = 'EHR Consent'
+  EVENT_TYPE_NAME_EHR_REMOVAL = 'EHR Consent Removal'
   EVENT_TYPE_NAME_WITHDRAWN = 'Withdrawn'
   SYSTEM = 'study tracker'
 
@@ -60,6 +61,18 @@ class StudyTrackerApi
 
       if patient.withdrawal_status_display == HealthPro::HEALTH_PRO_CONSENT_STATUS_WITHDRAWN
         payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_WITHDRAWN, date: Date.parse(patient.withdrawal_date).to_s }
+      end
+
+      if patient.date_of_first_primary_consent.present?
+        payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_CONSENTED, date: Date.parse(patient.date_of_first_primary_consent).to_s }
+      end
+
+      if patient.date_of_first_ehr_consent.present?
+        payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_EHR_CONSENT, date: Date.parse(patient.date_of_first_ehr_consent).to_s }
+      end
+
+      if patient.date_of_first_ehr_consent.present? && patient.ehr_consent_date.blank?
+        payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_EHR_REMOVAL, date: Date.parse(patient.date_of_first_ehr_consent).to_s }
       end
 
       url = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['register'].gsub(':id', patient.uuid)

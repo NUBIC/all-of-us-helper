@@ -186,6 +186,8 @@ class BatchHealthPro < ApplicationRecord
       matched_pmi_patient.family_ppi_survey_completion_date = health_pro.family_ppi_survey_completion_date
       matched_pmi_patient.access_ppi_survey_complete = health_pro.access_ppi_survey_complete
       matched_pmi_patient.access_ppi_survey_completion_date = health_pro.access_ppi_survey_completion_date
+      matched_pmi_patient.date_of_first_primary_consent = health_pro.date_of_first_primary_consent
+      matched_pmi_patient.date_of_first_ehr_consent = health_pro.date_of_first_ehr_consent
 
       if matched_pmi_patient.registered? #&& matched_pmi_patient.changed?
         puts 'here is the pmi_id to update'
@@ -316,6 +318,7 @@ class BatchHealthPro < ApplicationRecord
       'biobankId' => 'biobank_id',
       'lastName' => 'last_name',
       'firstName' => 'first_name',
+      'middleName' => 'middle_name',
       'dateOfBirth' => 'date_of_birth',
       'language' => 'language',
       'enrollmentStatus' => 'participant_status',
@@ -328,6 +331,8 @@ class BatchHealthPro < ApplicationRecord
       'consentForCABoRTimeAuthored' => 'cabor_consent_date',
       'withdrawalStatus' => 'withdrawal_status',
       'withdrawalAuthored' => 'withdrawal_date',
+      'suspensionStatus' => 'deactivation_status',
+      'suspensionTime' => 'deactivation_date',
       'withdrawalReason' => 'withdrawal_reason',
       'streetAddress' => 'street_address',
       'streetAddress2' => 'street_address2',
@@ -336,6 +341,7 @@ class BatchHealthPro < ApplicationRecord
       'zipCode' => 'zip',
       'email' => 'email',
       'phoneNumber' => 'phone',
+      'ageRange' => 'age_range',
       'sex' => 'sex',
       'genderIdentity' => 'gender_identity',
       'race' => 'race_ethnicity',
@@ -400,9 +406,6 @@ class BatchHealthPro < ApplicationRecord
       'patientStatus' => 'patient_status',
       'enrollmentStatusCoreStoredSampleTime' => 'core_participant_date',
       'participantOrigin' => 'participant_origination',
-      'suspensionStatus' => 'deactivation_status',
-      'suspensionTime' => 'deactivation_date',
-      'ageRange' => 'age_range',
       'consentForGenomicsROR' => 'consent_for_genomics_ror',
       'consentForGenomicsRORAuthored' => 'consent_for_genomics_ror_date',
       'questionnaireOnCopeMay' => 'questionnaire_on_cope_may',
@@ -410,7 +413,21 @@ class BatchHealthPro < ApplicationRecord
       'questionnaireOnCopeJune' => 'questionnaire_on_cope_june',
       'questionnaireOnCopeJuneTime' => 'questionnaire_on_cope_june_time',
       'questionnaireOnCopeJuly' => 'questionnaire_on_cope_july',
-      'questionnaireOnCopeJulyAuthored' => 'questionnaire_on_cope_july_authored'
+      'questionnaireOnCopeJulyAuthored' => 'questionnaire_on_cope_july_authored',
+
+      #new moomin
+      'consentCohort' => 'consent_cohort',
+      'questionnaireOnDnaProgram' => 'program_update',
+      'questionnaireOnDnaProgramAuthored' => 'date_of_program_update',
+      'ehrConsentExpireStatus' => 'ehr_expiration_status',
+      'ehrconsentExpireAuthored' => 'date_of_ehr_expiration',
+      'consentForStudyEnrollmentFirstYesAuthored' => 'date_of_first_primary_consent',
+      'consentForElectronicHealthRecordsFirstYesAuthored' => 'date_of_first_ehr_consent',
+      'retentionEligibleStatus' => 'retention_eligible',
+      'retentionEligibleTime' => 'date_of_retention_eligibility',
+      'deceasedStatus' => 'deceased',
+      'dateOfDeath' => 'date_of_death',
+      'deceasedAuthored' => 'date_of_approval'
     }
   end
 
@@ -516,7 +533,7 @@ class BatchHealthPro < ApplicationRecord
     end
 
     def convert_dates(row)
-      ['general_consent_date', 'ehr_consent_date', 'withdrawal_date', 'physical_measurements_completion_date', 'genomic_consent_status_date', 'core_participant_date', 'deactivation_date', 'basics_ppi_survey_completion_date', 'health_ppi_survey_completion_date', 'lifestyle_ppi_survey_completion_date', 'hist_ppi_survey_completion_date', 'meds_ppi_survey_completion_date',  'family_ppi_survey_completion_date', 'access_ppi_survey_completion_date', 'questionnaire_on_cope_may_time', 'questionnaire_on_cope_june_time', 'questionnaire_on_cope_july_authored'].each do |column|
+      ['general_consent_date', 'ehr_consent_date', 'withdrawal_date', 'physical_measurements_completion_date', 'genomic_consent_status_date', 'core_participant_date', 'deactivation_date', 'basics_ppi_survey_completion_date', 'health_ppi_survey_completion_date', 'lifestyle_ppi_survey_completion_date', 'hist_ppi_survey_completion_date', 'meds_ppi_survey_completion_date',  'family_ppi_survey_completion_date', 'access_ppi_survey_completion_date', 'questionnaire_on_cope_may_time', 'questionnaire_on_cope_june_time', 'questionnaire_on_cope_july_authored', 'date_of_first_primary_consent', 'date_of_first_ehr_consent'].each do |column|
         convert_date(row, column)
       end
     end

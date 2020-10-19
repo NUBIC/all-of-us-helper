@@ -84,14 +84,23 @@
             %strong
               General Consent Date:
             = @patient.general_consent_date
+          .general_consent_date_first.field
+            %strong
+              First General Consent Date:
+            = @patient.date_of_first_primary_consent
           .ehr_consent_status.field
             %strong
               EHR Consent Status:
             = @patient.ehr_consent_status_display
+          .ehr_consent_date_first.field
+            %strong
+              First EHR Consent Status Date:
+            = @patient.date_of_first_ehr_consent
           .ehr_consent_date.field
             %strong
               EHR Consent Status Date:
             = @patient.ehr_consent_date
+
           .withdrawal_status.field
             %strong
               Withdrawal Status:
@@ -192,7 +201,7 @@
           - if current_user.username == 'mjg994' || current_user.username == 'kyh7878'
             - if @patient.accepted_match
               = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date.present? ? @patient.birth_date.to_s(:date) : nil, gender: @patient.gender.present? ? @patient.gender : @patient.accepted_match.health_pro.sex_to_patient_gender, address: @patient.accepted_match.health_pro.address, match_id: @patient.match.id), class: 'new-empi-link button'
-            - else			
+            - else
               = link_to 'EMPI', new_empi_lookup_url(first_name: @patient.first_name, last_name: @patient.last_name, birth_date: @patient.birth_date.present? ? @patient.birth_date.to_s(:date) : nil, gender: @patient.gender, address: nil, match_id: nil), class: 'new-empi-link button'
           = form_with(url: register_patient_url(@patient), local: true, id: 'register-patient-form') do |f|
             = f.submit 'Register Study Tracker', class: 'button', 'data-confirm': 'Register patient?'

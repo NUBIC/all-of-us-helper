@@ -9,7 +9,8 @@
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended that you check this file into your version control system.
-ActiveRecord::Schema.define(version: 20200609150636) do
+
+ActiveRecord::Schema.define(version: 20201005125320) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -223,6 +224,18 @@ ActiveRecord::Schema.define(version: 20200609150636) do
     t.string "questionnaire_on_cope_june_time"
     t.string "questionnaire_on_cope_july"
     t.string "questionnaire_on_cope_july_authored"
+    t.string "consent_cohort"
+    t.string "program_update"
+    t.string "date_of_program_update"
+    t.string "ehr_expiration_status"
+    t.string "date_of_ehr_expiration"
+    t.string "date_of_first_primary_consent"
+    t.string "date_of_first_ehr_consent"
+    t.string "retention_eligible"
+    t.string "date_of_retention_eligibility"
+    t.string "deceased"
+    t.string "date_of_death"
+    t.string "date_of_approval"
   end
 
   create_table "invitation_code_assignments", force: :cascade do |t|
@@ -368,6 +381,8 @@ ActiveRecord::Schema.define(version: 20200609150636) do
     t.string "questionnaire_on_cope_june_time"
     t.string "questionnaire_on_cope_july"
     t.string "questionnaire_on_cope_july_authored"
+    t.string "date_of_first_primary_consent"
+    t.string "date_of_first_ehr_consent"
   end
 
   create_table "patients_races", force: :cascade do |t|
