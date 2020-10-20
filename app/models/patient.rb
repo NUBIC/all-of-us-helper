@@ -257,35 +257,35 @@ class Patient < ApplicationRecord
   def health_pro_address1
     health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
     if health_pro.present?
-      health_pro.health_pro_address1
+      health_pro.street_address
     end
   end
 
   def health_pro_address2
     health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
     if health_pro.present?
-      health_pro.health_pro_address2
+      health_pro.street_address2
     end
   end
 
   def health_pro_city
     health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
     if health_pro.present?
-      health_pro.health_pro_city
+      health_pro.city
     end
   end
 
   def health_pro_state
     health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
     if health_pro.present?
-      health_pro.health_pro_state
+      health_pro.state
     end
   end
 
   def health_pro_zip
     health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
     if health_pro.present?
-      health_pro.health_pro_zip
+      health_pro.zip
     end
   end
 
