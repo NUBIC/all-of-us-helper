@@ -292,14 +292,14 @@ class Patient < ApplicationRecord
   def wq_program_update_status
     health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
     if health_pro.present?
-      health_pro.wq_program_update_status
+      health_pro.program_update
     end
   end
 
   def wq_program_update_date
     health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
     if health_pro.present?
-      health_pro.wq_program_update_date
+      health_pro.date_of_program_update
     end
   end
 
