@@ -32,29 +32,29 @@ case environment
       rake "recruitment:load_cohorts"
     end
 
-    every :day, at: '4:00am' do # Use any day of the week or :weekend, :weekday
+    every :day, at: '2:00am' do # Use any day of the week or :weekend, :weekday
       rake "health_pro_api:rotate_service_account_key"
     end
 
-    every :day, at: '5:30am' do # Use any day of the week or :weekend, :weekday
-      rake "health_pro_api:import_api"
-    end
-
-    every :day, at: '3:55am' do # Use any day of the week or :weekend, :weekday
+    every :day, at: '2:25am' do # Use any day of the week or :weekend, :weekday
       rake "maintenance:expire_batch_health_pros"
     end
 
-    # every 1.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
-    #   rake "redcap:synch_patients"
-    # end
-    #
-    # every :day, at: '2:00am' do # Use any day of the week or :weekend, :weekday
-    #   rake "redcap:synch_deleted_patients"
-    # end
-    #
-    # every 6.hours do # 1.minute 1.day 1.week 1.month 1.year is also supported
-    #   rake "redcap:synch_patients_to_redcap"
-    # end
+    every :day, at: '2:30am' do # Use any day of the week or :weekend, :weekday
+      rake "health_pro_api:import_api"
+    end
+
+    every 1.hour do # 1.minute 1.day 1.week 1.month 1.year is also supported
+      rake "redcap:synch_patients"
+    end
+
+    every :day, at: '2:00am' do # Use any day of the week or :weekend, :weekday
+      rake "redcap:synch_deleted_patients"
+    end
+
+    every 6.hours do # 1.minute 1.day 1.week 1.month 1.year is also supported
+      rake "redcap:synch_patients_to_redcap"
+    end
   when 'staging'
     # every :thursday, at: '4:28am' do # Use any day of the week or :weekend, :weekday
     #   rake "health_pro_api_migrate:migrate"
