@@ -199,6 +199,8 @@ class RedcapApi
     wq_program_update_date = Date.parse(wq_program_update_date) if wq_program_update_date
     donotcontact = map_donotcontact(wq_program_update_status)
 
+    puts 'before the API call'
+
     if (withdrawn_y == HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NO_USE || deactivation_status == HealthPro::HEALTH_PRO_API_DEACTIVATION_STATUS_NO_CONTACT)
     payload = {
         :token => @api_token,
@@ -212,6 +214,7 @@ class RedcapApi
         :returnFormat => 'json'
     }
     else
+    puts 'in the API call'
     payload = {
         :token => @api_token,
         :content => 'record',
@@ -227,6 +230,7 @@ class RedcapApi
 
     api_response = redcap_api_request_wrapper(payload)
 
+    puts 'after the api call'
     { response: record_id, error: api_response[:error] }
   end
 
