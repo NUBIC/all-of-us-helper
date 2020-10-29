@@ -117,6 +117,10 @@ class Ldap
 
   private :get_connection
 
+  def ssl_encryption
+    {method: :simple_tls, tls_options: OpenSSL::SSL::SSLContext::DEFAULT_PARAMS}
+  end
+
   def find_ldap_entry(filter)
     entries = find_ldap_entries(filter)
     return entries[0] unless entries.blank?
