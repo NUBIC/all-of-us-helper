@@ -75,6 +75,10 @@ class StudyTrackerApi
         payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_EHR_REMOVAL, date: Date.parse(patient.date_of_first_ehr_consent).to_s }
       end
 
+      if patient.ehr_consent_status == HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUS_SUBMITTED_NO_CONSENT &&  patient.ehr_consent_date.present?
+        payload[:subject][:events] << { name: StudyTrackerApi::EVENT_TYPE_NAME_EHR_REMOVAL, date: Date.parse(patient.ehr_consent_date).to_s }
+      end
+
       url = Rails.configuration.custom.app_config['study_tracker'][Rails.env]['register'].gsub(':id', patient.uuid)
 
       api_response = study_tracker_api_request_wrapper(url: url, method: :put, parse_response: true, payload: payload)
