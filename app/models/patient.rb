@@ -225,7 +225,7 @@ class Patient < ApplicationRecord
   def ehr_consent_status_display
     if self.ehr_consent_status.blank? || (self.ehr_consent_status == HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUS_UNSET && self.ehr_consent_date.blank?)
       HealthPro::HEALTH_PRO_CONSENT_STATUS_UNDETERMINED
-    elsif HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUSES_DECLINED.include?(self.general_consent_status) && self.ehr_consent_date.present?
+    elsif HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUSES_DECLINED.include?(self.ehr_consent_status) && self.ehr_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_DECLINED
     elsif self.ehr_consent_status == HealthPro::HEALTH_PRO_API_EHR_CONSENT_STATUS_SUBMITTED && self.ehr_consent_date.present?
       HealthPro::HEALTH_PRO_CONSENT_STATUS_CONSENTED
