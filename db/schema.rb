@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20201026191708) do
+ActiveRecord::Schema.define(version: 20201214165425) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -236,6 +236,14 @@ ActiveRecord::Schema.define(version: 20201026191708) do
     t.string "deceased"
     t.string "date_of_death"
     t.string "date_of_approval"
+    t.string "cope_nov_ppi_survey_complete"
+    t.string "cope_nov_ppi_survey_completion_date"
+    t.string "retention_status"
+    t.string "ehr_data_transfer"
+    t.string "most_recent_ehr_receipt"
+    t.string "saliva_collection"
+    t.string "cope_dec_ppi_survey_complete"
+    t.string "cope_dec_ppi_survey_completion_date"
     t.index ["batch_health_pro_id"], name: "idx_health_pros_batch_health_pro_id"
     t.index ["pmi_id"], name: "idx_health_pros_pmi_id"
   end
