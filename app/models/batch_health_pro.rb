@@ -427,7 +427,7 @@ class BatchHealthPro < ApplicationRecord
       'retentionEligibleTime' => 'date_of_retention_eligibility',
       'deceasedStatus' => 'deceased',
       'dateOfDeath' => 'date_of_death',
-      'deceasedAuthored' => 'date_of_approval'
+      'deceasedAuthored' => 'date_of_approval',
       'questionnaireoncopenov' => 'cope_nov_ppi_survey_complete',
       'questionnaireoncopenovauthored' => 'cope_nov_ppi_survey_completion_date',
       'retentiontype' => 'retention_status',
