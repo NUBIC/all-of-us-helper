@@ -430,7 +430,7 @@ class BatchHealthPro < ApplicationRecord
       'deceasedAuthored' => 'date_of_approval',
       'questionnaireOnCopeNov' => 'cope_nov_ppi_survey_complete',
       'questionnaireOnCopeNovAuthored' => 'cope_nov_ppi_survey_completion_date',
-      'retentiontype' => 'retention_status',
+      'retentionType' => 'retention_status',
       'ehrStatus' => 'ehr_data_transfer',
       'latestEhrReceiptTime' => 'most_recent_ehr_receipt',
       'sample1SAL2CollectionMethod' => 'saliva_collection',
