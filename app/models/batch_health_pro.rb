@@ -428,14 +428,14 @@ class BatchHealthPro < ApplicationRecord
       'deceasedStatus' => 'deceased',
       'dateOfDeath' => 'date_of_death',
       'deceasedAuthored' => 'date_of_approval',
-      'questionnaireoncopenov' => 'cope_nov_ppi_survey_complete',
-      'questionnaireoncopenovauthored' => 'cope_nov_ppi_survey_completion_date',
+      'questionnaireOnCopeNov' => 'cope_nov_ppi_survey_complete',
+      'questionnaireOnCopeNovAuthored' => 'cope_nov_ppi_survey_completion_date',
       'retentiontype' => 'retention_status',
-      'ehrstatus' => 'ehr_data_transfer',
-      'latestehrreceipttime' => 'most_recent_ehr_receipt',
-      'sample1sal2collectionmethod' => 'saliva_collection',
-      'questionnaireoncopedec' => 'cope_dec_ppi_survey_complete',
-      'questionnaireoncopedecauthored' => 'cope_dec_ppi_survey_completion_date'
+      'ehrStatus' => 'ehr_data_transfer',
+      'latestEhrReceiptTime' => 'most_recent_ehr_receipt',
+      'sample1SAL2CollectionMethod' => 'saliva_collection',
+      'questionnaireOnCopeDec' => 'cope_dec_ppi_survey_complete',
+      'questionnaireOnCopeDecAuthored' => 'cope_dec_ppi_survey_completion_date'
 
     }
   end
