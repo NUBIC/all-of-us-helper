@@ -58,7 +58,8 @@ namespace :recruitment do
               if recruitment_patient.present?
                 st_event = cohort['current_status']['status']
                 st_event_d = cohort['current_status']['date']
-                st_import_d = cohort['status_history'].map { |status| status['date'].present? ? Date.parse(status['date']).to_s(:date) : nil}.compact.min
+                st_import_d = cohort['status_history'].map { |status| status['date'].present? ? Date.parse(status['date']) : nil}.compact.min
+                st_import_d = st_import_d.to_s(:date)
                 sleep(1)
                 redcap_api.update_recruitment_patient(recruitment_patient['record_id'], st_event, st_event_d, st_import_d)
               else
