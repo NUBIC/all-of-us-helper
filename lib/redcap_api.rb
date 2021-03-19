@@ -176,7 +176,7 @@ class RedcapApi
     { response: response, error: error }
   end
 
-  def update_patient(record_id, pmi_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, health_pro_login_phone, gror_consent, gror_consent_d, core_participant_d, deactivation_status, deactivation_date, required_ppi_complete_y, completed_surveys, basics_ppi_complete_y, basics_ppi_complete_d, health_ppi_complete_y, health_ppi_complete_d, lifestyle_ppi_complete_y, lifestyle_ppi_complete_d, history_ppi_complete_y, history_ppi_complete_d, meds_ppi_complete_y, meds_ppi_complete_d, family_ppi_complete_y, family_ppi_complete_d, access_ppi_complete_y, access_ppi_complete_d, copemay_complete_y, copemay_complete_d, copejune_complete_y, copejune_complete_d, copejuly_complete_y, copejuly_complete_d, first_primary_consent_d, first_ehr_consent_d, health_pro_address1, health_pro_address2, health_pro_city, health_pro_state, health_pro_zip, wq_program_update_status, wq_program_update_date)
+  def update_patient(record_id, pmi_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, health_pro_login_phone, gror_consent, gror_consent_d, core_participant_d, deactivation_status, deactivation_date, required_ppi_complete_y, completed_surveys, basics_ppi_complete_y, basics_ppi_complete_d, health_ppi_complete_y, health_ppi_complete_d, lifestyle_ppi_complete_y, lifestyle_ppi_complete_d, history_ppi_complete_y, history_ppi_complete_d, meds_ppi_complete_y, meds_ppi_complete_d, family_ppi_complete_y, family_ppi_complete_d, access_ppi_complete_y, access_ppi_complete_d, copemay_complete_y, copemay_complete_d, copejune_complete_y, copejune_complete_d, copejuly_complete_y, copejuly_complete_d, first_primary_consent_d, first_ehr_consent_d, health_pro_address1, health_pro_address2, health_pro_city, health_pro_state, health_pro_zip, wq_program_update_status, wq_program_update_date, deceased)
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
@@ -197,7 +197,7 @@ class RedcapApi
     first_primary_consent_d = Date.parse(first_primary_consent_d) if first_primary_consent_d
     first_ehr_consent_d = Date.parse(first_ehr_consent_d) if first_ehr_consent_d
     wq_program_update_date = Date.parse(wq_program_update_date) if wq_program_update_date
-    donotcontact = map_donotcontact(wq_program_update_status)
+    donotcontact = map_donotcontact(deceased)
 
     puts 'before the API call'
 
@@ -234,7 +234,7 @@ class RedcapApi
     { response: record_id, error: api_response[:error] }
   end
 
-  def create_patient(first_name, last_name, email, phone_1, pmi_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, health_pro_login_phone, gror_consent, gror_consent_d, core_participant_d, deactivation_status, deactivation_date, required_ppi_complete_y, completed_surveys, basics_ppi_complete_y, basics_ppi_complete_d, health_ppi_complete_y, health_ppi_complete_d, lifestyle_ppi_complete_y, lifestyle_ppi_complete_d, history_ppi_complete_y, history_ppi_complete_d, meds_ppi_complete_y, meds_ppi_complete_d, family_ppi_complete_y, family_ppi_complete_d, access_ppi_complete_y, access_ppi_complete_d, copemay_complete_y, copemay_complete_d, copejune_complete_y, copejune_complete_d, copejuly_complete_y, copejuly_complete_d, site_preference___1, site_preference___2, site_preference___3, site_preference___4, first_primary_consent_d, first_ehr_consent_d, health_pro_address1, health_pro_address2, health_pro_city, health_pro_state, health_pro_zip, wq_program_update_status, wq_program_update_date)
+  def create_patient(first_name, last_name, email, phone_1, pmi_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, health_pro_login_phone, gror_consent, gror_consent_d, core_participant_d, deactivation_status, deactivation_date, required_ppi_complete_y, completed_surveys, basics_ppi_complete_y, basics_ppi_complete_d, health_ppi_complete_y, health_ppi_complete_d, lifestyle_ppi_complete_y, lifestyle_ppi_complete_d, history_ppi_complete_y, history_ppi_complete_d, meds_ppi_complete_y, meds_ppi_complete_d, family_ppi_complete_y, family_ppi_complete_d, access_ppi_complete_y, access_ppi_complete_d, copemay_complete_y, copemay_complete_d, copejune_complete_y, copejune_complete_d, copejuly_complete_y, copejuly_complete_d, site_preference___1, site_preference___2, site_preference___3, site_preference___4, first_primary_consent_d, first_ehr_consent_d, health_pro_address1, health_pro_address2, health_pro_city, health_pro_state, health_pro_zip, wq_program_update_status, wq_program_update_date, deceased)
     record_id = next_record_id
     record_id = record_id[:response]
     consent_d = Date.parse(consent_d) if consent_d
@@ -257,7 +257,7 @@ class RedcapApi
     first_primary_consent_d = Date.parse(first_primary_consent_d) if first_primary_consent_d
     first_ehr_consent_d = Date.parse(first_ehr_consent_d) if first_ehr_consent_d
     wq_program_update_date = Date.parse(wq_program_update_date) if wq_program_update_date
-    donotcontact = map_donotcontact(wq_program_update_status)
+    donotcontact = map_donotcontact(deceased)
 
     ts = Date.today
     if (withdrawn_y == HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NO_USE || deactivation_status == HealthPro::HEALTH_PRO_API_DEACTIVATION_STATUS_NO_CONTACT)
@@ -292,7 +292,7 @@ class RedcapApi
     { response: record_id, error: api_response[:error] }
   end
 
-  def match(record_id, pmi_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, health_pro_login_phone, gror_consent, gror_consent_d, core_participant_d, deactivation_status, deactivation_date, required_ppi_complete_y, completed_surveys, basics_ppi_complete_y, basics_ppi_complete_d, health_ppi_complete_y, health_ppi_complete_d, lifestyle_ppi_complete_y, lifestyle_ppi_complete_d, history_ppi_complete_y, history_ppi_complete_d, meds_ppi_complete_y, meds_ppi_complete_d, family_ppi_complete_y, family_ppi_complete_d, access_ppi_complete_y, access_ppi_complete_d, copemay_complete_y, copemay_complete_d, copejune_complete_y, copejune_complete_d, copejuly_complete_y, copejuly_complete_d, first_primary_consent_d, first_ehr_consent_d, health_pro_address1, health_pro_address2, health_pro_city, health_pro_state, health_pro_zip, wq_program_update_status, wq_program_update_date)
+  def match(record_id, pmi_id, consent, consent_d, ehr_consent, ehr_consent_d, withdrawn_y, withdrawal_d, wq_participant_status, pm_date, wq_paired_site, wq_paired_org, health_pro_email, health_pro_phone, health_pro_login_phone, gror_consent, gror_consent_d, core_participant_d, deactivation_status, deactivation_date, required_ppi_complete_y, completed_surveys, basics_ppi_complete_y, basics_ppi_complete_d, health_ppi_complete_y, health_ppi_complete_d, lifestyle_ppi_complete_y, lifestyle_ppi_complete_d, history_ppi_complete_y, history_ppi_complete_d, meds_ppi_complete_y, meds_ppi_complete_d, family_ppi_complete_y, family_ppi_complete_d, access_ppi_complete_y, access_ppi_complete_d, copemay_complete_y, copemay_complete_d, copejune_complete_y, copejune_complete_d, copejuly_complete_y, copejuly_complete_d, first_primary_consent_d, first_ehr_consent_d, health_pro_address1, health_pro_address2, health_pro_city, health_pro_state, health_pro_zip, wq_program_update_status, wq_program_update_date, deceased)
     consent_d = Date.parse(consent_d) if consent_d
     ehr_consent_d = Date.parse(ehr_consent_d) if ehr_consent_d
     withdrawal_d = Date.parse(withdrawal_d) if withdrawal_d
@@ -313,7 +313,7 @@ class RedcapApi
     first_primary_consent_d = Date.parse(first_primary_consent_d) if first_primary_consent_d
     first_ehr_consent_d = Date.parse(first_ehr_consent_d) if first_ehr_consent_d
     wq_program_update_date = Date.parse(wq_program_update_date) if wq_program_update_date
-    donotcontact = map_donotcontact(wq_program_update_status)
+    donotcontact = map_donotcontact(deceased)
 
     if (withdrawn_y == HealthPro::HEALTH_PRO_API_WITHDRAWAL_STATUS_NO_USE || deactivation_status == HealthPro::HEALTH_PRO_API_DEACTIVATION_STATUS_NO_CONTACT)
     payload = {
@@ -485,9 +485,9 @@ class RedcapApi
       end
     end
 
-    def map_donotcontact(wq_program_update_status)
-      donotcontact = case wq_program_update_status
-      when 'APPROVED'
+    def map_donotcontact(deceased)
+      donotcontact = case deceased
+      when 'APPROVED', 'PENDING'
         '1'
       else
         '0'

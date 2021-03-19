@@ -410,6 +410,13 @@ class Patient < ApplicationRecord
     site_preference
   end
 
+  def deceased
+    health_pro = HealthPro.where(batch_health_pro_id: last_batch_health_pro_id, pmi_id: self.pmi_id).first
+    if health_pro.present?
+      health_pro.deceased
+    end
+  end
+
   private
     def last_batch_health_pro_id
       last_batch_health_pro_id = HealthPro.where(pmi_id: self.pmi_id).maximum(:batch_health_pro_id)
