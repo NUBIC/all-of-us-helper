@@ -15,7 +15,7 @@ namespace :recruitment do
       if Rails.env.development?
         file = "#{Rails.root}/lib/setup/data/#{file}"
       else
-        file = "/mnt/fsmresfiles/STU00204480/#{file}"
+        file = "/mnt/fsmresfiles/vfsmnubicapps/STU00204480/#{file}"
       end
 
       edw_patients = CSV.new(File.open(file), headers: true, col_sep: ",", return_headers: false,  quote_char: "\"")
